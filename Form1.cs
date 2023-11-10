@@ -1,5 +1,6 @@
 ////TODO
-////Debug Stream Overlay
+////Add Ignore inputs
+////Add Translations from system text to Actual key (ex: D1 -> 1)
 ////Test With OBS
 
 using Newtonsoft.Json;
@@ -26,10 +27,12 @@ namespace KeyStreamOverlay
         }
         ~Form1()
         {
-            if (ImportedSave != "")
-                JSONSave(ImportedSave);
-            else
-                JSONSave(DefaultSave);
+            JSONSave(ImportedSave == "" ? DefaultSave : ImportedSave);
+        }
+        public new void Dispose()
+        {
+            JSONSave(ImportedSave == "" ? DefaultSave : ImportedSave);
+            base.Dispose();
         }
         private void BtnStart_Click(object sender, EventArgs e)
         {

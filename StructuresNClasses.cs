@@ -43,4 +43,73 @@
                 && this.Alt == otherAlt;
         }
     }
+
+    public static class TranslationDict
+    {
+        private const string DefaultTranslationSavePath = "DefaultTranslations.json";
+        public static Dictionary<string, string> Translations { get; private set; } = new Dictionary<string, string>()
+        {
+            { "D1","1" },
+            { "D2","2" },
+            { "D3","3" },
+            { "D4","4" },
+            { "D5","5" },
+            { "D6","6" },
+            { "D7","7" },
+            { "D8","8" },
+            { "D9","9" },
+            { "D0","0" },
+            { "D1","1" },
+            { "Oem5", "\\" },
+            { "OemMinus", "-" },
+            { "Oemplus", "=" },
+            {"LMenu", "LAlt" },
+            { "Oemtilde", "tilde" },
+            { "OemOpenBrackets", "[" },
+            { "Oem6", "}" },
+            { "Oem7", "'" },
+            { "Oem1", ";"},
+            { "OemPeriod", "." },
+            { "OemQuestion" , "?"},
+            { "Oemcomma", "," }
+        };
+        public static string GetTranslation(string Input)
+        {
+            if (Translations.TryGetValue(Input, out string? Translation))
+                return Translation;
+            
+            else 
+                return Input;
+        }
+        public static bool LoadTranslations(string FilePath)
+        {
+            return false;
+        }
+        private static bool SaveTranslations(string FilePath)
+        {
+            return false;
+        }
+        public static bool AddTranslation(string Input, string Output)
+        {
+            if (Translations.TryGetValue(Input, out _))
+                return false;
+            Translations.Add(Input, Output);
+            return true;
+        }
+        public static bool ReplaceTranslation(string Input, string Output)
+        {
+            if (Translations.TryGetValue(Input, out _))
+                return false;
+            Translations.Remove(Input);
+            Translations.Add(Input,Output);
+            return true;
+        }
+        public static bool RemoveTranslation(string Input)
+        {
+            if (Translations.Remove(Input))
+                return true;
+            else 
+                return false;
+        }
+    }
 }
