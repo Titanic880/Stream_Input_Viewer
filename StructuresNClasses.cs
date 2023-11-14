@@ -1,17 +1,51 @@
-﻿namespace KeyStreamOverlay
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
+namespace KeyStreamOverlay
 {
     public class SaveData
     {
         public readonly string SaveLocation;
         public readonly PauseKeybind PauseBind;
         public readonly string[] PreallowedWindows;
+        public readonly Dictionary<Keys, string> translations = new();
+        public readonly int[] BackColor;
+        [IgnoreDataMember]
+        public Color GetBackColor
+        {
+            get =>
+                Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
+        }
         public readonly bool Global = false;
-        public SaveData(string SaveLocation, PauseKeybind PauseBind, string[] PreallowedWindows, bool Global)
+        public SaveData(string SaveLocation, PauseKeybind PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor)
         {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
             this.Global = Global;
+            this.translations = translations;
+            this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
+        }
+        [JsonConstructor]
+        public SaveData(string SaveLocation, PauseKeybind PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor)
+        {
+            this.SaveLocation = SaveLocation;
+            this.PauseBind = PauseBind;
+            this.PreallowedWindows = PreallowedWindows;
+            this.Global = Global;
+            this.translations = translations;
+
+            if (BackColor.Length > 4)
+                BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
+            for(int i = 0; i < 4; i++)
+            {
+                if (BackColor[i] > 255)
+                    BackColor[i] = 255;
+                else if (BackColor[i] < 0)
+                    BackColor[i] = 0;
+            }
+
+            this.BackColor = BackColor;
         }
     }
     public class PauseKeybind
@@ -46,57 +80,73 @@
 
     public static class TranslationDict
     {
-        private const string DefaultTranslationSavePath = "DefaultTranslations.json";
-        public static Dictionary<string, string> Translations { get; private set; } = new Dictionary<string, string>()
+        private readonly static Dictionary<Keys, string> DefaultTranslations = new()
         {
-            { "D1","1" },
-            { "D2","2" },
-            { "D3","3" },
-            { "D4","4" },
-            { "D5","5" },
-            { "D6","6" },
-            { "D7","7" },
-            { "D8","8" },
-            { "D9","9" },
-            { "D0","0" },
-            { "D1","1" },
-            { "Oem5", "\\" },
-            { "OemMinus", "-" },
-            { "Oemplus", "=" },
-            {"LMenu", "LAlt" },
-            { "Oemtilde", "tilde" },
-            { "OemOpenBrackets", "[" },
-            { "Oem6", "}" },
-            { "Oem7", "'" },
-            { "Oem1", ";"},
-            { "OemPeriod", "." },
-            { "OemQuestion" , "?"},
-            { "Oemcomma", "," }
+            { Keys.D1,"1"},
+            { Keys.D2,"2" },
+            { Keys.D3,"3" },
+            { Keys.D4,"4" },
+            { Keys.D5,"5" },
+            { Keys.D6,"6" },
+            { Keys.D7,"7" },
+            { Keys.D8,"8" },
+            { Keys.D9,"9" },
+            { Keys.D0,"0" },
+
+            { Keys.Oem5, "\\" },
+            { Keys.OemMinus, "-" },
+            { Keys.Oemplus, "=" },
+            { Keys.LMenu, "LAlt" },
+            { Keys.Oemtilde, "tilde" },
+            { Keys.OemOpenBrackets, "[" },
+            { Keys.Oem6, "}" },
+            { Keys.Oem7, "'" },
+            { Keys.Oem1, ";"},
+            { Keys.OemPeriod, "." },
+            { Keys.OemQuestion , "?"},
+            { Keys.Oemcomma, "," }
         };
-        public static string GetTranslation(string Input)
+        public static Dictionary<Keys, string> Translations { get; private set; } = new();
+        /// <summary>
+        /// returns Translation, if not found returns input
+        /// </summary>
+        /// <param name="Input"></param>
+        /// <returns></returns>
+        public static string GetTranslation(Keys Input)
         {
             if (Translations.TryGetValue(Input, out string? Translation))
                 return Translation;
             
             else 
-                return Input;
+                return Input.ToString();
         }
-        public static bool LoadTranslations(string FilePath)
+        public static void RestoreDefaults()
         {
-            return false;
+            Translations.Clear();
+            Translations = DefaultTranslations;
         }
-        private static bool SaveTranslations(string FilePath)
+        public static bool LoadTranslations(Dictionary<Keys, string> importedTranslations)
         {
-            return false;
+            if (importedTranslations == null)
+            {
+                Translations = DefaultTranslations;
+                return false;
+            }
+            try
+            {
+                Translations = importedTranslations;
+                return true;
+            }
+            catch { return false; }
         }
-        public static bool AddTranslation(string Input, string Output)
+        public static bool AddTranslation(Keys Input, string Output)
         {
             if (Translations.TryGetValue(Input, out _))
                 return false;
             Translations.Add(Input, Output);
             return true;
         }
-        public static bool ReplaceTranslation(string Input, string Output)
+        public static bool ReplaceTranslation(Keys Input, string Output)
         {
             if (Translations.TryGetValue(Input, out _))
                 return false;
@@ -104,7 +154,7 @@
             Translations.Add(Input,Output);
             return true;
         }
-        public static bool RemoveTranslation(string Input)
+        public static bool RemoveTranslation(Keys Input)
         {
             if (Translations.Remove(Input))
                 return true;

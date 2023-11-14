@@ -1,14 +1,17 @@
-﻿namespace KeyStreamOverlay
+﻿using System.Runtime.CompilerServices;
+
+namespace KeyStreamOverlay
 {
     public partial class SteamView : Form
     {
         private bool Paused = false;
+        private readonly bool UseTranslations = false;
         private readonly UI_Mimic.UIReader? KeyboardHook;
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer ActiveTimer;
         private const int ListMax = 13;
         private readonly PauseKeybind PauseButtons;
-        public SteamView(bool Global, string[] AllowedWindows, PauseKeybind PauseBind)
+        public SteamView(bool Global,bool UseInputTranslations, string[] AllowedWindows, PauseKeybind PauseBind, Color BackColor)
         {
             InitializeComponent();
 
@@ -19,6 +22,8 @@
 
             AllowedPrograms = AllowedWindows;
             PauseButtons = PauseBind;
+            this.UseTranslations = UseInputTranslations;
+            listBox1.BackColor = BackColor;
 
             KeyboardHook = new UI_Mimic.UIReader(Global, AllowedPrograms);
             KeyboardHook.OnError += KeyboardHook_OnError;
@@ -59,10 +64,11 @@
             }
             else MessageBox.Show("Error: Pause Button");
         }
-
+        
         PauseKeybind Previous_Key = new(Keys.F24,true,true,true);
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt)
         {
+            listBox1.SelectedIndex = -1;
             if (PauseButtons.Equals(key, Shift, Ctrl, Alt))
             {
                 Paused = !Paused;
@@ -79,7 +85,10 @@
             string sft = Shift ? "Shift+" : "";
             string ctrl = Ctrl ? "Ctrl+" : "";
             string alt = Alt ? "Alt+" : "";
-            Action(sft + ctrl + alt + key);
+            if (UseTranslations)
+                Action(sft+ctrl+alt+TranslationDict.GetTranslation(key));
+            else
+                Action(sft + ctrl + alt + key);
         }
 
         private void KeyboardHook_OnError(Exception e)
@@ -89,6 +98,9 @@
 
         private void Action(string input)
         {
+            if (input == "") 
+                return;
+
             listBox1.SuspendLayout();
             for (int i = ListMax-1; i > 0; i--)
                 listBox1.Items[i] = listBox1.Items[i - 1];

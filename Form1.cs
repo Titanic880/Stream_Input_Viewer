@@ -1,6 +1,7 @@
 ////TODO
 ////Add Ignore inputs
 ////Add Translations from system text to Actual key (ex: D1 -> 1)
+////Implement CheckBox for Translation + form/section to add/change/remove Translations
 ////Test With OBS
 
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace KeyStreamOverlay
             InitializeComponent();
 
             this.MaximizeBox = false;
+            LoadTranslations();
 
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
@@ -25,25 +27,28 @@ namespace KeyStreamOverlay
             PauseBind = new(Keys.Insert, true, true, true);
             JSONLoad(DefaultSave);
         }
-        ~Form1()
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             JSONSave(ImportedSave == "" ? DefaultSave : ImportedSave);
         }
-        public new void Dispose()
+        private void LoadTranslations()
         {
-            JSONSave(ImportedSave == "" ? DefaultSave : ImportedSave);
-            base.Dispose();
+            LstTranslations.Items.Clear();
+            foreach (KeyValuePair<Keys, string> pair in TranslationDict.Translations)
+                LstTranslations.Items.Add(pair.Key + " => " + pair.Value);
+            CBKeys.Items.AddRange(Enum.GetNames(typeof(Keys)));
         }
+
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count == 0 || PauseBind == null)
+            if (LstTracked.Items.Count == 0 || PauseBind == null)
             {
                 MessageBox.Show("List is empty or a pause bind has not been set...");
                 return;
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView? view = new(CBGlobal.Checked, GetAllowedWindows(), PauseBind);
+            SteamView? view = new(CBGlobal.Checked, true, GetAllowedWindows(), PauseBind, BtnColorChange.BackColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -57,8 +62,8 @@ namespace KeyStreamOverlay
         private string[] GetAllowedWindows()
         {
             List<string> AllowedPrograms = new();
-            for (int i = 0; i < listBox1.Items.Count; i++)
-                AllowedPrograms.Add(listBox1.Items[i].ToString()!);
+            for (int i = 0; i < LstTracked.Items.Count; i++)
+                AllowedPrograms.Add(LstTracked.Items[i].ToString()!);
             return AllowedPrograms.ToArray();
         }
         private void KeyboardHook_OnError(Exception e)
@@ -91,7 +96,7 @@ namespace KeyStreamOverlay
 
         private void BtnAddProgram_Click(object sender, EventArgs e)
         {
-            listBox1.Items.Add(TbTracked.Text);
+            LstTracked.Items.Add(TbTracked.Text);
             //CurrentSave.AddWindow(TbTracked.Text);
             JSONSave(this.ImportedSave is "" ? DefaultSave : ImportedSave);
             TbTracked.Text = "";
@@ -99,8 +104,8 @@ namespace KeyStreamOverlay
 
         private void BtnRemove_Click(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex == -1) return;
-            listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+            if (LstTracked.SelectedIndex == -1) return;
+            LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
         }
 
         private void JSONSave(string FilePath)
@@ -111,7 +116,11 @@ namespace KeyStreamOverlay
                 File.Create(FilePath).Close();
 
                 File.WriteAllText(FilePath,
-                JsonConvert.SerializeObject(new SaveData(FilePath, PauseBind, GetAllowedWindows(), CBGlobal.Checked), Formatting.Indented)
+                JsonConvert.SerializeObject(
+                    new SaveData(FilePath, PauseBind,
+                        GetAllowedWindows(), CBGlobal.Checked,
+                        TranslationDict.Translations, BtnColorChange.BackColor)
+                    , Formatting.Indented)
                 );
             }
             else
@@ -132,10 +141,13 @@ namespace KeyStreamOverlay
                 SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(FilePath));
                 if (SaveInfo != null)
                 {
-                    listBox1.Items.AddRange(SaveInfo.PreallowedWindows);
+                    LstTracked.Items.AddRange(SaveInfo.PreallowedWindows);
                     this.PauseBind = SaveInfo.PauseBind;
                     this.ImportedSave = SaveInfo.SaveLocation;
                     CBGlobal.Checked = SaveInfo.Global;
+                    TranslationDict.LoadTranslations(SaveInfo.translations);
+                    BtnColorChange.BackColor = SaveInfo.GetBackColor;
+                    LoadTranslations();
                 }
                 if (ImportedSave != DefaultSave)
                     JSONLoad(ImportedSave);
@@ -149,6 +161,45 @@ namespace KeyStreamOverlay
         private void BtnForceSave_Click(object sender, EventArgs e)
         {
             JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+        }
+
+        private void BtnDeleteTranslation_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show($"Are you sure you want to delete: {LstTranslations.Items[LstTranslations.SelectedIndex]}", "Delete Translation", MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
+            if (TranslationDict.RemoveTranslation(((KeyValuePair<Keys, string>)LstTranslations.Items[LstTranslations.SelectedIndex]).Key))
+                MessageBox.Show("Translation Deleted");
+            else
+                MessageBox.Show("Failed to remove from Dictionary");
+            LstTranslations.Items.RemoveAt(LstTranslations.SelectedIndex);
+            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+        }
+
+        private void BtnEditTranslation_Click(object sender, EventArgs e)
+        {
+            //TODO: This
+
+            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+        }
+
+        private void BtnAddTranslation_Click(object sender, EventArgs e)
+        {
+            //TODO: This
+
+            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+        }
+
+        private void BtnColorChange_Click(object sender, EventArgs e)
+        {
+            ColorDialog dialog = new()
+            {
+                Color = BtnColorChange.BackColor
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                BtnColorChange.BackColor = dialog.Color;
+            }
+            dialog.Dispose();
         }
     }
 }
