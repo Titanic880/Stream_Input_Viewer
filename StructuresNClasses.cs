@@ -9,7 +9,7 @@ namespace KeyStreamOverlay
         public readonly PauseKeybind PauseBind;
         public readonly string[] PreallowedWindows;
         public readonly Dictionary<Keys, string> translations = new();
-        public readonly int[] BackColor;
+        public readonly int[] BackColor = new int[4] { 255,0,255,0 };
         [IgnoreDataMember]
         public Color GetBackColor
         {

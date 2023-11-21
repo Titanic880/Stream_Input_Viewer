@@ -1,8 +1,6 @@
 ////TODO
-////Add Ignore inputs
-////Add Translations from system text to Actual key (ex: D1 -> 1)
 ////Implement CheckBox for Translation + form/section to add/change/remove Translations
-////Test With OBS
+////Test With OBS - Chroma key functions weirdly, Added user defined color to make it easier
 
 using Newtonsoft.Json;
 
