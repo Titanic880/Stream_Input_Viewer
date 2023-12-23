@@ -55,7 +55,7 @@ namespace KeyStreamOverlay {
             return AllowedPrograms.ToArray();
         }
         private void KeyboardHook_OnError(Exception e) {
-            //TODO: Output in a non disruptive way
+            LoggingHook.LogAsError($"KeyHook Error: {e.Message}");
         }
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
