@@ -12,7 +12,7 @@
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
 
-        public SteamView_List(StreamOutputType OutputType, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor) {
+        public SteamView_List(StreamOutputType OutputType, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
             this.TopMost = true;
@@ -24,6 +24,8 @@
             PauseButtons = PauseBind;
             this.UseTranslations = UseInputTranslations;
             DisplayBackColor = BackColor;
+            this.TextColor = TextColor;
+
 
             KeyboardHook = new UI_Mimic.UIReader(true, AllowedPrograms);
             KeyboardHook.OnError += KeyboardHook_OnError;

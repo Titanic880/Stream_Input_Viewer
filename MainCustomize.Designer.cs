@@ -41,7 +41,8 @@
             TbTranslation = new TextBox();
             CBKeys = new ComboBox();
             groupBox1 = new GroupBox();
-            BtnColorChange = new Button();
+            BtnBackColorPicker = new Button();
+            BtnTextColorPicker = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -61,7 +62,7 @@
             LstTracked.ItemHeight = 15;
             LstTracked.Location = new Point(12, 26);
             LstTracked.Name = "LstTracked";
-            LstTracked.Size = new Size(158, 229);
+            LstTracked.Size = new Size(158, 259);
             LstTracked.TabIndex = 1;
             // 
             // LblList
@@ -214,29 +215,40 @@
             groupBox1.Controls.Add(BtnAddTranslation);
             groupBox1.Controls.Add(BtnEditTranslation);
             groupBox1.Controls.Add(BtnDeleteTranslation);
-            groupBox1.Location = new Point(12, 261);
+            groupBox1.Location = new Point(12, 300);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(324, 221);
             groupBox1.TabIndex = 22;
             groupBox1.TabStop = false;
             groupBox1.Text = "Translation Options";
             // 
-            // BtnColorChange
+            // BtnBackColorPicker
             // 
-            BtnColorChange.Location = new Point(180, 232);
-            BtnColorChange.Name = "BtnColorChange";
-            BtnColorChange.Size = new Size(151, 23);
-            BtnColorChange.TabIndex = 20;
-            BtnColorChange.Text = "Select Back Color";
-            BtnColorChange.UseVisualStyleBackColor = true;
-            BtnColorChange.Click += BtnColorChange_Click;
+            BtnBackColorPicker.Location = new Point(180, 232);
+            BtnBackColorPicker.Name = "BtnBackColorPicker";
+            BtnBackColorPicker.Size = new Size(151, 23);
+            BtnBackColorPicker.TabIndex = 20;
+            BtnBackColorPicker.Text = "Select Back Color";
+            BtnBackColorPicker.UseVisualStyleBackColor = true;
+            BtnBackColorPicker.Click += BtnColorChange_Click;
             // 
-            // Form1
+            // BtnTextColorPicker
+            // 
+            BtnTextColorPicker.Location = new Point(180, 261);
+            BtnTextColorPicker.Name = "BtnTextColorPicker";
+            BtnTextColorPicker.Size = new Size(151, 23);
+            BtnTextColorPicker.TabIndex = 23;
+            BtnTextColorPicker.Text = "Select Text Color";
+            BtnTextColorPicker.UseVisualStyleBackColor = true;
+            BtnTextColorPicker.Click += BtnColorChange_Click;
+            // 
+            // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(349, 492);
-            Controls.Add(BtnColorChange);
+            ClientSize = new Size(349, 534);
+            Controls.Add(BtnTextColorPicker);
+            Controls.Add(BtnBackColorPicker);
             Controls.Add(groupBox1);
             Controls.Add(BtnForceSave);
             Controls.Add(BtnRemove);
@@ -248,7 +260,7 @@
             Controls.Add(LblList);
             Controls.Add(LstTracked);
             Controls.Add(BtnAddProgram);
-            Name = "Form1";
+            Name = "MainCustomize";
             Text = "Setup View";
             FormClosing += Form1_FormClosing;
             groupBox1.ResumeLayout(false);
@@ -277,6 +289,7 @@
         private ComboBox CBKeys;
         private TextBox TbTranslation;
         private GroupBox groupBox1;
-        private Button BtnColorChange;
+        private Button BtnBackColorPicker;
+        private Button BtnTextColorPicker;
     }
 }

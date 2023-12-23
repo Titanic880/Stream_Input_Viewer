@@ -7,7 +7,8 @@ namespace KeyStreamOverlay {
         private const string DefaultSave = "Save.json";
         private string ImportedSave { get; set; } = "";
         public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
-        private string SaveLocation { get {
+        private string SaveLocation {
+            get {
                 string ret = DefaultFolder;
                 if (ImportedSave.Contains('\\')) {
                     ret = ImportedSave;
@@ -46,7 +47,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView_List? view = new(StreamOutputType.Listbox, true, GetAllowedWindows(), PauseBind, BtnColorChange.BackColor);
+            SteamView_List? view = new(StreamOutputType.Listbox, true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -88,7 +89,7 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnAddProgram_Click(object sender, EventArgs e) {
-            if(TbTracked.Text == "Enter Program Name Here") {
+            if (TbTracked.Text == "Enter Program Name Here") {
                 return;
             }
 
@@ -112,7 +113,7 @@ namespace KeyStreamOverlay {
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
                     GetAllowedWindows(), CBGlobal.Checked,
-                    TranslationDict.Translations, BtnColorChange.BackColor,LoggingHook.HookActive)
+                    TranslationDict.Translations, BtnBackColorPicker.BackColor, LoggingHook.HookActive)
                 , Formatting.Indented)
             );
         }
@@ -129,7 +130,7 @@ namespace KeyStreamOverlay {
                     this.ImportedSave = SaveInfo.SaveLocation;
                     CBGlobal.Checked = SaveInfo.Global;
                     TranslationDict.LoadTranslations(SaveInfo.translations);
-                    BtnColorChange.BackColor = SaveInfo.GetBackColor;
+                    BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     LoadTranslations();
                     LoggingHook.Hookinit(SaveInfo.LoggingHookEnabled);
                 }
@@ -166,12 +167,23 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnColorChange_Click(object sender, EventArgs e) {
-            ColorDialog dialog = new()
-            {
-                Color = BtnColorChange.BackColor
-            };
+            ColorDialog dialog;
+            if (((Button)sender).Name == "BtnBackColorPicker") {
+                dialog = new() {
+                    Color = BtnBackColorPicker.BackColor
+                };
+            } else {
+                dialog = new() {
+                    Color = BtnTextColorPicker.ForeColor
+                };
+            }
+
             if (dialog.ShowDialog() == DialogResult.OK) {
-                BtnColorChange.BackColor = dialog.Color;
+                if (((Button)sender).Name == "BtnBackColorPicker") {
+                    BtnBackColorPicker.BackColor = dialog.Color;
+                } else {
+                    BtnTextColorPicker.ForeColor = dialog.Color;
+                }
             }
             dialog.Dispose();
         }
