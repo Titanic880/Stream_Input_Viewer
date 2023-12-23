@@ -46,7 +46,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView_List? view = new(CBGlobal.Checked, true, GetAllowedWindows(), PauseBind, BtnColorChange.BackColor);
+            SteamView_List? view = new(StreamOutputType.Listbox, true, GetAllowedWindows(), PauseBind, BtnColorChange.BackColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();

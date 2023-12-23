@@ -42,6 +42,12 @@ namespace KeyStreamOverlay {
             this.BackColor = BackColor;
         }
     }
+
+    public enum StreamOutputType {
+        DEV = -1,           //Quicker API implementation default?
+        Listbox = 0,
+        Textbox = 1
+    }
     public class KeyCombo {
         public readonly Keys key;
         public readonly bool Shift;
