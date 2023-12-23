@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace KeyStreamOverlay {
     public class SaveData {
@@ -33,12 +33,12 @@ namespace KeyStreamOverlay {
             if (BackColor.Length > 4)
                 BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
             for (int i = 0; i < 4; i++) {
-                if (BackColor[i] > 255)
+                if (BackColor[i] > 255) {
                     BackColor[i] = 255;
-                else if (BackColor[i] < 0)
+                } else if (BackColor[i] < 0) {
                     BackColor[i] = 0;
+                }
             }
-
             this.BackColor = BackColor;
         }
     }
@@ -119,6 +119,11 @@ namespace KeyStreamOverlay {
             }
             try {
                 Translations = importedTranslations;
+                foreach(Keys key in DefaultTranslations.Keys) {
+                    if (!Translations.ContainsKey(key)) {
+                        Translations.Add(key, DefaultTranslations[key]);
+                    }
+                }
                 return true;
             } catch { return false; }
         }
@@ -128,11 +133,10 @@ namespace KeyStreamOverlay {
             Translations.Add(Input, Output);
             return true;
         }
-        public static bool ReplaceTranslation(Keys Input, string Output) {
-            if (Translations.TryGetValue(Input, out _))
+        public static bool ReplaceTranslation(Keys OldKey, string NewValue) {
+            if (Translations.TryGetValue(OldKey, out _))
                 return false;
-            Translations.Remove(Input);
-            Translations.Add(Input, Output);
+            Translations[OldKey] = NewValue;
             return true;
         }
         public static bool RemoveTranslation(Keys Input) {
