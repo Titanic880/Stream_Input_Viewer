@@ -1,6 +1,7 @@
 ﻿namespace KeyStreamOverlay {
     internal class LoggingHook {
         public static bool HookActive { get; private set; } = false;
+        public static bool HookPaused { get; private set; } = false;
         public static string LogToLocation { get {
                 return MainCustomize.DefaultFolder + DefaultLogFile;
             } }
@@ -11,7 +12,7 @@
         private const string DefaultErrorFile = "Errors.txt";
 
         public static async void LogToFile(string DatatoLog) {
-            if (HookActive) {
+            if (HookActive && !HookPaused) {
                 await LogTask(LogToLocation, DatatoLog);
             }
         }
@@ -36,11 +37,11 @@
             HookActive = HookActiveStatus;
         }
 
-        /// <summary>
-        /// To Re-enable hook you need to rerun init
-        /// </summary>
-        public static void DisableHook() {
-            HookActive = false;
+        public static void PauseLoggingHook() {
+            HookPaused = true;
+        }
+        public static void ResumeLoggingHook() {
+            HookPaused = false;
         }
     }
 }
