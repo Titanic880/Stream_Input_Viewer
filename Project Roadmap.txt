@@ -1,0 +1,41 @@
+﻿NEEDS IMPLEMENTATION - Implement CheckBox for Translation + form/section to add/change/remove Translations
+ONGOING - Test With OBS/XSplit? (Might need to look into other streaming programs)
+- Chroma key functions weirdly, Added user defined color to make it easier
+
+Features:
+	Ability to select type of user output (Currently Textbox/Listbox)
+	Implement Translation modifications as end user
+	StreamView Window:
+		TextBox User output
+		Add ability to change text color.
+	Support for Pictures/Bitmaps?
+	Make project not look like a generic WinForm App...
+
+	Ghost mode version of the project? (only outputs to file unless pause bind is pressed) (VERY LIKELY NOT DUE TO BEING A FULL ON KEYLOGGER)
+	
+BackEnd:
+	Get Unicode Characters for :
+		Shift,
+		Escape,
+		Delete,
+		Enter,
+		Backspace,
+		Ctrl,
+		Alt,
+		Home (Windows button)
+	And implement as Translations (Optional?)
+	Get a better name for Translations (More accurate)
+	Create a better project name (Make it a pun or something!)
+	
+	Dejunking of primary Functions (Remove any un-needed calls/interactions)
+	General Optimizations -> Better variable Naming, Better control flows, Early Escapes
+
+	Optimize Structures and classes objects (Unsure if able to ?)
+	Rebuild TranslationsDict to an extension of Dictionary instead of a shell class?
+
+	Quick Launch (Skips showing Main Setup form and instantly loads user settings and opens StreamView)
+
+	LoggingHook:
+		Implement TOFILE System
+		Toggle for TOFILE
+		Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
