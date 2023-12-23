@@ -6,8 +6,8 @@
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
         private const int ListMax = 13;
-        private readonly PauseKeybind PauseButtons;
-        public SteamView_List(bool Global, bool UseInputTranslations, string[] AllowedWindows, PauseKeybind PauseBind, Color BackColor) {
+        private readonly KeyCombo PauseButtons;
+        public SteamView_List(bool Global, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor) {
             InitializeComponent();
 
             this.TopMost = true;
@@ -57,7 +57,7 @@
                 MessageBox.Show("Error: Pause Button");
         }
 
-        PauseKeybind Previous_Key = new(Keys.F24,true,true,true);
+        KeyCombo Previous_Key = new(Keys.F24,true,true,true);
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
             listBox1.SelectedIndex = -1;
             if (PauseButtons.Equals(key, Shift, Ctrl, Alt)) {

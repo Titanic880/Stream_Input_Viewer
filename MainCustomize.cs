@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
         private UI_Mimic.UIReader? KeyboardHook;
-        private PauseKeybind PauseBind;
+        private KeyCombo PauseBind;
         private const string DefaultSave = "Save.json";
         private string ImportedSave = "";
         public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
@@ -18,10 +18,10 @@ namespace KeyStreamOverlay {
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
             KeyboardHook.OnError += KeyboardHook_OnError;
             PauseBind = new(Keys.Insert, true, true, true);
-            JSONLoad(SaveLocation);
+            JSONLoad();
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            JSONSave(SaveLocation);
+            JSONSave();
         }
         private void LoadTranslations() {
             LstTranslations.Items.Clear();
@@ -84,7 +84,7 @@ namespace KeyStreamOverlay {
             }
 
             LstTracked.Items.Add(TbTracked.Text);
-            JSONSave(SaveLocation);
+            JSONSave();
             TbTracked.Text = "";
         }
 
@@ -95,26 +95,25 @@ namespace KeyStreamOverlay {
             LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
         }
 
-        private void JSONSave(string FilePath) {
+        private void JSONSave() {
             if (!Directory.Exists(DefaultFolder)) {
                 Directory.CreateDirectory(DefaultFolder);
             }
-            File.WriteAllText(FilePath,
+            File.WriteAllText(SaveLocation,
             JsonConvert.SerializeObject(
-                new SaveData(FilePath, PauseBind,
+                new SaveData(SaveLocation, PauseBind,
                     GetAllowedWindows(), CBGlobal.Checked,
                     TranslationDict.Translations, BtnColorChange.BackColor)
                 , Formatting.Indented)
             );
         }
-        private void JSONLoad(string FilePath) {
-            if (!File.Exists(FilePath)) {
+        private void JSONLoad() {
+            if (!File.Exists(SaveLocation)) {
                 MessageBox.Show("File Not Found");
-                if (!File.Exists(SaveLocation))
-                    JSONSave(SaveLocation);
+                JSONSave();
             }
             try {
-                SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(FilePath));
+                SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(SaveLocation));
                 if (SaveInfo != null) {
                     LstTracked.Items.AddRange(SaveInfo.PreallowedWindows);
                     this.PauseBind = SaveInfo.PauseBind;
@@ -124,15 +123,13 @@ namespace KeyStreamOverlay {
                     BtnColorChange.BackColor = SaveInfo.GetBackColor;
                     LoadTranslations();
                 }
-                if (ImportedSave != DefaultSave)
-                    JSONLoad(ImportedSave);
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");
             }
         }
 
         private void BtnForceSave_Click(object sender, EventArgs e) {
-            JSONSave(SaveLocation);
+            JSONSave();
         }
 
         private void BtnDeleteTranslation_Click(object sender, EventArgs e) {
@@ -143,19 +140,19 @@ namespace KeyStreamOverlay {
             else
                 MessageBox.Show("Failed to remove from Dictionary");
             LstTranslations.Items.RemoveAt(LstTranslations.SelectedIndex);
-            JSONSave(SaveLocation);
+            JSONSave();
         }
 
         private void BtnEditTranslation_Click(object sender, EventArgs e) {
             //TODO: This
 
-            JSONSave(SaveLocation);
+            JSONSave();
         }
 
         private void BtnAddTranslation_Click(object sender, EventArgs e) {
             //TODO: This
 
-            JSONSave(SaveLocation);
+            JSONSave();
         }
 
         private void BtnColorChange_Click(object sender, EventArgs e) {

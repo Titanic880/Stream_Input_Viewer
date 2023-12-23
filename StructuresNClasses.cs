@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace KeyStreamOverlay {
     public class SaveData {
         public readonly string SaveLocation;
-        public readonly PauseKeybind PauseBind;
+        public readonly KeyCombo PauseBind;
         public readonly string[] PreallowedWindows;
         public readonly Dictionary<Keys, string> translations = new();
         public readonly int[] BackColor = new int[4] { 255,0,255,0 };
@@ -14,7 +14,7 @@ namespace KeyStreamOverlay {
                 Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
         }
         public readonly bool Global = false;
-        public SaveData(string SaveLocation, PauseKeybind PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -23,7 +23,7 @@ namespace KeyStreamOverlay {
             this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
         }
         [JsonConstructor]
-        public SaveData(string SaveLocation, PauseKeybind PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -42,19 +42,19 @@ namespace KeyStreamOverlay {
             this.BackColor = BackColor;
         }
     }
-    public class PauseKeybind {
+    public class KeyCombo {
         public readonly Keys key;
         public readonly bool Shift;
         public readonly bool Ctrl;
         public readonly bool Alt;
 
-        public PauseKeybind(Keys key, bool Shift, bool Ctrl, bool Alt) {
+        public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt) {
             this.key = key;
             this.Shift = Shift;
             this.Ctrl = Ctrl;
             this.Alt = Alt;
         }
-        public bool Equals(PauseKeybind other) {
+        public bool Equals(KeyCombo other) {
             return this.key == other.key
                 && this.Shift == other.Shift
                 && this.Ctrl == other.Ctrl
@@ -68,7 +68,7 @@ namespace KeyStreamOverlay {
         }
     }
 
-    public static class TranslationDict { 
+    public static class TranslationDict {
         private readonly static Dictionary<Keys, string> DefaultTranslations = new()
         {
             { Keys.D1,"1"},
@@ -102,11 +102,11 @@ namespace KeyStreamOverlay {
         /// <param name="Input"></param>
         /// <returns></returns>
         public static string GetTranslation(Keys Input) {
-            if (Translations.TryGetValue(Input, out string? Translation))
+            if (Translations.TryGetValue(Input, out string? Translation)) {
                 return Translation;
-
-            else
+            } else {
                 return Input.ToString();
+            }
         }
         public static void RestoreDefaults() {
             Translations.Clear();
@@ -119,7 +119,7 @@ namespace KeyStreamOverlay {
             }
             try {
                 Translations = importedTranslations;
-                foreach(Keys key in DefaultTranslations.Keys) {
+                foreach (Keys key in DefaultTranslations.Keys) {
                     if (!Translations.ContainsKey(key)) {
                         Translations.Add(key, DefaultTranslations[key]);
                     }
@@ -128,22 +128,25 @@ namespace KeyStreamOverlay {
             } catch { return false; }
         }
         public static bool AddTranslation(Keys Input, string Output) {
-            if (Translations.TryGetValue(Input, out _))
+            if (Translations.TryGetValue(Input, out _)) {
                 return false;
+            }
             Translations.Add(Input, Output);
             return true;
         }
         public static bool ReplaceTranslation(Keys OldKey, string NewValue) {
-            if (Translations.TryGetValue(OldKey, out _))
+            if (Translations.TryGetValue(OldKey, out _)) {
                 return false;
+            }
             Translations[OldKey] = NewValue;
             return true;
         }
         public static bool RemoveTranslation(Keys Input) {
-            if (Translations.Remove(Input))
+            if (Translations.Remove(Input)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
     }
 }
