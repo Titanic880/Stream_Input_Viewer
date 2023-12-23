@@ -112,7 +112,7 @@ namespace KeyStreamOverlay {
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
                     GetAllowedWindows(), CBGlobal.Checked,
-                    TranslationDict.Translations, BtnColorChange.BackColor)
+                    TranslationDict.Translations, BtnColorChange.BackColor,LoggingHook.HookActive)
                 , Formatting.Indented)
             );
         }
@@ -131,6 +131,7 @@ namespace KeyStreamOverlay {
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnColorChange.BackColor = SaveInfo.GetBackColor;
                     LoadTranslations();
+                    LoggingHook.Hookinit(SaveInfo.LoggingHookEnabled);
                 }
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");

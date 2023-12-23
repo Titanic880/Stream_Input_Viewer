@@ -8,27 +8,33 @@ namespace KeyStreamOverlay {
         public readonly string[] PreallowedWindows;
         public readonly Dictionary<Keys, string> translations = new();
         public readonly int[] BackColor = new int[4] { 255,0,255,0 };
+        public readonly bool LoggingHookEnabled = false;
         [IgnoreDataMember]
         public Color GetBackColor {
             get =>
                 Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
         }
         public readonly bool Global = false;
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor) {
+
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor,bool loggingHookEnabled) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
             this.Global = Global;
             this.translations = translations;
             this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
+            this.LoggingHookEnabled = loggingHookEnabled;
         }
         [JsonConstructor]
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, 
+                        string[] PreallowedWindows, bool Global,
+                        Dictionary<Keys, string> translations, int[] BackColor, bool loggingHookEnabled) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
             this.Global = Global;
             this.translations = translations;
+            this.LoggingHookEnabled = loggingHookEnabled;
 
             if (BackColor.Length > 4)
                 BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
@@ -40,6 +46,7 @@ namespace KeyStreamOverlay {
                 }
             }
             this.BackColor = BackColor;
+            LoggingHookEnabled = loggingHookEnabled;
         }
     }
 
