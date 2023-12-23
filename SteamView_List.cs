@@ -48,9 +48,11 @@
             if (BtnPause.Text == "Pause") {
                 BtnPause.Text = "Resume";
                 Paused = true;
+                LoggingHook.DisableHook();
             } else if (BtnPause.Text == "Resume") {
                 BtnPause.Text = "Pause";
                 Paused = false;
+                LoggingHook.Hookinit();
             } else
                 MessageBox.Show("Error: Pause Button");
         }

@@ -7,7 +7,7 @@ namespace KeyStreamOverlay {
         private const string DefaultSave = "Save.json";
         private string ImportedSave = "";
         public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
-        private string SaveLocation { get => DefaultFolder + ImportedSave == "" ? DefaultSave : ImportedSave; }
+        private string SaveLocation { get => DefaultFolder + (ImportedSave == "" ? DefaultSave : ImportedSave); }
         public MainCustomize() {
             InitializeComponent();
 
@@ -79,33 +79,33 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnAddProgram_Click(object sender, EventArgs e) {
+            if(TbTracked.Text == "Enter Program Name Here") {
+                return;
+            }
+
             LstTracked.Items.Add(TbTracked.Text);
-            //CurrentSave.AddWindow(TbTracked.Text);
             JSONSave(SaveLocation);
             TbTracked.Text = "";
         }
 
         private void BtnRemove_Click(object sender, EventArgs e) {
-            if (LstTracked.SelectedIndex == -1)
+            if (LstTracked.SelectedIndex == -1) {
                 return;
+            }
             LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
         }
 
         private void JSONSave(string FilePath) {
-            if (File.Exists(FilePath)) {
-                File.Delete(FilePath);
-                File.Create(FilePath).Close();
-
-                File.WriteAllText(FilePath,
-                JsonConvert.SerializeObject(
-                    new SaveData(FilePath, PauseBind,
-                        GetAllowedWindows(), CBGlobal.Checked,
-                        TranslationDict.Translations, BtnColorChange.BackColor)
-                    , Formatting.Indented)
-                );
-            } else {
-                MessageBox.Show("File Created");
+            if (!Directory.Exists(DefaultFolder)) {
+                Directory.CreateDirectory(DefaultFolder);
             }
+            File.WriteAllText(FilePath,
+            JsonConvert.SerializeObject(
+                new SaveData(FilePath, PauseBind,
+                    GetAllowedWindows(), CBGlobal.Checked,
+                    TranslationDict.Translations, BtnColorChange.BackColor)
+                , Formatting.Indented)
+            );
         }
         private void JSONLoad(string FilePath) {
             if (!File.Exists(FilePath)) {
