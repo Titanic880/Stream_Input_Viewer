@@ -8,27 +8,31 @@ namespace KeyStreamOverlay {
         public readonly string[] PreallowedWindows;
         public readonly Dictionary<Keys, string> translations = new();
         public readonly int[] BackColor = new int[4] { 255,0,255,0 };
+        public readonly int[] TextColor = new int[4] { 255,0,0,0 };
         public readonly bool LoggingHookEnabled = false;
         [IgnoreDataMember]
         public Color GetBackColor {
             get =>
                 Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
         }
+        public Color GetTextColor {
+            get =>
+                Color.FromArgb(TextColor[0], TextColor[1], TextColor[2], TextColor[3]);
+        }
         public readonly bool Global = false;
 
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor,bool loggingHookEnabled) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,bool loggingHookEnabled) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
             this.Global = Global;
             this.translations = translations;
             this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
+            this.TextColor = new int[] {StreamViewTextColor.A, StreamViewTextColor.R,StreamViewTextColor.G, StreamViewTextColor.B };
             this.LoggingHookEnabled = loggingHookEnabled;
         }
         [JsonConstructor]
-        public SaveData(string SaveLocation, KeyCombo PauseBind, 
-                        string[] PreallowedWindows, bool Global,
-                        Dictionary<Keys, string> translations, int[] BackColor, bool loggingHookEnabled) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, bool loggingHookEnabled) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -36,6 +40,15 @@ namespace KeyStreamOverlay {
             this.translations = translations;
             this.LoggingHookEnabled = loggingHookEnabled;
 
+            if (TextColor.Length > 4)
+                TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };
+            for (int i = 0; i < 4; i++) {
+                if (TextColor[i] > 255) {
+                    TextColor[i] = 255;
+                } else if (TextColor[i] < 0) {
+                    TextColor[i] = 0;
+                }
+            }
             if (BackColor.Length > 4)
                 BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
             for (int i = 0; i < 4; i++) {
@@ -45,6 +58,7 @@ namespace KeyStreamOverlay {
                     BackColor[i] = 0;
                 }
             }
+            this.TextColor = TextColor;
             this.BackColor = BackColor;
             LoggingHookEnabled = loggingHookEnabled;
         }

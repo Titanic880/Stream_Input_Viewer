@@ -113,7 +113,8 @@ namespace KeyStreamOverlay {
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
                     GetAllowedWindows(), CBGlobal.Checked,
-                    TranslationDict.Translations, BtnBackColorPicker.BackColor, LoggingHook.HookActive)
+                    TranslationDict.Translations, BtnBackColorPicker.BackColor,
+                    BtnTextColorPicker.ForeColor, LoggingHook.HookActive)
                 , Formatting.Indented)
             );
         }
