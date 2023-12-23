@@ -81,7 +81,7 @@ namespace KeyStreamOverlay {
         private void BtnAddProgram_Click(object sender, EventArgs e) {
             LstTracked.Items.Add(TbTracked.Text);
             //CurrentSave.AddWindow(TbTracked.Text);
-            JSONSave(this.ImportedSave is "" ? DefaultSave : ImportedSave);
+            JSONSave(SaveLocation);
             TbTracked.Text = "";
         }
 
@@ -132,7 +132,7 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnForceSave_Click(object sender, EventArgs e) {
-            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+            JSONSave(SaveLocation);
         }
 
         private void BtnDeleteTranslation_Click(object sender, EventArgs e) {
@@ -143,19 +143,19 @@ namespace KeyStreamOverlay {
             else
                 MessageBox.Show("Failed to remove from Dictionary");
             LstTranslations.Items.RemoveAt(LstTranslations.SelectedIndex);
-            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+            JSONSave(SaveLocation);
         }
 
         private void BtnEditTranslation_Click(object sender, EventArgs e) {
             //TODO: This
 
-            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+            JSONSave(SaveLocation);
         }
 
         private void BtnAddTranslation_Click(object sender, EventArgs e) {
             //TODO: This
 
-            JSONSave(ImportedSave is "" ? DefaultSave : ImportedSave);
+            JSONSave(SaveLocation);
         }
 
         private void BtnColorChange_Click(object sender, EventArgs e) {
