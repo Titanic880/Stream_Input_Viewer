@@ -5,9 +5,18 @@ namespace KeyStreamOverlay {
         private UI_Mimic.UIReader? KeyboardHook;
         private KeyCombo PauseBind;
         private const string DefaultSave = "Save.json";
-        private string ImportedSave = "";
+        private string ImportedSave { get; set; } = "";
         public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
-        private string SaveLocation { get => DefaultFolder + (ImportedSave == "" ? DefaultSave : ImportedSave); }
+        private string SaveLocation { get {
+                string ret = DefaultFolder;
+                if (ImportedSave.Contains('\\')) {
+                    ret = ImportedSave;
+                } else {
+                    ret += (ImportedSave == "" ? DefaultSave : ImportedSave);
+                }
+                return ret;
+            }
+        }
         public MainCustomize() {
             InitializeComponent();
 

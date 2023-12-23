@@ -36,6 +36,6 @@ BackEnd:
 	Quick Launch (Skips showing Main Setup form and instantly loads user settings and opens StreamView)
 
 	LoggingHook:
-		Implement TOFILE System
-		Toggle for TOFILE
-		Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
+		DONE - Implement TOFILE System
+		ONGOING - Toggle for TOFILE
+		NOT STARTED - Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
