@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.ComponentModel.Design;
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
@@ -52,14 +53,33 @@ namespace KeyStreamOverlay {
             InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
         }
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
-            if (PauseBind != null)
-                if (PauseBind.Equals(key, Shift, Ctrl, Alt))
+            if (PauseBind != null) {
+                if (PauseBind.Equals(key, Shift, Ctrl, Alt)) {
                     MessageBox.Show("Pause Bind Pressed!");
-
-            string sft = Shift ? "Shift+" : "";
+                }
+            }
+            string sft =  Shift ? "Shift+" : "";
             string ctrl = Ctrl ? "Ctrl+" : "";
             string alt = Alt ? "Alt+" : "";
-            TbOutput.Text = sft + ctrl + alt + key;
+            string strkey;
+
+            if (CBShiftToggle.Checked) {
+                if (Shift && CBTranslationToggle.Checked) {
+                    strkey = TranslationDict.GetShiftTranslation(key);
+                } else if (CBTranslationToggle.Checked) {
+                    strkey = TranslationDict.GetTranslation(key).ToLower();
+                } else { 
+                    strkey = key.ToString().ToLower();
+                }
+                TbOutput.Text = ctrl + alt + strkey;
+            } else {
+                if (Shift && CBTranslationToggle.Checked) {
+                    strkey = TranslationDict.GetTranslation(key);
+                } else {
+                    strkey = key.ToString().ToLower();
+                }
+                TbOutput.Text = sft + ctrl + alt + strkey;
+            }
         }
         #endregion FormControl
         #region Functions
@@ -78,7 +98,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook!.Dispose();
             this.Hide();
-            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), CBTranslationToggle.Checked,CBShiftToggle.Checked, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -189,7 +209,7 @@ namespace KeyStreamOverlay {
                 BtnEditTranslation.Text = "Finish Editing";
                 BtnAddTranslation.Enabled = false;
                 BtnDeleteTranslation.Enabled = false;
-                _ = Enum.TryParse(LstTranslations.SelectedItem!.ToString()!.Split("=>")[0], out Keys resultkey);
+                _ = Enum.TryParse(LstTranslations.SelectedItem!.ToString()!.Split("=>")[0].Trim(), out Keys resultkey);
                 CBKeys.SelectedIndex = CBKeys.Items.IndexOf(resultkey);
                 TbTranslation.Text = LstTranslations.SelectedItem!.ToString()!.Split("=>")[1].Trim();
             } else {
@@ -250,13 +270,5 @@ namespace KeyStreamOverlay {
             dialog.Dispose();
         }
         #endregion GeneralSettings Events
-
-
-
-
-
-
-
-
     }
 }

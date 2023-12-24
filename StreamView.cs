@@ -1,8 +1,11 @@
-﻿namespace KeyStreamOverlay {
+﻿using System.Globalization;
+
+namespace KeyStreamOverlay {
     public partial class StreamView : Form {
 
         private bool Paused = false;
         private readonly bool UseTranslations = false;
+        private readonly bool ShiftToggle = false;
         private readonly UI_Mimic.UIReader? KeyboardHook;
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
@@ -12,7 +15,7 @@
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
 
-        public StreamView(StreamOutputType OutputType, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
+        public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
             this.TopMost = true;
@@ -23,6 +26,7 @@
             AllowedPrograms = AllowedWindows;
             PauseButtons = PauseBind;
             this.UseTranslations = UseInputTranslations;
+            this.ShiftToggle = ShiftToggle;
             DisplayBackColor = BackColor;
             this.TextColor = TextColor;
 
@@ -116,13 +120,36 @@
             string sft = Shift ? "Shift+" : "";
             string ctrl = Ctrl ? "Ctrl+" : "";
             string alt = Alt ? "Alt+" : "";
+            string strkey;
             //Handles holding a key down/spamming it
             if (Previous_Key.Equals(key, Shift, Ctrl, Alt)) {
-                AddToUI_Duplicate(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
+                ShiftTranslationLogic(AddToUI_Duplicate);
                 return;
             }
             Previous_Key = new(key, Shift, Ctrl, Alt);
-            AddToUI(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
+
+            ShiftTranslationLogic(AddToUI);
+            //AddToUI(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
+            
+            void ShiftTranslationLogic(Action<string> FuncCall) {
+                if (ShiftToggle) {
+                    if (Shift && UseTranslations) {
+                        strkey = TranslationDict.GetShiftTranslation(key);
+                    } else if (UseTranslations) {
+                        strkey = TranslationDict.GetTranslation(key).ToLower();
+                    } else {
+                        strkey = key.ToString().ToLower();
+                    }
+                    FuncCall(ctrl + alt + strkey);
+                } else {
+                    if (Shift && UseTranslations) {
+                        strkey = TranslationDict.GetTranslation(key);
+                    } else {
+                        strkey = key.ToString().ToLower();
+                    }
+                    FuncCall(sft + ctrl + alt + strkey);
+                }
+            }
         }
 
         private void KeyboardHook_OnError(Exception e) {
@@ -149,7 +176,6 @@
                 }
             }
         }
-
         private void AddToUI_Duplicate(string input) {
             if (input == "")
                 return;

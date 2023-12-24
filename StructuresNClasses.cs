@@ -115,6 +115,7 @@ namespace KeyStreamOverlay {
     public static class TranslationDict {
         private readonly static Dictionary<Keys, string> DefaultTranslations = new()
         {
+            { Keys.Oemtilde, "`" },
             { Keys.D1,"1"},
             { Keys.D2,"2" },
             { Keys.D3,"3" },
@@ -125,22 +126,26 @@ namespace KeyStreamOverlay {
             { Keys.D8,"8" },
             { Keys.D9,"9" },
             { Keys.D0,"0" },
-
-            { Keys.Oem5, "\\" },
             { Keys.OemMinus, "-" },
             { Keys.Oemplus, "=" },
-            { Keys.LMenu, "LAlt" },
-            { Keys.Oemtilde, "tilde" },
+
+            { Keys.Menu, "LAlt" },
+            { Keys.LWin, "Win" },
+
             { Keys.OemOpenBrackets, "[" },
-            { Keys.Oem6, "}" },
-            { Keys.Oem7, "'" },
+            { Keys.Oem6, "]" },
+            { Keys.Oem5, "\\" },
+            
             { Keys.Oem1, ";"},
+            { Keys.Oem7, "'" },
+
+            { Keys.Oemcomma, "," },
             { Keys.OemPeriod, "." },
-            { Keys.OemQuestion , "?"},
-            { Keys.Oemcomma, "," }
+            { Keys.OemQuestion , "/"}
         };
         public static readonly Dictionary<Keys,string> ShiftTranslation = new()
         {
+            { Keys.Oemtilde, "~" },
             { Keys.D1, "!" },
             { Keys.D2, "@" },
             { Keys.D3, "#" },
@@ -151,9 +156,19 @@ namespace KeyStreamOverlay {
             { Keys.D8, "*" },
             { Keys.D9, "(" },
             { Keys.D0, ")" },
-            { Keys.Subtract, "_"},
-            { Keys.Oemplus, "+" }
+            { Keys.OemMinus, "_" },
+            { Keys.Oemplus, "+" },
 
+            { Keys.OemOpenBrackets, "{" },
+            { Keys.Oem6, "}" },
+            { Keys.Oem5, "|" },
+
+            { Keys.Oem1, ":"},
+            { Keys.Oem7, '"'.ToString() },
+
+            { Keys.Oemcomma, "<" },
+            { Keys.OemPeriod, ">" },
+            { Keys.OemQuestion , "?" }
         };
         public static Dictionary<Keys, string> Translations { get; private set; } = new();
         /// <summary>
@@ -163,6 +178,13 @@ namespace KeyStreamOverlay {
         /// <returns></returns>
         public static string GetTranslation(Keys Input) {
             if (Translations.TryGetValue(Input, out string? Translation)) {
+                return Translation;
+            } else {
+                return Input.ToString();
+            }
+        }
+        public static string GetShiftTranslation(Keys Input) {
+            if(ShiftTranslation.TryGetValue(Input, out string? Translation)) {
                 return Translation;
             } else {
                 return Input.ToString();

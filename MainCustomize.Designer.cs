@@ -77,9 +77,9 @@
             // 
             // BtnPauseKeybind
             // 
-            BtnPauseKeybind.Location = new Point(172, 176);
+            BtnPauseKeybind.Location = new Point(172, 186);
             BtnPauseKeybind.Name = "BtnPauseKeybind";
-            BtnPauseKeybind.Size = new Size(151, 23);
+            BtnPauseKeybind.Size = new Size(151, 29);
             BtnPauseKeybind.TabIndex = 3;
             BtnPauseKeybind.Text = "Set Pause Keybind";
             BtnPauseKeybind.UseVisualStyleBackColor = true;
@@ -98,7 +98,7 @@
             // TbOutput
             // 
             TbOutput.Enabled = false;
-            TbOutput.Location = new Point(172, 147);
+            TbOutput.Location = new Point(172, 159);
             TbOutput.Name = "TbOutput";
             TbOutput.Size = new Size(151, 23);
             TbOutput.TabIndex = 7;
@@ -106,7 +106,7 @@
             // LblOut
             // 
             LblOut.AutoSize = true;
-            LblOut.Location = new Point(168, 129);
+            LblOut.Location = new Point(168, 139);
             LblOut.Name = "LblOut";
             LblOut.Size = new Size(160, 15);
             LblOut.TabIndex = 8;
@@ -281,7 +281,7 @@
             // CBSkipSetupView
             // 
             CBSkipSetupView.AutoSize = true;
-            CBSkipSetupView.Location = new Point(150, 18);
+            CBSkipSetupView.Location = new Point(150, 24);
             CBSkipSetupView.Name = "CBSkipSetupView";
             CBSkipSetupView.Size = new Size(168, 19);
             CBSkipSetupView.TabIndex = 29;
@@ -291,7 +291,7 @@
             // CBShiftToggle
             // 
             CBShiftToggle.AutoSize = true;
-            CBShiftToggle.Location = new Point(150, 36);
+            CBShiftToggle.Location = new Point(150, 42);
             CBShiftToggle.Name = "CBShiftToggle";
             CBShiftToggle.Size = new Size(88, 19);
             CBShiftToggle.TabIndex = 28;
@@ -311,7 +311,7 @@
             // CBDeleteLogLaunch
             // 
             CBDeleteLogLaunch.AutoSize = true;
-            CBDeleteLogLaunch.Location = new Point(150, 80);
+            CBDeleteLogLaunch.Location = new Point(150, 78);
             CBDeleteLogLaunch.Name = "CBDeleteLogLaunch";
             CBDeleteLogLaunch.Size = new Size(154, 19);
             CBDeleteLogLaunch.TabIndex = 26;
@@ -321,7 +321,7 @@
             // CBLogToggle
             // 
             CBLogToggle.AutoSize = true;
-            CBLogToggle.Location = new Point(150, 65);
+            CBLogToggle.Location = new Point(150, 60);
             CBLogToggle.Name = "CBLogToggle";
             CBLogToggle.Size = new Size(165, 19);
             CBLogToggle.TabIndex = 25;
