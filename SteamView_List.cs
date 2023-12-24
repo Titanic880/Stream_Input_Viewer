@@ -7,7 +7,7 @@
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
         private const int ListMax = 13;
-        private const int TextboxMaxChar = 20;
+        private const int TextboxMaxChar = 19;
         private readonly KeyCombo PauseButtons;
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
@@ -111,19 +111,17 @@
                 AddToUI(Paused ? "Output Paused" : "Output Un-Paused");
                 return;
             }
-            //Handles holding a key down/spamming it
-            if (Previous_Key.Equals(key, Shift, Ctrl, Alt)) {
-                return;
-            }
-            Previous_Key = new(key, Shift, Ctrl, Alt);
 
             string sft = Shift ? "Shift+" : "";
             string ctrl = Ctrl ? "Ctrl+" : "";
             string alt = Alt ? "Alt+" : "";
-            if (UseTranslations)
-                AddToUI(sft + ctrl + alt + TranslationDict.GetTranslation(key));
-            else
-                AddToUI(sft + ctrl + alt + key);
+            //Handles holding a key down/spamming it
+            if (Previous_Key.Equals(key, Shift, Ctrl, Alt)) {
+                AddToUI_Duplicate(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
+                return;
+            }
+            Previous_Key = new(key, Shift, Ctrl, Alt);
+            AddToUI(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
         }
 
         private void KeyboardHook_OnError(Exception e) {
@@ -136,9 +134,27 @@
             foreach (Control a in Controls) {
                 if (a is ListBox listBox1) {
                     listBox1.SuspendLayout();
-                    for (int i = ListMax - 1; i > 0; i--)
+                    for (int i = ListMax - 1; i > 0; i--) {
                         listBox1.Items[i] = listBox1.Items[i - 1];
+                    }
                     listBox1.Items[0] = input;
+                    listBox1.ResumeLayout();
+                } else if (a is TextBox TbUI) {
+                    TbUI.Text += input;
+                    if (TbUI.Text.Length > TextboxMaxChar) {
+                        TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
+                    }
+                }
+            }
+        }
+
+        private void AddToUI_Duplicate(string input) {
+            if (input == "")
+                return;
+            foreach (Control a in Controls) {
+                if (a is ListBox listBox1) {
+                    listBox1.SuspendLayout();
+                    listBox1.Items[0] += input;
                     listBox1.ResumeLayout();
                 } else if (a is TextBox TbUI) {
                     TbUI.Text += input;

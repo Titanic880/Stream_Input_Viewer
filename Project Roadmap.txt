@@ -6,8 +6,8 @@ Features:
 	Ability to select type of user output (Currently Textbox/Listbox)
 	Implement Translation modifications as end user
 	StreamView Window:
-		TextBox User output
-		Add ability to change text color.
+		ONGOING - TextBox User output
+		DONE - Add ability to change text color.
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App...
 
@@ -37,5 +37,5 @@ BackEnd:
 
 	LoggingHook:
 		DONE - Implement TOFILE System
-		ONGOING - Toggle for TOFILE
+		AWAITING GUI implementation - Toggle for TOFILE
 		NOT STARTED - Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
