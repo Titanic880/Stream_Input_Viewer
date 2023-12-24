@@ -39,17 +39,18 @@
             TbTranslation = new TextBox();
             CBKeys = new ComboBox();
             groupBox1 = new GroupBox();
+            CBTranslationToggle = new CheckBox();
             BtnBackColorPicker = new Button();
             BtnTextColorPicker = new Button();
             CBOutputTypes = new ComboBox();
             LblUserOutput = new Label();
             groupBox2 = new GroupBox();
-            groupBox3 = new GroupBox();
-            CBLogToggle = new CheckBox();
-            CBDeleteLogLaunch = new CheckBox();
-            CBDeleteLogClose = new CheckBox();
-            CBShiftToggle = new CheckBox();
             CBSkipSetupView = new CheckBox();
+            CBShiftToggle = new CheckBox();
+            CBDeleteLogClose = new CheckBox();
+            CBDeleteLogLaunch = new CheckBox();
+            CBLogToggle = new CheckBox();
+            groupBox3 = new GroupBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -86,9 +87,9 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(168, 162);
+            BtnStart.Location = new Point(168, 186);
             BtnStart.Name = "BtnStart";
-            BtnStart.Size = new Size(151, 53);
+            BtnStart.Size = new Size(151, 29);
             BtnStart.TabIndex = 5;
             BtnStart.Text = "Start StreamView";
             BtnStart.UseVisualStyleBackColor = true;
@@ -195,9 +196,10 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(CBTranslationToggle);
             groupBox1.Controls.Add(LstTranslations);
-            groupBox1.Controls.Add(CBKeys);
             groupBox1.Controls.Add(BtnStart);
+            groupBox1.Controls.Add(CBKeys);
             groupBox1.Controls.Add(TbTranslation);
             groupBox1.Controls.Add(BtnAddTranslation);
             groupBox1.Controls.Add(BtnEditTranslation);
@@ -208,6 +210,18 @@
             groupBox1.TabIndex = 22;
             groupBox1.TabStop = false;
             groupBox1.Text = "Translation Options";
+            // 
+            // CBTranslationToggle
+            // 
+            CBTranslationToggle.AutoSize = true;
+            CBTranslationToggle.Checked = true;
+            CBTranslationToggle.CheckState = CheckState.Checked;
+            CBTranslationToggle.Location = new Point(168, 161);
+            CBTranslationToggle.Name = "CBTranslationToggle";
+            CBTranslationToggle.Size = new Size(151, 19);
+            CBTranslationToggle.TabIndex = 30;
+            CBTranslationToggle.Text = "Use System Translations";
+            CBTranslationToggle.UseVisualStyleBackColor = true;
             // 
             // BtnBackColorPicker
             // 
@@ -264,6 +278,56 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "General Settings";
             // 
+            // CBSkipSetupView
+            // 
+            CBSkipSetupView.AutoSize = true;
+            CBSkipSetupView.Location = new Point(150, 18);
+            CBSkipSetupView.Name = "CBSkipSetupView";
+            CBSkipSetupView.Size = new Size(168, 19);
+            CBSkipSetupView.TabIndex = 29;
+            CBSkipSetupView.Text = "Skip Setup View on Launch";
+            CBSkipSetupView.UseVisualStyleBackColor = true;
+            // 
+            // CBShiftToggle
+            // 
+            CBShiftToggle.AutoSize = true;
+            CBShiftToggle.Location = new Point(150, 36);
+            CBShiftToggle.Name = "CBShiftToggle";
+            CBShiftToggle.Size = new Size(88, 19);
+            CBShiftToggle.TabIndex = 28;
+            CBShiftToggle.Text = "Shift Toggle";
+            CBShiftToggle.UseVisualStyleBackColor = true;
+            // 
+            // CBDeleteLogClose
+            // 
+            CBDeleteLogClose.AutoSize = true;
+            CBDeleteLogClose.Location = new Point(150, 96);
+            CBDeleteLogClose.Name = "CBDeleteLogClose";
+            CBDeleteLogClose.Size = new Size(147, 19);
+            CBDeleteLogClose.TabIndex = 27;
+            CBDeleteLogClose.Text = "Delete log File on close";
+            CBDeleteLogClose.UseVisualStyleBackColor = true;
+            // 
+            // CBDeleteLogLaunch
+            // 
+            CBDeleteLogLaunch.AutoSize = true;
+            CBDeleteLogLaunch.Location = new Point(150, 80);
+            CBDeleteLogLaunch.Name = "CBDeleteLogLaunch";
+            CBDeleteLogLaunch.Size = new Size(154, 19);
+            CBDeleteLogLaunch.TabIndex = 26;
+            CBDeleteLogLaunch.Text = "Delete log file on launch";
+            CBDeleteLogLaunch.UseVisualStyleBackColor = true;
+            // 
+            // CBLogToggle
+            // 
+            CBLogToggle.AutoSize = true;
+            CBLogToggle.Location = new Point(150, 65);
+            CBLogToggle.Name = "CBLogToggle";
+            CBLogToggle.Size = new Size(165, 19);
+            CBLogToggle.TabIndex = 25;
+            CBLogToggle.Text = "Log unpaused input to file";
+            CBLogToggle.UseVisualStyleBackColor = true;
+            // 
             // groupBox3
             // 
             groupBox3.Controls.Add(LstTracked);
@@ -280,56 +344,6 @@
             groupBox3.TabIndex = 26;
             groupBox3.TabStop = false;
             groupBox3.Text = "Programs to Allow input tracking";
-            // 
-            // CBLogToggle
-            // 
-            CBLogToggle.AutoSize = true;
-            CBLogToggle.Location = new Point(150, 65);
-            CBLogToggle.Name = "CBLogToggle";
-            CBLogToggle.Size = new Size(165, 19);
-            CBLogToggle.TabIndex = 25;
-            CBLogToggle.Text = "Log unpaused input to file";
-            CBLogToggle.UseVisualStyleBackColor = true;
-            // 
-            // CBDeleteLogLaunch
-            // 
-            CBDeleteLogLaunch.AutoSize = true;
-            CBDeleteLogLaunch.Location = new Point(150, 80);
-            CBDeleteLogLaunch.Name = "CBDeleteLogLaunch";
-            CBDeleteLogLaunch.Size = new Size(154, 19);
-            CBDeleteLogLaunch.TabIndex = 26;
-            CBDeleteLogLaunch.Text = "Delete log file on launch";
-            CBDeleteLogLaunch.UseVisualStyleBackColor = true;
-            // 
-            // CBDeleteLogClose
-            // 
-            CBDeleteLogClose.AutoSize = true;
-            CBDeleteLogClose.Location = new Point(150, 96);
-            CBDeleteLogClose.Name = "CBDeleteLogClose";
-            CBDeleteLogClose.Size = new Size(147, 19);
-            CBDeleteLogClose.TabIndex = 27;
-            CBDeleteLogClose.Text = "Delete log File on close";
-            CBDeleteLogClose.UseVisualStyleBackColor = true;
-            // 
-            // CBShiftToggle
-            // 
-            CBShiftToggle.AutoSize = true;
-            CBShiftToggle.Location = new Point(150, 36);
-            CBShiftToggle.Name = "CBShiftToggle";
-            CBShiftToggle.Size = new Size(88, 19);
-            CBShiftToggle.TabIndex = 28;
-            CBShiftToggle.Text = "Shift Toggle";
-            CBShiftToggle.UseVisualStyleBackColor = true;
-            // 
-            // CBSkipSetupView
-            // 
-            CBSkipSetupView.AutoSize = true;
-            CBSkipSetupView.Location = new Point(150, 18);
-            CBSkipSetupView.Name = "CBSkipSetupView";
-            CBSkipSetupView.Size = new Size(168, 19);
-            CBSkipSetupView.TabIndex = 29;
-            CBSkipSetupView.Text = "Skip Setup View on Launch";
-            CBSkipSetupView.UseVisualStyleBackColor = true;
             // 
             // MainCustomize
             // 
@@ -380,5 +394,6 @@
         private CheckBox CBLogToggle;
         private CheckBox CBShiftToggle;
         private CheckBox CBSkipSetupView;
+        private CheckBox CBTranslationToggle;
     }
 }

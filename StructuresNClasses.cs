@@ -24,9 +24,10 @@ namespace KeyStreamOverlay {
         public readonly bool LoggingHookEnabled = false;
         public readonly bool DeleteLogFileOnLaunch = false;
         public readonly bool DeleteLogFileOnClose = false;
+        public readonly bool UseTranslations = true;
 
         public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows,  Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled, bool DeleteLogFileLaunch, bool DeleteLogFileClose) {
+            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled, bool DeleteLogFileLaunch, bool DeleteLogFileClose,bool UseTranslations) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -40,10 +41,11 @@ namespace KeyStreamOverlay {
             this.LoggingHookEnabled = loggingHookEnabled;
             this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
             this.DeleteLogFileOnClose = DeleteLogFileClose;
+            this.UseTranslations = UseTranslations;
         }
         [JsonConstructor]
         public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, 
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileLaunch, bool DeleteLogFileClose) {
+            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileLaunch, bool DeleteLogFileClose,bool UseTranslations) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -54,6 +56,7 @@ namespace KeyStreamOverlay {
             this.LoggingHookEnabled = loggingHookEnabled;
             this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
             this.DeleteLogFileOnClose = DeleteLogFileClose;
+            this.UseTranslations = UseTranslations;
 
             if (TextColor.Length > 4)
                 TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };
@@ -136,6 +139,22 @@ namespace KeyStreamOverlay {
             { Keys.OemQuestion , "?"},
             { Keys.Oemcomma, "," }
         };
+        public static readonly Dictionary<Keys,string> ShiftTranslation = new()
+        {
+            { Keys.D1, "!" },
+            { Keys.D2, "@" },
+            { Keys.D3, "#" },
+            { Keys.D4, "$" },
+            { Keys.D5, "%" },
+            { Keys.D6, "^" },
+            { Keys.D7, "&" },
+            { Keys.D8, "*" },
+            { Keys.D9, "(" },
+            { Keys.D0, ")" },
+            { Keys.Subtract, "_"},
+            { Keys.Oemplus, "+" }
+
+        };
         public static Dictionary<Keys, string> Translations { get; private set; } = new();
         /// <summary>
         /// returns Translation, if not found returns input
@@ -166,7 +185,9 @@ namespace KeyStreamOverlay {
                     }
                 }
                 return true;
-            } catch { return false; }
+            } catch { 
+                return false; 
+            }
         }
         public static bool AddTranslation(Keys Input, string Output) {
             if (Translations.TryGetValue(Input, out _)) {

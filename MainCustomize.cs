@@ -1,6 +1,4 @@
 using Newtonsoft.Json;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
@@ -24,7 +22,6 @@ namespace KeyStreamOverlay {
             InitializeComponent();
 
             this.MaximizeBox = false;
-            LoadTranslations();
 
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
@@ -33,11 +30,19 @@ namespace KeyStreamOverlay {
             CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
             CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
+            LoadTranslations();
+
+            if (CBDeleteLogLaunch.Checked) {
+                File.WriteAllText(InfoLogging.LogToLocation, "");
+            }
+            if (CBSkipSetupView.Checked) {
+                LaunchStreamView();
+            }
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             JSONSave();
             if (CBDeleteLogClose.Checked) {
-                File.WriteAllText(SaveLocation,"");
+                File.WriteAllText(InfoLogging.LogToLocation, "");
             }
         }
         private void LoadTranslations() {
@@ -50,11 +55,14 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnStart_Click(object sender, EventArgs e) {
+            LaunchStreamView();
+        }
+        private void LaunchStreamView() {
             if (LstTracked.Items.Count == 0 || PauseBind == null) {
                 MessageBox.Show("List is empty or a pause bind has not been set...");
                 return;
             }
-            KeyboardHook = null;
+            KeyboardHook!.Dispose();
             this.Hide();
             StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
@@ -113,7 +121,6 @@ namespace KeyStreamOverlay {
             }
             LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
         }
-
         private void JSONSave() {
             if (!Directory.Exists(DefaultFolder)) {
                 Directory.CreateDirectory(DefaultFolder);
@@ -121,11 +128,11 @@ namespace KeyStreamOverlay {
             File.WriteAllText(SaveLocation,
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
-                    GetAllowedWindows(), TranslationDict.Translations, 
+                    GetAllowedWindows(), TranslationDict.Translations,
                     BtnBackColorPicker.BackColor,
                     BtnTextColorPicker.ForeColor,
-                    CBSkipSetupView.Checked,CBShiftToggle.Checked,
-                    InfoLogging.LoggingToFile, CBDeleteLogLaunch.Checked, CBDeleteLogClose.Checked)
+                    CBSkipSetupView.Checked, CBShiftToggle.Checked,
+                    InfoLogging.LoggingToFile, CBDeleteLogLaunch.Checked, CBDeleteLogClose.Checked, CBTranslationToggle.Checked)
                 , Formatting.Indented)
             );
         }
@@ -145,17 +152,14 @@ namespace KeyStreamOverlay {
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
-                    LoadTranslations();
                     CBSkipSetupView.Checked = SaveInfo.QuickLaunch;
                     CBShiftToggle.Checked = SaveInfo.ShiftToggle;
                     InfoLogging.LoggingInit(SaveInfo.LoggingHookEnabled);
                     CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
                     CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
-
-                    if (CBDeleteLogLaunch.Checked) {
-                        File.WriteAllText(SaveLocation,"");
-                    }
+                    CBTranslationToggle.Checked = SaveInfo.UseTranslations;
                 }
+                LoadTranslations();
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");
             }

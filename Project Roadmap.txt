@@ -3,29 +3,19 @@
 
 
 Things to Complete Prior to 1.0 Release Build:
-	Quick Launch,				 - Needs back end implementation
+	Quick Launch,				 - Needs Testing.
 	Shift Override,				 - Needs back end implementation
-	Toggle for TOFILE,			 - Needs back end implementation
-	Toggle to Purge TOFILE file, - Needs back end imlpementation
+	Toggle for TOFILE,			 - Needs Testing.
+	Toggle to Purge TOFILE file, - Needs Testing.
 	Update Forms to not look like a generic winform app.
 
 
 Features:
-	Ability to select type of user output (Currently Textbox/Listbox)
-	Implement Translation modifications as end user
-	StreamView Window:
-		DONE (Feels Sluggish) - TextBox User output
-		DONE - Add ability to change text color.
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App...
-
 	Ghost mode version of the project? (only outputs to file unless pause bind is pressed) (VERY LIKELY NOT DUE TO BEING A FULL ON KEYLOGGER)
 	
 BackEnd:
-	Done - Add Translation button Logic
-	Done - Edit Translation button Logic
-	Done - Remove Translation button Logic
-
 	Override outputting "Shift" with outputting the upper case version of what is clicked (might require a dict/list of shared keys ex: 1 => !)
 
 	User warning about the Nature of the program? (pop up when program is started with a "never show again" option)
@@ -40,6 +30,7 @@ BackEnd:
 		Alt,
 		Home (Windows button)
 	And implement as Default Translations
+	
 	Get a better name for Translations (More accurate)
 	Create a better project name (Make it a pun or something!)
 	
@@ -49,9 +40,20 @@ BackEnd:
 	Optimize Structures and class objects (Unsure if able to ?)
 	Rebuild TranslationsDict to an extension of Dictionary instead of a shell class?
 
+	
+
+In Testing:
+	Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
 	Quick Launch (Skips showing Main Setup form and instantly loads user settings and opens StreamView)
 
-	LoggingHook:
-		DONE - Implement TOFILE System
-		AWAITING GUI implementation - Toggle for TOFILE
-		NOT STARTED - Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
+
+Completed Features/Implementations:
+	DONE - Implement TOFILE System
+	DONE - Toggle for TOFILE
+	DONE - Ability to select type of user output (Currently Textbox/Listbox)
+	DONE - Implement Translation modifications as end user
+	Done - Add/Edit/Remove Translation button Logic
+
+	StreamView Window:
+		DONE (Feels Sluggish) - TextBox User output
+		DONE - Add ability to change text color.
