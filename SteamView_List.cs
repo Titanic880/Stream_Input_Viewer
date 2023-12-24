@@ -7,7 +7,7 @@
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
         private const int ListMax = 13;
-        private const int TextboxMaxChar = 19;
+        private const int TextboxMaxChar = 15;
         private readonly KeyCombo PauseButtons;
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
@@ -49,11 +49,12 @@
                     Location = new Point(12, 12),
                     Name = "TbOutput",
                     Size = new Size(176, 23),
-                    TabIndex = 0
+                    TabIndex = 0,
+                    Enabled = false
                 };
 
-                BtnPause.Top = toadd.Bottom - 5;
-                this.Height = BtnPause.Bottom + 5;
+                BtnPause.Top = toadd.Bottom + 10;
+                this.Height = BtnPause.Top + BtnPause.Height + 45;
                 break;
             case StreamOutputType.Listbox:
                 toadd = new ListBox() {
@@ -125,7 +126,8 @@
         }
 
         private void KeyboardHook_OnError(Exception e) {
-            AddToUI($"Error Occoured in DLL: {e.Message}");
+            AddToUI($"Error Occoured in DLL");
+            LoggingHook.LogAsError($"Error in KeyboardHook: {e.Message}");
         }
 
         private void AddToUI(string input) {
@@ -153,14 +155,14 @@
                 return;
             foreach (Control a in Controls) {
                 if (a is ListBox listBox1) {
-                    listBox1.SuspendLayout();
                     listBox1.Items[0] += input;
-                    listBox1.ResumeLayout();
+                    return;
                 } else if (a is TextBox TbUI) {
                     TbUI.Text += input;
                     if (TbUI.Text.Length > TextboxMaxChar) {
                         TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
                     }
+                    return;
                 }
             }
         }
@@ -188,7 +190,9 @@
                     return;
                 }
                 else if (a is TextBox TbUI) {
-                    TbUI.Text = TbUI.Text.Remove(0,1);
+                    if (TbUI.Text != "") {
+                        TbUI.Text = TbUI.Text.Remove(0, 1);
+                    }
                     return;
                 }
             }

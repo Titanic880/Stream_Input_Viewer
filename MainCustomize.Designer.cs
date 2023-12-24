@@ -154,7 +154,7 @@
             // 
             // BtnAddTranslation
             // 
-            BtnAddTranslation.Location = new Point(168, 133);
+            BtnAddTranslation.Location = new Point(168, 74);
             BtnAddTranslation.Name = "BtnAddTranslation";
             BtnAddTranslation.Size = new Size(151, 23);
             BtnAddTranslation.TabIndex = 13;
@@ -174,7 +174,7 @@
             // 
             // BtnDeleteTranslation
             // 
-            BtnDeleteTranslation.Location = new Point(168, 74);
+            BtnDeleteTranslation.Location = new Point(168, 132);
             BtnDeleteTranslation.Name = "BtnDeleteTranslation";
             BtnDeleteTranslation.Size = new Size(151, 23);
             BtnDeleteTranslation.TabIndex = 15;

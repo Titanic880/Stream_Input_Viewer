@@ -6,7 +6,7 @@ Features:
 	Ability to select type of user output (Currently Textbox/Listbox)
 	Implement Translation modifications as end user
 	StreamView Window:
-		ONGOING - TextBox User output
+		DONE (Feels Sluggish) - TextBox User output
 		DONE - Add ability to change text color.
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App...
@@ -14,6 +14,10 @@ Features:
 	Ghost mode version of the project? (only outputs to file unless pause bind is pressed) (VERY LIKELY NOT DUE TO BEING A FULL ON KEYLOGGER)
 	
 BackEnd:
+	Add Translation button Logic
+	Edit Translation button Logic
+	Remove Translation button Logic
+
 	Get Unicode Characters for :
 		Shift,
 		Escape,

@@ -1,4 +1,6 @@
 using Newtonsoft.Json;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
@@ -35,8 +37,10 @@ namespace KeyStreamOverlay {
         }
         private void LoadTranslations() {
             LstTranslations.Items.Clear();
-            foreach (KeyValuePair<Keys, string> pair in TranslationDict.Translations)
+            CBKeys.Items.Clear();
+            foreach (KeyValuePair<Keys, string> pair in TranslationDict.Translations) {
                 LstTranslations.Items.Add(pair.Key + " => " + pair.Value);
+            }
             CBKeys.Items.AddRange(Enum.GetNames(typeof(Keys)));
         }
 
@@ -47,7 +51,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView_List? view = new(StreamOutputType.Listbox, true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            SteamView_List? view = new(StreamOutputType.Textbox, true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -132,6 +136,7 @@ namespace KeyStreamOverlay {
                     CBGlobal.Checked = SaveInfo.Global;
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
+                    BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
                     LoadTranslations();
                     LoggingHook.Hookinit(SaveInfo.LoggingHookEnabled);
                 }
@@ -145,26 +150,66 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnDeleteTranslation_Click(object sender, EventArgs e) {
-            if (MessageBox.Show($"Are you sure you want to delete: {LstTranslations.Items[LstTranslations.SelectedIndex]}", "Delete Translation", MessageBoxButtons.YesNo) == DialogResult.No)
+            if (MessageBox.Show($"Are you sure you want to delete: {LstTranslations.Items[LstTranslations.SelectedIndex]}", "Delete Translation", MessageBoxButtons.YesNo) == DialogResult.No) {
                 return;
-            if (TranslationDict.RemoveTranslation(((KeyValuePair<Keys, string>)LstTranslations.Items[LstTranslations.SelectedIndex]).Key))
+            }
+            if (TranslationDict.RemoveTranslation(Enum.Parse<Keys>(LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0]))) {
                 MessageBox.Show("Translation Deleted");
-            else
+            } else {
                 MessageBox.Show("Failed to remove from Dictionary");
-            LstTranslations.Items.RemoveAt(LstTranslations.SelectedIndex);
+            }
+            LoadTranslations();
             JSONSave();
         }
 
         private void BtnEditTranslation_Click(object sender, EventArgs e) {
             //TODO: This
+            if(LstTranslations.SelectedIndex < 0) {
+                return;
+            }
+            if(BtnEditTranslation.Text == "Edit Translation") {
+                BtnEditTranslation.Text = "Finish Editing";
+                BtnAddTranslation.Enabled = false;
+                BtnDeleteTranslation.Enabled = false;
+                _ = Enum.TryParse(LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0], out Keys resultkey);
+                CBKeys.SelectedIndex = CBKeys.Items.IndexOf(resultkey);
+                TbTranslation.Text = LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[1].Trim();
+
+            } else {
+                BtnEditTranslation.Text = "Edit Translation";
+                BtnAddTranslation.Enabled = true;
+                BtnDeleteTranslation.Enabled = true;
+
+                string Key = LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0];
+                if (Enum.TryParse(Key, out Keys resultkey)) {
+                    if (TranslationDict.ReplaceTranslation(resultkey, TbTranslation.Text)) {
+                        MessageBox.Show("Updated Translation!");
+                        LoadTranslations();
+                        JSONSave();
+                        CBKeys.SelectedIndex = 0;
+                        TbTranslation.Text = "";
+                    } else {
+                        MessageBox.Show("Failed to update Translation...");
+                    }
+                } else {
+                    MessageBox.Show("Failed to Parse out Key...");
+                }
+            }
 
             JSONSave();
         }
 
         private void BtnAddTranslation_Click(object sender, EventArgs e) {
-            //TODO: This
-
-            JSONSave();
+            if(CBKeys.SelectedIndex < 0 || TbTranslation.Text == "") {
+                return;
+            }
+            if (TranslationDict.AddTranslation(Enum.Parse<Keys>((string)CBKeys.SelectedItem!), TbTranslation.Text)) {
+                MessageBox.Show("Added Translation to the list.");
+                LoadTranslations();
+                JSONSave();
+            } else {
+                MessageBox.Show("Failed to add Translation (Possibly already exists for provided key?)");
+            }
         }
 
         private void BtnColorChange_Click(object sender, EventArgs e) {

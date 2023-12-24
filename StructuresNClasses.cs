@@ -15,6 +15,7 @@ namespace KeyStreamOverlay {
             get =>
                 Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
         }
+        [IgnoreDataMember]
         public Color GetTextColor {
             get =>
                 Color.FromArgb(TextColor[0], TextColor[1], TextColor[2], TextColor[3]);
@@ -162,7 +163,7 @@ namespace KeyStreamOverlay {
             return true;
         }
         public static bool ReplaceTranslation(Keys OldKey, string NewValue) {
-            if (Translations.TryGetValue(OldKey, out _)) {
+            if (!Translations.TryGetValue(OldKey, out _)) {
                 return false;
             }
             Translations[OldKey] = NewValue;
