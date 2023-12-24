@@ -30,6 +30,8 @@ namespace KeyStreamOverlay {
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
             KeyboardHook.OnError += KeyboardHook_OnError;
             PauseBind = new(Keys.Insert, true, true, true);
+            CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
+            CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
@@ -51,7 +53,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView_List? view = new(StreamOutputType.Textbox, true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            SteamView_List? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -116,7 +118,7 @@ namespace KeyStreamOverlay {
             File.WriteAllText(SaveLocation,
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
-                    GetAllowedWindows(), CBGlobal.Checked,
+                    GetAllowedWindows(), true,
                     TranslationDict.Translations, BtnBackColorPicker.BackColor,
                     BtnTextColorPicker.ForeColor, LoggingHook.HookActive)
                 , Formatting.Indented)
@@ -133,7 +135,7 @@ namespace KeyStreamOverlay {
                     LstTracked.Items.AddRange(SaveInfo.PreallowedWindows);
                     this.PauseBind = SaveInfo.PauseBind;
                     this.ImportedSave = SaveInfo.SaveLocation;
-                    CBGlobal.Checked = SaveInfo.Global;
+                    //CBGlobal.Checked = SaveInfo.Global;
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
@@ -164,10 +166,10 @@ namespace KeyStreamOverlay {
 
         private void BtnEditTranslation_Click(object sender, EventArgs e) {
             //TODO: This
-            if(LstTranslations.SelectedIndex < 0) {
+            if (LstTranslations.SelectedIndex < 0) {
                 return;
             }
-            if(BtnEditTranslation.Text == "Edit Translation") {
+            if (BtnEditTranslation.Text == "Edit Translation") {
                 BtnEditTranslation.Text = "Finish Editing";
                 BtnAddTranslation.Enabled = false;
                 BtnDeleteTranslation.Enabled = false;
@@ -200,7 +202,7 @@ namespace KeyStreamOverlay {
         }
 
         private void BtnAddTranslation_Click(object sender, EventArgs e) {
-            if(CBKeys.SelectedIndex < 0 || TbTranslation.Text == "") {
+            if (CBKeys.SelectedIndex < 0 || TbTranslation.Text == "") {
                 return;
             }
             if (TranslationDict.AddTranslation(Enum.Parse<Keys>((string)CBKeys.SelectedItem!), TbTranslation.Text)) {

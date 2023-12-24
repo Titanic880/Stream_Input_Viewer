@@ -66,7 +66,6 @@ namespace KeyStreamOverlay {
     }
 
     public enum StreamOutputType {
-        DEV = -1,           //Quicker API implementation default?
         Listbox = 0,
         Textbox = 1
     }

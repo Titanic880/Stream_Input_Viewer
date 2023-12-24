@@ -14,11 +14,13 @@ Features:
 	Ghost mode version of the project? (only outputs to file unless pause bind is pressed) (VERY LIKELY NOT DUE TO BEING A FULL ON KEYLOGGER)
 	
 BackEnd:
-	Add Translation button Logic
-	Edit Translation button Logic
-	Remove Translation button Logic
+	Done - Add Translation button Logic
+	Done - Edit Translation button Logic
+	Done - Remove Translation button Logic
 
-	Get Unicode Characters for :
+	Override outputting "Shift" with outputting the upper case version of what is clicked (might require a dict/list of shared keys ex: 1 => !)
+
+	Get Unicode/UTF-16 Characters for :
 		Shift,
 		Escape,
 		Delete,
@@ -27,7 +29,7 @@ BackEnd:
 		Ctrl,
 		Alt,
 		Home (Windows button)
-	And implement as Translations (Optional?)
+	And implement as Default Translations
 	Get a better name for Translations (More accurate)
 	Create a better project name (Make it a pun or something!)
 	

@@ -28,7 +28,6 @@
             LblList = new Label();
             BtnPauseKeybind = new Button();
             BtnStart = new Button();
-            CBGlobal = new CheckBox();
             TbOutput = new TextBox();
             LblOut = new Label();
             TbTracked = new TextBox();
@@ -43,6 +42,8 @@
             groupBox1 = new GroupBox();
             BtnBackColorPicker = new Button();
             BtnTextColorPicker = new Button();
+            CBOutputTypes = new ComboBox();
+            LblUserOutput = new Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -62,7 +63,7 @@
             LstTracked.ItemHeight = 15;
             LstTracked.Location = new Point(12, 26);
             LstTracked.Name = "LstTracked";
-            LstTracked.Size = new Size(158, 259);
+            LstTracked.Size = new Size(158, 289);
             LstTracked.TabIndex = 1;
             // 
             // LblList
@@ -93,19 +94,6 @@
             BtnStart.Text = "Start StreamView";
             BtnStart.UseVisualStyleBackColor = true;
             BtnStart.Click += BtnStart_Click;
-            // 
-            // CBGlobal
-            // 
-            CBGlobal.AutoSize = true;
-            CBGlobal.Checked = true;
-            CBGlobal.CheckState = CheckState.Checked;
-            CBGlobal.Enabled = false;
-            CBGlobal.Location = new Point(180, 211);
-            CBGlobal.Name = "CBGlobal";
-            CBGlobal.Size = new Size(160, 19);
-            CBGlobal.TabIndex = 6;
-            CBGlobal.Text = "Allow Global Hook Vision";
-            CBGlobal.UseVisualStyleBackColor = true;
             // 
             // TbOutput
             // 
@@ -215,7 +203,7 @@
             groupBox1.Controls.Add(BtnAddTranslation);
             groupBox1.Controls.Add(BtnEditTranslation);
             groupBox1.Controls.Add(BtnDeleteTranslation);
-            groupBox1.Location = new Point(12, 300);
+            groupBox1.Location = new Point(12, 323);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(324, 221);
             groupBox1.TabIndex = 22;
@@ -224,7 +212,7 @@
             // 
             // BtnBackColorPicker
             // 
-            BtnBackColorPicker.Location = new Point(180, 232);
+            BtnBackColorPicker.Location = new Point(180, 265);
             BtnBackColorPicker.Name = "BtnBackColorPicker";
             BtnBackColorPicker.Size = new Size(151, 23);
             BtnBackColorPicker.TabIndex = 20;
@@ -234,7 +222,7 @@
             // 
             // BtnTextColorPicker
             // 
-            BtnTextColorPicker.Location = new Point(180, 261);
+            BtnTextColorPicker.Location = new Point(180, 294);
             BtnTextColorPicker.Name = "BtnTextColorPicker";
             BtnTextColorPicker.Size = new Size(151, 23);
             BtnTextColorPicker.TabIndex = 23;
@@ -242,11 +230,30 @@
             BtnTextColorPicker.UseVisualStyleBackColor = true;
             BtnTextColorPicker.Click += BtnColorChange_Click;
             // 
+            // CBOutputTypes
+            // 
+            CBOutputTypes.FormattingEnabled = true;
+            CBOutputTypes.Location = new Point(180, 236);
+            CBOutputTypes.Name = "CBOutputTypes";
+            CBOutputTypes.Size = new Size(151, 23);
+            CBOutputTypes.TabIndex = 20;
+            // 
+            // LblUserOutput
+            // 
+            LblUserOutput.AutoSize = true;
+            LblUserOutput.Location = new Point(180, 218);
+            LblUserOutput.Name = "LblUserOutput";
+            LblUserOutput.Size = new Size(111, 15);
+            LblUserOutput.TabIndex = 24;
+            LblUserOutput.Text = "Key output Control:";
+            // 
             // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(349, 534);
+            ClientSize = new Size(349, 558);
+            Controls.Add(LblUserOutput);
+            Controls.Add(CBOutputTypes);
             Controls.Add(BtnTextColorPicker);
             Controls.Add(BtnBackColorPicker);
             Controls.Add(groupBox1);
@@ -255,7 +262,6 @@
             Controls.Add(TbTracked);
             Controls.Add(LblOut);
             Controls.Add(TbOutput);
-            Controls.Add(CBGlobal);
             Controls.Add(BtnPauseKeybind);
             Controls.Add(LblList);
             Controls.Add(LstTracked);
@@ -276,7 +282,6 @@
         private Label LblList;
         private Button BtnPauseKeybind;
         private Button BtnStart;
-        private CheckBox CBGlobal;
         private TextBox TbOutput;
         private Label LblOut;
         private TextBox TbTracked;
@@ -291,5 +296,7 @@
         private GroupBox groupBox1;
         private Button BtnBackColorPicker;
         private Button BtnTextColorPicker;
+        private ComboBox CBOutputTypes;
+        private Label LblUserOutput;
     }
 }
