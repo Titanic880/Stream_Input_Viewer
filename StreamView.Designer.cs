@@ -1,5 +1,5 @@
 ﻿namespace KeyStreamOverlay {
-    partial class SteamView_List {
+    partial class StreamView {
         /// <summary>
         /// Required designer variable.
         /// </summary>

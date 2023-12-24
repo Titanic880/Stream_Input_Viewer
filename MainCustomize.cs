@@ -36,6 +36,9 @@ namespace KeyStreamOverlay {
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             JSONSave();
+            if (CBDeleteLogClose.Checked) {
+                File.WriteAllText(SaveLocation,"");
+            }
         }
         private void LoadTranslations() {
             LstTranslations.Items.Clear();
@@ -53,7 +56,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook = null;
             this.Hide();
-            SteamView_List? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), true, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -71,7 +74,7 @@ namespace KeyStreamOverlay {
             return AllowedPrograms.ToArray();
         }
         private void KeyboardHook_OnError(Exception e) {
-            LoggingHook.LogAsError($"KeyHook Error: {e.Message}");
+            InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
         }
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
@@ -118,15 +121,18 @@ namespace KeyStreamOverlay {
             File.WriteAllText(SaveLocation,
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
-                    GetAllowedWindows(), true,
-                    TranslationDict.Translations, BtnBackColorPicker.BackColor,
-                    BtnTextColorPicker.ForeColor, LoggingHook.HookActive)
+                    GetAllowedWindows(), TranslationDict.Translations, 
+                    BtnBackColorPicker.BackColor,
+                    BtnTextColorPicker.ForeColor,
+                    CBSkipSetupView.Checked,CBShiftToggle.Checked,
+                    InfoLogging.LoggingToFile, CBDeleteLogLaunch.Checked, CBDeleteLogClose.Checked)
                 , Formatting.Indented)
             );
         }
         private void JSONLoad() {
             if (!File.Exists(SaveLocation)) {
-                MessageBox.Show("File Not Found");
+                MessageBox.Show("Save file not found...\nLoading Defaults...");
+                MessageBox.Show("PLEASE KNOW: This program READS EVERY KEY INPUT YOU DO, even if it is not shown\nIt does not log/record any inputs without user permission.");
                 JSONSave();
             }
             try {
@@ -140,7 +146,15 @@ namespace KeyStreamOverlay {
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
                     LoadTranslations();
-                    LoggingHook.Hookinit(SaveInfo.LoggingHookEnabled);
+                    CBSkipSetupView.Checked = SaveInfo.QuickLaunch;
+                    CBShiftToggle.Checked = SaveInfo.ShiftToggle;
+                    InfoLogging.LoggingInit(SaveInfo.LoggingHookEnabled);
+                    CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
+                    CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
+
+                    if (CBDeleteLogLaunch.Checked) {
+                        File.WriteAllText(SaveLocation,"");
+                    }
                 }
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");

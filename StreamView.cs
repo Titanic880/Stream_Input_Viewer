@@ -1,5 +1,5 @@
 ﻿namespace KeyStreamOverlay {
-    public partial class SteamView_List : Form {
+    public partial class StreamView : Form {
 
         private bool Paused = false;
         private readonly bool UseTranslations = false;
@@ -12,7 +12,7 @@
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
 
-        public SteamView_List(StreamOutputType OutputType, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
+        public StreamView(StreamOutputType OutputType, bool UseInputTranslations, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
             this.TopMost = true;
@@ -79,7 +79,7 @@
             }
             Controls.Add(toadd);
         }
-        ~SteamView_List() {
+        ~StreamView() {
             KeyboardHook?.Dispose();
             TextClearTimer?.Stop();
             TextClearTimer?.Dispose();
@@ -94,11 +94,11 @@
             if (BtnPause.Text == "Pause") {
                 BtnPause.Text = "Resume";
                 Paused = true;
-                LoggingHook.PauseLoggingHook();
+                InfoLogging.PauseLoggingHook();
             } else if (BtnPause.Text == "Resume") {
                 BtnPause.Text = "Pause";
                 Paused = false;
-                LoggingHook.ResumeLoggingHook();
+                InfoLogging.ResumeLoggingHook();
             } else
                 MessageBox.Show("Error: Pause Button");
         }
@@ -127,7 +127,7 @@
 
         private void KeyboardHook_OnError(Exception e) {
             AddToUI($"Error Occoured in DLL");
-            LoggingHook.LogAsError($"Error in KeyboardHook: {e.Message}");
+            InfoLogging.LogAsError($"Error in KeyboardHook: {e.Message}");
         }
 
         private void AddToUI(string input) {

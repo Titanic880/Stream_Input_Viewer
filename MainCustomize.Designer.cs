@@ -25,7 +25,6 @@
         private void InitializeComponent() {
             BtnAddProgram = new Button();
             LstTracked = new ListBox();
-            LblList = new Label();
             BtnPauseKeybind = new Button();
             BtnStart = new Button();
             TbOutput = new TextBox();
@@ -44,12 +43,21 @@
             BtnTextColorPicker = new Button();
             CBOutputTypes = new ComboBox();
             LblUserOutput = new Label();
+            groupBox2 = new GroupBox();
+            groupBox3 = new GroupBox();
+            CBLogToggle = new CheckBox();
+            CBDeleteLogLaunch = new CheckBox();
+            CBDeleteLogClose = new CheckBox();
+            CBShiftToggle = new CheckBox();
+            CBSkipSetupView = new CheckBox();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // BtnAddProgram
             // 
-            BtnAddProgram.Location = new Point(180, 55);
+            BtnAddProgram.Location = new Point(172, 45);
             BtnAddProgram.Name = "BtnAddProgram";
             BtnAddProgram.Size = new Size(151, 23);
             BtnAddProgram.TabIndex = 0;
@@ -61,23 +69,14 @@
             // 
             LstTracked.FormattingEnabled = true;
             LstTracked.ItemHeight = 15;
-            LstTracked.Location = new Point(12, 26);
+            LstTracked.Location = new Point(4, 16);
             LstTracked.Name = "LstTracked";
-            LstTracked.Size = new Size(158, 289);
+            LstTracked.Size = new Size(158, 199);
             LstTracked.TabIndex = 1;
-            // 
-            // LblList
-            // 
-            LblList.AutoSize = true;
-            LblList.Location = new Point(12, 8);
-            LblList.Name = "LblList";
-            LblList.Size = new Size(151, 15);
-            LblList.TabIndex = 2;
-            LblList.Text = "ONLY these will show input";
             // 
             // BtnPauseKeybind
             // 
-            BtnPauseKeybind.Location = new Point(180, 186);
+            BtnPauseKeybind.Location = new Point(172, 176);
             BtnPauseKeybind.Name = "BtnPauseKeybind";
             BtnPauseKeybind.Size = new Size(151, 23);
             BtnPauseKeybind.TabIndex = 3;
@@ -98,7 +97,7 @@
             // TbOutput
             // 
             TbOutput.Enabled = false;
-            TbOutput.Location = new Point(180, 157);
+            TbOutput.Location = new Point(172, 147);
             TbOutput.Name = "TbOutput";
             TbOutput.Size = new Size(151, 23);
             TbOutput.TabIndex = 7;
@@ -106,7 +105,7 @@
             // LblOut
             // 
             LblOut.AutoSize = true;
-            LblOut.Location = new Point(176, 139);
+            LblOut.Location = new Point(168, 129);
             LblOut.Name = "LblOut";
             LblOut.Size = new Size(160, 15);
             LblOut.TabIndex = 8;
@@ -114,7 +113,7 @@
             // 
             // TbTracked
             // 
-            TbTracked.Location = new Point(180, 26);
+            TbTracked.Location = new Point(172, 16);
             TbTracked.Name = "TbTracked";
             TbTracked.Size = new Size(151, 23);
             TbTracked.TabIndex = 9;
@@ -122,7 +121,7 @@
             // 
             // BtnRemove
             // 
-            BtnRemove.Location = new Point(180, 84);
+            BtnRemove.Location = new Point(172, 74);
             BtnRemove.Name = "BtnRemove";
             BtnRemove.Size = new Size(151, 23);
             BtnRemove.TabIndex = 10;
@@ -132,7 +131,7 @@
             // 
             // BtnForceSave
             // 
-            BtnForceSave.Location = new Point(180, 113);
+            BtnForceSave.Location = new Point(172, 103);
             BtnForceSave.Name = "BtnForceSave";
             BtnForceSave.Size = new Size(151, 23);
             BtnForceSave.TabIndex = 11;
@@ -203,7 +202,7 @@
             groupBox1.Controls.Add(BtnAddTranslation);
             groupBox1.Controls.Add(BtnEditTranslation);
             groupBox1.Controls.Add(BtnDeleteTranslation);
-            groupBox1.Location = new Point(12, 323);
+            groupBox1.Location = new Point(342, 12);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(324, 221);
             groupBox1.TabIndex = 22;
@@ -212,9 +211,9 @@
             // 
             // BtnBackColorPicker
             // 
-            BtnBackColorPicker.Location = new Point(180, 265);
+            BtnBackColorPicker.Location = new Point(4, 65);
             BtnBackColorPicker.Name = "BtnBackColorPicker";
-            BtnBackColorPicker.Size = new Size(151, 23);
+            BtnBackColorPicker.Size = new Size(140, 23);
             BtnBackColorPicker.TabIndex = 20;
             BtnBackColorPicker.Text = "Select Back Color";
             BtnBackColorPicker.UseVisualStyleBackColor = true;
@@ -222,9 +221,9 @@
             // 
             // BtnTextColorPicker
             // 
-            BtnTextColorPicker.Location = new Point(180, 294);
+            BtnTextColorPicker.Location = new Point(4, 92);
             BtnTextColorPicker.Name = "BtnTextColorPicker";
-            BtnTextColorPicker.Size = new Size(151, 23);
+            BtnTextColorPicker.Size = new Size(140, 23);
             BtnTextColorPicker.TabIndex = 23;
             BtnTextColorPicker.Text = "Select Text Color";
             BtnTextColorPicker.UseVisualStyleBackColor = true;
@@ -233,53 +232,129 @@
             // CBOutputTypes
             // 
             CBOutputTypes.FormattingEnabled = true;
-            CBOutputTypes.Location = new Point(180, 236);
+            CBOutputTypes.Location = new Point(4, 36);
             CBOutputTypes.Name = "CBOutputTypes";
-            CBOutputTypes.Size = new Size(151, 23);
+            CBOutputTypes.Size = new Size(140, 23);
             CBOutputTypes.TabIndex = 20;
             // 
             // LblUserOutput
             // 
             LblUserOutput.AutoSize = true;
-            LblUserOutput.Location = new Point(180, 218);
+            LblUserOutput.Location = new Point(6, 18);
             LblUserOutput.Name = "LblUserOutput";
             LblUserOutput.Size = new Size(111, 15);
             LblUserOutput.TabIndex = 24;
             LblUserOutput.Text = "Key output Control:";
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(CBSkipSetupView);
+            groupBox2.Controls.Add(CBShiftToggle);
+            groupBox2.Controls.Add(CBDeleteLogClose);
+            groupBox2.Controls.Add(CBDeleteLogLaunch);
+            groupBox2.Controls.Add(CBLogToggle);
+            groupBox2.Controls.Add(BtnBackColorPicker);
+            groupBox2.Controls.Add(LblUserOutput);
+            groupBox2.Controls.Add(BtnTextColorPicker);
+            groupBox2.Controls.Add(CBOutputTypes);
+            groupBox2.Location = new Point(8, 239);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(328, 125);
+            groupBox2.TabIndex = 25;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "General Settings";
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(LstTracked);
+            groupBox3.Controls.Add(BtnAddProgram);
+            groupBox3.Controls.Add(BtnForceSave);
+            groupBox3.Controls.Add(BtnPauseKeybind);
+            groupBox3.Controls.Add(BtnRemove);
+            groupBox3.Controls.Add(TbOutput);
+            groupBox3.Controls.Add(TbTracked);
+            groupBox3.Controls.Add(LblOut);
+            groupBox3.Location = new Point(8, 12);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(328, 221);
+            groupBox3.TabIndex = 26;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Programs to Allow input tracking";
+            // 
+            // CBLogToggle
+            // 
+            CBLogToggle.AutoSize = true;
+            CBLogToggle.Location = new Point(150, 65);
+            CBLogToggle.Name = "CBLogToggle";
+            CBLogToggle.Size = new Size(165, 19);
+            CBLogToggle.TabIndex = 25;
+            CBLogToggle.Text = "Log unpaused input to file";
+            CBLogToggle.UseVisualStyleBackColor = true;
+            // 
+            // CBDeleteLogLaunch
+            // 
+            CBDeleteLogLaunch.AutoSize = true;
+            CBDeleteLogLaunch.Location = new Point(150, 80);
+            CBDeleteLogLaunch.Name = "CBDeleteLogLaunch";
+            CBDeleteLogLaunch.Size = new Size(154, 19);
+            CBDeleteLogLaunch.TabIndex = 26;
+            CBDeleteLogLaunch.Text = "Delete log file on launch";
+            CBDeleteLogLaunch.UseVisualStyleBackColor = true;
+            // 
+            // CBDeleteLogClose
+            // 
+            CBDeleteLogClose.AutoSize = true;
+            CBDeleteLogClose.Location = new Point(150, 96);
+            CBDeleteLogClose.Name = "CBDeleteLogClose";
+            CBDeleteLogClose.Size = new Size(147, 19);
+            CBDeleteLogClose.TabIndex = 27;
+            CBDeleteLogClose.Text = "Delete log File on close";
+            CBDeleteLogClose.UseVisualStyleBackColor = true;
+            // 
+            // CBShiftToggle
+            // 
+            CBShiftToggle.AutoSize = true;
+            CBShiftToggle.Location = new Point(150, 36);
+            CBShiftToggle.Name = "CBShiftToggle";
+            CBShiftToggle.Size = new Size(88, 19);
+            CBShiftToggle.TabIndex = 28;
+            CBShiftToggle.Text = "Shift Toggle";
+            CBShiftToggle.UseVisualStyleBackColor = true;
+            // 
+            // CBSkipSetupView
+            // 
+            CBSkipSetupView.AutoSize = true;
+            CBSkipSetupView.Location = new Point(150, 18);
+            CBSkipSetupView.Name = "CBSkipSetupView";
+            CBSkipSetupView.Size = new Size(168, 19);
+            CBSkipSetupView.TabIndex = 29;
+            CBSkipSetupView.Text = "Skip Setup View on Launch";
+            CBSkipSetupView.UseVisualStyleBackColor = true;
+            // 
             // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(349, 558);
-            Controls.Add(LblUserOutput);
-            Controls.Add(CBOutputTypes);
-            Controls.Add(BtnTextColorPicker);
-            Controls.Add(BtnBackColorPicker);
+            ClientSize = new Size(689, 383);
+            Controls.Add(groupBox3);
+            Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(BtnForceSave);
-            Controls.Add(BtnRemove);
-            Controls.Add(TbTracked);
-            Controls.Add(LblOut);
-            Controls.Add(TbOutput);
-            Controls.Add(BtnPauseKeybind);
-            Controls.Add(LblList);
-            Controls.Add(LstTracked);
-            Controls.Add(BtnAddProgram);
             Name = "MainCustomize";
             Text = "Setup View";
             FormClosing += Form1_FormClosing;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private Button BtnAddProgram;
         private ListBox LstTracked;
-        private Label LblList;
         private Button BtnPauseKeybind;
         private Button BtnStart;
         private TextBox TbOutput;
@@ -298,5 +373,12 @@
         private Button BtnTextColorPicker;
         private ComboBox CBOutputTypes;
         private Label LblUserOutput;
+        private GroupBox groupBox2;
+        private GroupBox groupBox3;
+        private CheckBox CBDeleteLogClose;
+        private CheckBox CBDeleteLogLaunch;
+        private CheckBox CBLogToggle;
+        private CheckBox CBShiftToggle;
+        private CheckBox CBSkipSetupView;
     }
 }

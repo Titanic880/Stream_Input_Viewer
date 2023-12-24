@@ -9,7 +9,6 @@ namespace KeyStreamOverlay {
         public readonly Dictionary<Keys, string> translations = new();
         public readonly int[] BackColor = new int[4] { 255,0,255,0 };
         public readonly int[] TextColor = new int[4] { 255,0,0,0 };
-        public readonly bool LoggingHookEnabled = false;
         [IgnoreDataMember]
         public Color GetBackColor {
             get =>
@@ -20,26 +19,41 @@ namespace KeyStreamOverlay {
             get =>
                 Color.FromArgb(TextColor[0], TextColor[1], TextColor[2], TextColor[3]);
         }
-        public readonly bool Global = false;
+        public readonly bool QuickLaunch = false;
+        public readonly bool ShiftToggle = false;
+        public readonly bool LoggingHookEnabled = false;
+        public readonly bool DeleteLogFileOnLaunch = false;
+        public readonly bool DeleteLogFileOnClose = false;
 
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,bool loggingHookEnabled) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows,  Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,
+            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled, bool DeleteLogFileLaunch, bool DeleteLogFileClose) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
-            this.Global = Global;
             this.translations = translations;
+
             this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
             this.TextColor = new int[] {StreamViewTextColor.A, StreamViewTextColor.R,StreamViewTextColor.G, StreamViewTextColor.B };
+            
+            this.QuickLaunch = QuickLaunch;
+            this.ShiftToggle = ShiftToggle;
             this.LoggingHookEnabled = loggingHookEnabled;
+            this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
+            this.DeleteLogFileOnClose = DeleteLogFileClose;
         }
         [JsonConstructor]
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, bool Global, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, bool loggingHookEnabled) {
+        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, 
+            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileLaunch, bool DeleteLogFileClose) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
-            this.Global = Global;
             this.translations = translations;
+            
+            this.QuickLaunch = QuickLaunch;
+            this.ShiftToggle = ShiftToggle;
             this.LoggingHookEnabled = loggingHookEnabled;
+            this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
+            this.DeleteLogFileOnClose = DeleteLogFileClose;
 
             if (TextColor.Length > 4)
                 TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };

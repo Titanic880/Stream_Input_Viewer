@@ -1,6 +1,14 @@
-﻿NEEDS IMPLEMENTATION - Implement CheckBox for Translation + form/section to add/change/remove Translations
-ONGOING - Test With OBS/XSplit? (Might need to look into other streaming programs)
-- Chroma key functions weirdly, Added user defined color to make it easier
+﻿OnGoing:
+	OBS/Xsplit Testing for Chroma keys/Responsiveness
+
+
+Things to Complete Prior to 1.0 Release Build:
+	Quick Launch,				 - Needs back end implementation
+	Shift Override,				 - Needs back end implementation
+	Toggle for TOFILE,			 - Needs back end implementation
+	Toggle to Purge TOFILE file, - Needs back end imlpementation
+	Update Forms to not look like a generic winform app.
+
 
 Features:
 	Ability to select type of user output (Currently Textbox/Listbox)
@@ -20,6 +28,8 @@ BackEnd:
 
 	Override outputting "Shift" with outputting the upper case version of what is clicked (might require a dict/list of shared keys ex: 1 => !)
 
+	User warning about the Nature of the program? (pop up when program is started with a "never show again" option)
+
 	Get Unicode/UTF-16 Characters for :
 		Shift,
 		Escape,
@@ -36,7 +46,7 @@ BackEnd:
 	Dejunking of primary Functions (Remove any un-needed calls/interactions)
 	General Optimizations -> Better variable Naming, Better control flows, Early Escapes
 
-	Optimize Structures and classes objects (Unsure if able to ?)
+	Optimize Structures and class objects (Unsure if able to ?)
 	Rebuild TranslationsDict to an extension of Dictionary instead of a shell class?
 
 	Quick Launch (Skips showing Main Setup form and instantly loads user settings and opens StreamView)
