@@ -20,7 +20,6 @@ namespace KeyStreamOverlay {
         }
         public MainCustomize() {
             InitializeComponent();
-
             this.MaximizeBox = false;
 
             KeyboardHook = new(false, new string[] { this.Text });
@@ -39,12 +38,31 @@ namespace KeyStreamOverlay {
                 LaunchStreamView();
             }
         }
+        #region FormControl
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             JSONSave();
             if (CBDeleteLogClose.Checked) {
                 File.WriteAllText(InfoLogging.LogToLocation, "");
             }
         }
+        private void BtnStart_Click(object sender, EventArgs e) {
+            LaunchStreamView();
+        }
+        private void KeyboardHook_OnError(Exception e) {
+            InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
+        }
+        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
+            if (PauseBind != null)
+                if (PauseBind.Equals(key, Shift, Ctrl, Alt))
+                    MessageBox.Show("Pause Bind Pressed!");
+
+            string sft = Shift ? "Shift+" : "";
+            string ctrl = Ctrl ? "Ctrl+" : "";
+            string alt = Alt ? "Alt+" : "";
+            TbOutput.Text = sft + ctrl + alt + key;
+        }
+        #endregion FormControl
+        #region Functions
         private void LoadTranslations() {
             LstTranslations.Items.Clear();
             CBKeys.Items.Clear();
@@ -52,10 +70,6 @@ namespace KeyStreamOverlay {
                 LstTranslations.Items.Add(pair.Key + " => " + pair.Value);
             }
             CBKeys.Items.AddRange(Enum.GetNames(typeof(Keys)));
-        }
-
-        private void BtnStart_Click(object sender, EventArgs e) {
-            LaunchStreamView();
         }
         private void LaunchStreamView() {
             if (LstTracked.Items.Count == 0 || PauseBind == null) {
@@ -80,46 +94,6 @@ namespace KeyStreamOverlay {
             for (int i = 0; i < LstTracked.Items.Count; i++)
                 AllowedPrograms.Add(LstTracked.Items[i].ToString()!);
             return AllowedPrograms.ToArray();
-        }
-        private void KeyboardHook_OnError(Exception e) {
-            InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
-        }
-
-        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
-            if (PauseBind != null)
-                if (PauseBind.Equals(key, Shift, Ctrl, Alt))
-                    MessageBox.Show("Pause Bind Pressed!");
-
-            string sft = Shift ? "Shift+" : "";
-            string ctrl = Ctrl ? "Ctrl+" : "";
-            string alt = Alt ? "Alt+" : "";
-            TbOutput.Text = sft + ctrl + alt + key;
-        }
-
-        private void BtnPause_Keybind_Click(object sender, EventArgs e) {
-            string[] options = TbOutput.Text.Split('+');
-            if (Enum.TryParse(options[^1], out Keys key)) {
-                PauseBind = new(key, options.Contains("Shift"), options.Contains("Ctrl"), options.Contains("Alt"));
-                MessageBox.Show("Pause Bind Set!");
-            } else
-                MessageBox.Show("Failed to Get Keybind");
-        }
-
-        private void BtnAddProgram_Click(object sender, EventArgs e) {
-            if (TbTracked.Text == "Enter Program Name Here") {
-                return;
-            }
-
-            LstTracked.Items.Add(TbTracked.Text);
-            JSONSave();
-            TbTracked.Text = "";
-        }
-
-        private void BtnRemove_Click(object sender, EventArgs e) {
-            if (LstTracked.SelectedIndex == -1) {
-                return;
-            }
-            LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
         }
         private void JSONSave() {
             if (!Directory.Exists(DefaultFolder)) {
@@ -164,26 +138,50 @@ namespace KeyStreamOverlay {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");
             }
         }
+        #endregion Functions
+        #region InputTracking Events
+        private void BtnAddProgram_Click(object sender, EventArgs e) {
+            if (TbTracked.Text == "Enter Program Name Here") {
+                return;
+            }
 
+            LstTracked.Items.Add(TbTracked.Text);
+            JSONSave();
+            TbTracked.Text = "";
+        }
+        private void BtnRemove_Click(object sender, EventArgs e) {
+            if (LstTracked.SelectedIndex == -1) {
+                return;
+            }
+            LstTracked.Items.RemoveAt(LstTracked.SelectedIndex);
+        }
         private void BtnForceSave_Click(object sender, EventArgs e) {
             JSONSave();
         }
-
-        private void BtnDeleteTranslation_Click(object sender, EventArgs e) {
-            if (MessageBox.Show($"Are you sure you want to delete: {LstTranslations.Items[LstTranslations.SelectedIndex]}", "Delete Translation", MessageBoxButtons.YesNo) == DialogResult.No) {
+        private void BtnPause_Keybind_Click(object sender, EventArgs e) {
+            string[] options = TbOutput.Text.Split('+');
+            if (Enum.TryParse(options[^1], out Keys key)) {
+                PauseBind = new(key, options.Contains("Shift"), options.Contains("Ctrl"), options.Contains("Alt"));
+                MessageBox.Show("Pause Bind Set!");
+            } else {
+                MessageBox.Show("Failed to Get Keybind");
+            }
+        }
+        #endregion InputTracking Events
+        #region Translation Events
+        private void BtnAddTranslation_Click(object sender, EventArgs e) {
+            if (CBKeys.SelectedIndex < 0 || TbTranslation.Text == "") {
                 return;
             }
-            if (TranslationDict.RemoveTranslation(Enum.Parse<Keys>(LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0]))) {
-                MessageBox.Show("Translation Deleted");
+            if (TranslationDict.AddTranslation(Enum.Parse<Keys>((string)CBKeys.SelectedItem!), TbTranslation.Text)) {
+                MessageBox.Show("Added Translation to the list.");
+                LoadTranslations();
+                JSONSave();
             } else {
-                MessageBox.Show("Failed to remove from Dictionary");
+                MessageBox.Show("Failed to add Translation (Possibly already exists for provided key?)");
             }
-            LoadTranslations();
-            JSONSave();
         }
-
         private void BtnEditTranslation_Click(object sender, EventArgs e) {
-            //TODO: This
             if (LstTranslations.SelectedIndex < 0) {
                 return;
             }
@@ -191,16 +189,15 @@ namespace KeyStreamOverlay {
                 BtnEditTranslation.Text = "Finish Editing";
                 BtnAddTranslation.Enabled = false;
                 BtnDeleteTranslation.Enabled = false;
-                _ = Enum.TryParse(LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0], out Keys resultkey);
+                _ = Enum.TryParse(LstTranslations.SelectedItem!.ToString()!.Split("=>")[0], out Keys resultkey);
                 CBKeys.SelectedIndex = CBKeys.Items.IndexOf(resultkey);
-                TbTranslation.Text = LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[1].Trim();
-
+                TbTranslation.Text = LstTranslations.SelectedItem!.ToString()!.Split("=>")[1].Trim();
             } else {
                 BtnEditTranslation.Text = "Edit Translation";
                 BtnAddTranslation.Enabled = true;
                 BtnDeleteTranslation.Enabled = true;
 
-                string Key = LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0];
+                string Key = LstTranslations.SelectedItem!.ToString()!.Split("=>")[0];
                 if (Enum.TryParse(Key, out Keys resultkey)) {
                     if (TranslationDict.ReplaceTranslation(resultkey, TbTranslation.Text)) {
                         MessageBox.Show("Updated Translation!");
@@ -215,23 +212,22 @@ namespace KeyStreamOverlay {
                     MessageBox.Show("Failed to Parse out Key...");
                 }
             }
-
             JSONSave();
         }
-
-        private void BtnAddTranslation_Click(object sender, EventArgs e) {
-            if (CBKeys.SelectedIndex < 0 || TbTranslation.Text == "") {
+        private void BtnDeleteTranslation_Click(object sender, EventArgs e) {
+            if (MessageBox.Show($"Are you sure you want to delete: {LstTranslations.Items[LstTranslations.SelectedIndex]}", "Delete Translation", MessageBoxButtons.YesNo) == DialogResult.No) {
                 return;
             }
-            if (TranslationDict.AddTranslation(Enum.Parse<Keys>((string)CBKeys.SelectedItem!), TbTranslation.Text)) {
-                MessageBox.Show("Added Translation to the list.");
-                LoadTranslations();
-                JSONSave();
+            if (TranslationDict.RemoveTranslation(Enum.Parse<Keys>(LstTranslations.Items[LstTranslations.SelectedIndex].ToString()!.Split("=>")[0]))) {
+                MessageBox.Show("Translation Deleted");
             } else {
-                MessageBox.Show("Failed to add Translation (Possibly already exists for provided key?)");
+                MessageBox.Show("Failed to remove from Dictionary");
             }
+            LoadTranslations();
+            JSONSave();
         }
-
+        #endregion Translation Events
+        #region GeneralSettings Events
         private void BtnColorChange_Click(object sender, EventArgs e) {
             ColorDialog dialog;
             if (((Button)sender).Name == "BtnBackColorPicker") {
@@ -253,5 +249,14 @@ namespace KeyStreamOverlay {
             }
             dialog.Dispose();
         }
+        #endregion GeneralSettings Events
+
+
+
+
+
+
+
+
     }
 }
