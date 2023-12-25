@@ -8,7 +8,7 @@ If you want to change the output of a given key;
 you are able to using the Translation options on the right of the Setup View.
 
 
-![alt text](/KeyStreamOverlay/readmeimg/SetupView.png)
+![alt text](/readmeimg/SetupView.png)
 
 Using the Toggle buttons you are able to enable/disable Logging functionalities and shortcuts!
 Using the Color buttons allows you to alter the background and text colors that will be shown on the StreamView form
