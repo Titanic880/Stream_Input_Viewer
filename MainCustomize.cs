@@ -98,7 +98,7 @@ namespace KeyStreamOverlay {
             }
             KeyboardHook!.Dispose();
             this.Hide();
-            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), CBTranslationToggle.Checked,CBShiftToggle.Checked, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), CBTranslationToggle.Checked,CBShiftToggle.Checked, CBLogToggle.Checked, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -126,7 +126,8 @@ namespace KeyStreamOverlay {
                     BtnBackColorPicker.BackColor,
                     BtnTextColorPicker.ForeColor,
                     CBSkipSetupView.Checked, CBShiftToggle.Checked,
-                    InfoLogging.LoggingToFile, CBDeleteLogLaunch.Checked, CBDeleteLogClose.Checked, CBTranslationToggle.Checked)
+                    CBLogToggle.Checked, CBDeleteLogLaunch.Checked,
+                    CBDeleteLogClose.Checked, CBTranslationToggle.Checked)
                 , Formatting.Indented)
             );
         }
@@ -148,11 +149,12 @@ namespace KeyStreamOverlay {
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
                     CBSkipSetupView.Checked = SaveInfo.QuickLaunch;
                     CBShiftToggle.Checked = SaveInfo.ShiftToggle;
-                    InfoLogging.LoggingInit(SaveInfo.LoggingHookEnabled);
+                    CBLogToggle.Checked = SaveInfo.LoggingHookEnabled;
                     CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
                     CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
                     CBTranslationToggle.Checked = SaveInfo.UseTranslations;
                 }
+                InfoLogging.LoggingInit(CBLogToggle.Checked);
                 LoadTranslations();
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");

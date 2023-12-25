@@ -11,18 +11,17 @@
         private const string DefaultLogFile = "KeyLog.txt";
         private const string DefaultErrorFile = "Errors.txt";
 
-        public static async void LogToFile(string DatatoLog) {
+        public static void LogToFile(string DatatoLog) {
             if (LoggingToFile && !InfoLogPaused) {
-                await LogTask(LogToLocation, DatatoLog);
+                LogTask(LogToLocation, DatatoLog);
             }
         }
-        public static async void LogAsError(string ErrorMessage) {
-            await LogTask(ErrorLogToLocation, ErrorMessage);
+        public static void LogAsError(string ErrorMessage) {
+            LogTask(ErrorLogToLocation, ErrorMessage);
         }
-        private static async Task<Task> LogTask(string Location, string Message) {
-            using StreamWriter sw = new(Location);
-            await sw.WriteLineAsync($"[{DateTime.Now}] {Message}");
-            return Task.CompletedTask;
+        private static void LogTask(string Location, string Message) {
+            using StreamWriter sw = File.AppendText(Location);
+            sw.WriteLine($"[{DateTime.Now}] {Message}");
         }
         public static void LoggingInit(bool LogToFile = false) {
             if (!Directory.Exists(MainCustomize.DefaultFolder)) {

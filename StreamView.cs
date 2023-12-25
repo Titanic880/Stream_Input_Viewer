@@ -6,6 +6,7 @@ namespace KeyStreamOverlay {
         private bool Paused = false;
         private readonly bool UseTranslations = false;
         private readonly bool ShiftToggle = false;
+        private readonly bool Keylogging = false;
         private readonly UI_Mimic.UIReader? KeyboardHook;
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
@@ -15,7 +16,7 @@ namespace KeyStreamOverlay {
         private readonly Color DisplayBackColor;
         private readonly Color TextColor;
 
-        public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
+        public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, bool KeyLogging, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
             this.TopMost = true;
@@ -27,6 +28,7 @@ namespace KeyStreamOverlay {
             PauseButtons = PauseBind;
             this.UseTranslations = UseInputTranslations;
             this.ShiftToggle = ShiftToggle;
+            this.Keylogging = KeyLogging;
             DisplayBackColor = BackColor;
             this.TextColor = TextColor;
 
@@ -39,6 +41,7 @@ namespace KeyStreamOverlay {
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
             GenerateUIControl(OutputType);
+            InfoLogging.LoggingInit(this.Keylogging);
             TextClearTimer.Start();
         }
 
@@ -84,11 +87,13 @@ namespace KeyStreamOverlay {
             Controls.Add(toadd);
         }
         ~StreamView() {
+            InfoLogging.LoggingInit(false);
             KeyboardHook?.Dispose();
             TextClearTimer?.Stop();
             TextClearTimer?.Dispose();
         }
         public new void Dispose() {
+            InfoLogging.LoggingInit(false);
             KeyboardHook?.Dispose();
             TextClearTimer?.Stop();
             TextClearTimer?.Dispose();
@@ -116,6 +121,9 @@ namespace KeyStreamOverlay {
                 AddToUI(Paused ? "Output Paused" : "Output Un-Paused");
                 return;
             }
+            if (Paused) {
+                return;
+            }
 
             string sft = Shift ? "Shift+" : "";
             string ctrl = Ctrl ? "Ctrl+" : "";
@@ -132,6 +140,7 @@ namespace KeyStreamOverlay {
             //AddToUI(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
             
             void ShiftTranslationLogic(Action<string> FuncCall) {
+                
                 if (ShiftToggle) {
                     if (Shift && UseTranslations) {
                         strkey = TranslationDict.GetShiftTranslation(key);
@@ -149,6 +158,10 @@ namespace KeyStreamOverlay {
                     }
                     FuncCall(sft + ctrl + alt + strkey);
                 }
+
+                if (Keylogging) {
+                    InfoLogging.LogToFile(strkey);
+                }
             }
         }
 
@@ -162,12 +175,10 @@ namespace KeyStreamOverlay {
                 return;
             foreach (Control a in Controls) {
                 if (a is ListBox listBox1) {
-                    listBox1.SuspendLayout();
                     for (int i = ListMax - 1; i > 0; i--) {
                         listBox1.Items[i] = listBox1.Items[i - 1];
                     }
                     listBox1.Items[0] = input;
-                    listBox1.ResumeLayout();
                 } else if (a is TextBox TbUI) {
                     TbUI.Text += input;
                     if (TbUI.Text.Length > TextboxMaxChar) {
@@ -195,30 +206,27 @@ namespace KeyStreamOverlay {
 
         private void ActiveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             => Invoke(TimerTick_Action);
-        private void TimerTick_Action() {
+        private void TimerTick_Action() {        
             foreach(Control a in Controls) {
-                if(a is ListBox listBox1) {
+                if (a is ListBox listBox1) {
                     listBox1.SuspendLayout();
                     listBox1.SelectedIndex = -1;    //Astethic.
-                    //
                     for (int i = 0; i < ListMax; i++) {
-                        if (listBox1.Items[i].ToString() == "") {
-                            if (i == 0) {
-                                listBox1.Items[0] = "";
-                            } else {
-                                listBox1.Items[i - 1] = "";
-                            }
-                            break;
+                        if (listBox1.Items[i].ToString() != "") {
+                            continue;
                         }
+                        if (i == 0) {
+                            listBox1.Items[0] = "";
+                        } else {
+                            listBox1.Items[i - 1] = "";
+                        }
+                        break;
                     }
-                    listBox1.Invoke(() => listBox1.Items[^1] = "");
+                    listBox1.Items[^1] = "";
                     listBox1.ResumeLayout();
                     return;
-                }
-                else if (a is TextBox TbUI) {
-                    if (TbUI.Text != "") {
-                        TbUI.Text = TbUI.Text.Remove(0, 1);
-                    }
+                } else if (a is TextBox TbUI && TbUI.Text != "") {
+                    TbUI.Text = TbUI.Text.Remove(0, 1);
                     return;
                 }
             }

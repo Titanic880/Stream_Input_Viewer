@@ -45,7 +45,7 @@ namespace KeyStreamOverlay {
         }
         [JsonConstructor]
         public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, 
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileLaunch, bool DeleteLogFileClose,bool UseTranslations) {
+            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileOnLaunch, bool DeleteLogFileOnClose,bool UseTranslations) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -54,8 +54,8 @@ namespace KeyStreamOverlay {
             this.QuickLaunch = QuickLaunch;
             this.ShiftToggle = ShiftToggle;
             this.LoggingHookEnabled = loggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileClose;
+            this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
+            this.DeleteLogFileOnClose = DeleteLogFileOnClose;
             this.UseTranslations = UseTranslations;
 
             if (TextColor.Length > 4)
