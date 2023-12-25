@@ -27,7 +27,7 @@
             if (!Directory.Exists(MainCustomize.DefaultFolder)) {
                 Directory.CreateDirectory(MainCustomize.DefaultFolder);
                 File.Create(LogToLocation).Close();
-            }else if (!File.Exists(DefaultLogFile)) {
+            }else if (!File.Exists(LogToLocation)) {
                 File.Create(LogToLocation).Close();
             }
             if (!File.Exists(ErrorLogToLocation)) {

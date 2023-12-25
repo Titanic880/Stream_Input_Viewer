@@ -3,11 +3,11 @@
 
 
 Things to Complete Prior to 1.0 Release Build:
-	Quick Launch,				 - Needs Testing.
+	Quick Launch,				 - DONE
 	Shift Override,				 - More Translations/ability to alter?
-	Lower Case & Upper case output - Needs Implementing
-	Toggle for TOFILE,			 - Needs Testing.
-	Toggle to Purge TOFILE file, - Needs Testing.
+	Lower Case & Upper case output - DONE
+	Toggle for TOFILE,			 - DONE
+	Toggle to Purge TOFILE file, - DONE
 	
 	Update Forms to not look like a generic winform app.
 	Creation of a DEV Branch and lock down main for PR only

@@ -204,8 +204,11 @@ namespace KeyStreamOverlay {
             }
         }
 
-        private void ActiveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-            => Invoke(TimerTick_Action);
+        private void ActiveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e) {
+            if (!this.IsDisposed) {
+                Invoke(TimerTick_Action);
+            }
+        }
         private void TimerTick_Action() {        
             foreach(Control a in Controls) {
                 if (a is ListBox listBox1) {
