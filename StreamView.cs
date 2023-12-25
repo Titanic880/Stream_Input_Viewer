@@ -119,6 +119,7 @@ namespace KeyStreamOverlay {
                 Paused = !Paused;
                 BtnPause.Text = Paused ? "Resume" : "Pause";
                 AddToUI(Paused ? "Output Paused" : "Output Un-Paused");
+                InfoLogging.PauseLoggingHookToggle(Paused);
                 return;
             }
             if (Paused) {

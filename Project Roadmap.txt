@@ -46,8 +46,7 @@ BackEnd:
 	
 
 In Testing:
-	Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
-	Quick Launch (Skips showing Main Setup form and instantly loads user settings and opens StreamView)
+	
 
 
 Completed Features/Implementations:
@@ -56,7 +55,8 @@ Completed Features/Implementations:
 	DONE - Ability to select type of user output (Currently Textbox/Listbox)
 	DONE - Implement Translation modifications as end user
 	Done - Add/Edit/Remove Translation button Logic
-
+	DONE - Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
+	DONE - Quick Launch
 	StreamView Window:
 		DONE (Feels Sluggish) - TextBox User output
 		DONE - Add ability to change text color.

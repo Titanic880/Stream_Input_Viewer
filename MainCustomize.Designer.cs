@@ -193,6 +193,7 @@
             CBKeys.Name = "CBKeys";
             CBKeys.Size = new Size(151, 23);
             CBKeys.TabIndex = 19;
+            CBKeys.Text = "None";
             // 
             // groupBox1
             // 

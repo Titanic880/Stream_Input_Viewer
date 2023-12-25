@@ -22,6 +22,9 @@ namespace KeyStreamOverlay {
         public MainCustomize() {
             InitializeComponent();
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.HelpButton = true;
+            this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
@@ -39,6 +42,16 @@ namespace KeyStreamOverlay {
                 LaunchStreamView();
             }
         }
+
+        private void MainCustomize_HelpButtonClicked(object? sender, System.ComponentModel.CancelEventArgs e) {
+            MessageBox.Show("To add a program to the allowed list;" +
+                          "\ntake the name on the top left of the application" +
+                          "\nand put it into the space with:" +
+                          "\n'Enter program name here'" +
+                          $"\nEX: this window is '{this.Text}'"+
+                          "\n\nAll associated files can be found at:" +
+                          $"\n{DefaultFolder}");
+        }   
         #region FormControl
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             JSONSave();
@@ -68,7 +81,7 @@ namespace KeyStreamOverlay {
                     strkey = TranslationDict.GetShiftTranslation(key);
                 } else if (CBTranslationToggle.Checked) {
                     strkey = TranslationDict.GetTranslation(key).ToLower();
-                } else { 
+                } else {
                     strkey = key.ToString().ToLower();
                 }
                 TbOutput.Text = ctrl + alt + strkey;
@@ -213,6 +226,9 @@ namespace KeyStreamOverlay {
                 BtnDeleteTranslation.Enabled = false;
                 _ = Enum.TryParse(LstTranslations.SelectedItem!.ToString()!.Split("=>")[0].Trim(), out Keys resultkey);
                 CBKeys.SelectedIndex = CBKeys.Items.IndexOf(resultkey);
+                if (CBKeys.Text == "") {
+                    CBKeys.SelectedText = resultkey.ToString();
+                }
                 TbTranslation.Text = LstTranslations.SelectedItem!.ToString()!.Split("=>")[1].Trim();
             } else {
                 BtnEditTranslation.Text = "Edit Translation";

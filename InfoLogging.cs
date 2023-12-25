@@ -36,6 +36,9 @@
             LoggingToFile = LogToFile;
         }
 
+        public static void PauseLoggingHookToggle(bool State) {
+            InfoLogPaused = State;
+        }
         public static void PauseLoggingHook() {
             InfoLogPaused = true;
         }
