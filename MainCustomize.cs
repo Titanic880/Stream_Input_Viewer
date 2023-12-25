@@ -117,7 +117,7 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            MessageBox.Show("Stream View Cleaned up, Restarting Testing Hook...");
+            //MessageBox.Show("Stream View Cleaned up, Restarting Testing Hook...");
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.OnError += KeyboardHook_OnError;
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
