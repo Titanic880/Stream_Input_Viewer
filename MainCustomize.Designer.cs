@@ -51,6 +51,7 @@
             CBDeleteLogLaunch = new CheckBox();
             CBLogToggle = new CheckBox();
             groupBox3 = new GroupBox();
+            BtnResetTranslations = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -142,7 +143,7 @@
             // 
             // BtnAddTranslation
             // 
-            BtnAddTranslation.Location = new Point(167, 103);
+            BtnAddTranslation.Location = new Point(167, 74);
             BtnAddTranslation.Name = "BtnAddTranslation";
             BtnAddTranslation.Size = new Size(151, 23);
             BtnAddTranslation.TabIndex = 13;
@@ -152,7 +153,7 @@
             // 
             // BtnEditTranslation
             // 
-            BtnEditTranslation.Location = new Point(167, 132);
+            BtnEditTranslation.Location = new Point(167, 103);
             BtnEditTranslation.Name = "BtnEditTranslation";
             BtnEditTranslation.Size = new Size(151, 23);
             BtnEditTranslation.TabIndex = 14;
@@ -162,7 +163,7 @@
             // 
             // BtnDeleteTranslation
             // 
-            BtnDeleteTranslation.Location = new Point(167, 161);
+            BtnDeleteTranslation.Location = new Point(167, 132);
             BtnDeleteTranslation.Name = "BtnDeleteTranslation";
             BtnDeleteTranslation.Size = new Size(151, 23);
             BtnDeleteTranslation.TabIndex = 15;
@@ -197,6 +198,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(BtnResetTranslations);
             groupBox1.Controls.Add(CBTranslationToggle);
             groupBox1.Controls.Add(LstTranslations);
             groupBox1.Controls.Add(CBKeys);
@@ -345,6 +347,16 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Programs to Allow input tracking";
             // 
+            // BtnResetTranslations
+            // 
+            BtnResetTranslations.Location = new Point(167, 161);
+            BtnResetTranslations.Name = "BtnResetTranslations";
+            BtnResetTranslations.Size = new Size(151, 23);
+            BtnResetTranslations.TabIndex = 31;
+            BtnResetTranslations.Text = "Reset to Default";
+            BtnResetTranslations.UseVisualStyleBackColor = true;
+            BtnResetTranslations.Click += BtnResetTranslations_Click;
+            // 
             // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -396,5 +408,6 @@
         private CheckBox CBShiftToggle;
         private CheckBox CBSkipSetupView;
         private CheckBox CBTranslationToggle;
+        private Button BtnResetTranslations;
     }
 }

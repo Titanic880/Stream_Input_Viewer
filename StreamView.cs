@@ -19,6 +19,8 @@ namespace KeyStreamOverlay {
         public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, bool KeyLogging, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
+            
+
             this.TopMost = true;
             this.MinimizeBox = false;
             this.MaximizeBox = false;

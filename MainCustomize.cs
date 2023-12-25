@@ -3,6 +3,7 @@ using System.ComponentModel.Design;
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
+
         private UI_Mimic.UIReader? KeyboardHook;
         private KeyCombo PauseBind;
         private const string DefaultSave = "Save.json";
@@ -71,9 +72,9 @@ namespace KeyStreamOverlay {
                     MessageBox.Show("Pause Bind Pressed!");
                 }
             }
-            string sft =  Shift ? "Shift+" : "";
-            string ctrl = Ctrl ? "Ctrl+" : "";
-            string alt = Alt ? "Alt+" : "";
+            string sft =  Shift ? TranslationDict.GetTranslation(Keys.Shift)+"+" : "";
+            string ctrl = Ctrl ? TranslationDict.GetTranslation(Keys.Control)+ "+" : "";
+            string alt = Alt ? TranslationDict.GetTranslation(Keys.Alt)+"+" : "";
             string strkey;
 
             if (CBShiftToggle.Checked) {
@@ -263,6 +264,13 @@ namespace KeyStreamOverlay {
             }
             LoadTranslations();
             JSONSave();
+        }
+        private void BtnResetTranslations_Click(object sender, EventArgs e) {
+            DialogResult dr = MessageBox.Show("Would you like to reset ALL translations to default?\nPlease note, this also deletes custom translations","Are you sure?",MessageBoxButtons.YesNo);
+            if(dr == DialogResult.Yes) {
+                TranslationDict.RestoreDefaults();
+                LoadTranslations();
+            }
         }
         #endregion Translation Events
         #region GeneralSettings Events

@@ -2,37 +2,27 @@
 	OBS/Xsplit Testing for Chroma keys/Responsiveness
 
 
-Things to Complete Prior to 1.0 Release Build:
-	Quick Launch,				 - DONE
-	Shift Override,				 - More Translations/ability to alter?
-	Lower Case & Upper case output - DONE
-	Toggle for TOFILE,			 - DONE
-	Toggle to Purge TOFILE file, - DONE
-	
-	Create a README.MD - DONE
-	Update Forms to not look like a generic winform app. - NOT DONE
-	Creation of a DEV Branch and lock down main for PR only
-
-
 Features:
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App...
 	Ghost mode version of the project? (only outputs to file unless pause bind is pressed) (VERY LIKELY NOT DUE TO BEING A FULL ON KEYLOGGER)
-	
+	Different ways to view input
+
+
 BackEnd:
 	Override outputting "Shift" with outputting the upper case version of what is clicked (might require a dict/list of shared keys ex: 1 => !)
 
 	User warning about the Nature of the program? (pop up when program is started with a "never show again" option)
 
 	Get Unicode/UTF-16 Characters for :
-		Shift,
-		Escape,
-		Delete,
-		Enter,
-		Backspace,
-		Ctrl,
-		Alt,
-		Home (Windows button)
+		Shift,     (U+21E7) (⇧)
+		Escape,    (U+238B) (⎋)
+		Delete,    (U+2326) (⌦)
+		Enter,     (¶)  ()
+		Backspace, (U+232B) (⌫)
+		Ctrl,      (⎈)
+		Alt,       (⎇)
+		Home (Windows button) (⌂)
 	And implement as Default Translations
 	
 	Get a better name for Translations (More accurate)
@@ -44,11 +34,9 @@ BackEnd:
 	Optimize Structures and class objects (Unsure if able to ?)
 	Rebuild TranslationsDict to an extension of Dictionary instead of a shell class?
 
-	
 
 In Testing:
-	
-
+	NONE :D
 
 Completed Features/Implementations:
 	DONE - Implement TOFILE System
@@ -58,6 +46,7 @@ Completed Features/Implementations:
 	Done - Add/Edit/Remove Translation button Logic
 	DONE - Toggle to purge TOFILE file on program startup AND/OR close (incase people dont want data lingering)
 	DONE - Quick Launch
+	DONE - Shift Toggle ::: More Translations Wanted
 	StreamView Window:
 		DONE (Feels Sluggish) - TextBox User output
 		DONE - Add ability to change text color.

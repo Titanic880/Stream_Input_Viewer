@@ -129,8 +129,19 @@ namespace KeyStreamOverlay {
             { Keys.OemMinus, "-" },
             { Keys.Oemplus, "=" },
 
-            { Keys.Menu, "LAlt" },
-            { Keys.LWin, "Win" },
+            { Keys.Shift, "⇧" },
+            { Keys.Control, "⎈" },
+            { Keys.Alt, "⎇" },
+            { Keys.ShiftKey, "⇧" },
+            { Keys.ControlKey, "⎈" },
+            { Keys.Menu, "⎇" },
+
+            { Keys.Escape, "⎋" },
+            { Keys.Delete, "⌦" },
+            { Keys.Enter, "¶" },
+            { Keys.Back, "⌫" },
+            { Keys.LWin, "⌂" },
+            { Keys.RWin, "⌂" },
 
             { Keys.OemOpenBrackets, "[" },
             { Keys.Oem6, "]" },
@@ -168,7 +179,8 @@ namespace KeyStreamOverlay {
 
             { Keys.Oemcomma, "<" },
             { Keys.OemPeriod, ">" },
-            { Keys.OemQuestion , "?" }
+            { Keys.OemQuestion , "?" },
+
         };
         public static Dictionary<Keys, string> Translations { get; private set; } = new();
         /// <summary>
