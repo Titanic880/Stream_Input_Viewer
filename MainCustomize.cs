@@ -86,7 +86,7 @@ namespace KeyStreamOverlay {
                 }
                 TbOutput.Text = ctrl + alt + strkey;
             } else {
-                if (Shift && CBTranslationToggle.Checked) {
+                if (CBTranslationToggle.Checked) {
                     strkey = TranslationDict.GetTranslation(key);
                 } else {
                     strkey = key.ToString().ToLower();

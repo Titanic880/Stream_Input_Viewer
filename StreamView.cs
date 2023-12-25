@@ -152,7 +152,7 @@ namespace KeyStreamOverlay {
                     }
                     FuncCall(ctrl + alt + strkey);
                 } else {
-                    if (Shift && UseTranslations) {
+                    if (UseTranslations) {
                         strkey = TranslationDict.GetTranslation(key);
                     } else {
                         strkey = key.ToString().ToLower();
