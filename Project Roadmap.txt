@@ -9,6 +9,7 @@ Things to Complete Prior to 1.0 Release Build:
 	Toggle for TOFILE,			 - DONE
 	Toggle to Purge TOFILE file, - DONE
 	
+	Create a README.MD
 	Update Forms to not look like a generic winform app.
 	Creation of a DEV Branch and lock down main for PR only
 

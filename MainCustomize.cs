@@ -48,10 +48,10 @@ namespace KeyStreamOverlay {
                           "\ntake the name on the top left of the application" +
                           "\nand put it into the space with:" +
                           "\n'Enter program name here'" +
-                          $"\nEX: this window is '{this.Text}'"+
+                          $"\nEX: this window is '{this.Text}'" +
                           "\n\nAll associated files can be found at:" +
                           $"\n{DefaultFolder}");
-        }   
+        }
         #region FormControl
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             JSONSave();

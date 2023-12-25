@@ -87,9 +87,9 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(168, 186);
+            BtnStart.Location = new Point(342, 251);
             BtnStart.Name = "BtnStart";
-            BtnStart.Size = new Size(151, 29);
+            BtnStart.Size = new Size(318, 113);
             BtnStart.TabIndex = 5;
             BtnStart.Text = "Start StreamView";
             BtnStart.UseVisualStyleBackColor = true;
@@ -142,7 +142,7 @@
             // 
             // BtnAddTranslation
             // 
-            BtnAddTranslation.Location = new Point(168, 74);
+            BtnAddTranslation.Location = new Point(167, 103);
             BtnAddTranslation.Name = "BtnAddTranslation";
             BtnAddTranslation.Size = new Size(151, 23);
             BtnAddTranslation.TabIndex = 13;
@@ -152,7 +152,7 @@
             // 
             // BtnEditTranslation
             // 
-            BtnEditTranslation.Location = new Point(168, 103);
+            BtnEditTranslation.Location = new Point(167, 132);
             BtnEditTranslation.Name = "BtnEditTranslation";
             BtnEditTranslation.Size = new Size(151, 23);
             BtnEditTranslation.TabIndex = 14;
@@ -162,7 +162,7 @@
             // 
             // BtnDeleteTranslation
             // 
-            BtnDeleteTranslation.Location = new Point(168, 132);
+            BtnDeleteTranslation.Location = new Point(167, 161);
             BtnDeleteTranslation.Name = "BtnDeleteTranslation";
             BtnDeleteTranslation.Size = new Size(151, 23);
             BtnDeleteTranslation.TabIndex = 15;
@@ -199,7 +199,6 @@
             // 
             groupBox1.Controls.Add(CBTranslationToggle);
             groupBox1.Controls.Add(LstTranslations);
-            groupBox1.Controls.Add(BtnStart);
             groupBox1.Controls.Add(CBKeys);
             groupBox1.Controls.Add(TbTranslation);
             groupBox1.Controls.Add(BtnAddTranslation);
@@ -217,7 +216,7 @@
             CBTranslationToggle.AutoSize = true;
             CBTranslationToggle.Checked = true;
             CBTranslationToggle.CheckState = CheckState.Checked;
-            CBTranslationToggle.Location = new Point(168, 161);
+            CBTranslationToggle.Location = new Point(167, 190);
             CBTranslationToggle.Name = "CBTranslationToggle";
             CBTranslationToggle.Size = new Size(151, 19);
             CBTranslationToggle.TabIndex = 30;
@@ -353,6 +352,7 @@
             ClientSize = new Size(689, 383);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
+            Controls.Add(BtnStart);
             Controls.Add(groupBox1);
             Name = "MainCustomize";
             Text = "Setup View";
