@@ -30,7 +30,7 @@ namespace KeyStreamOverlay {
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
             KeyboardHook.OnError += KeyboardHook_OnError;
-            PauseBind = new(Keys.Insert, true, true, true);
+            PauseBind = new(Keys.Insert, true, true, true,true);
             CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
             CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
@@ -66,9 +66,9 @@ namespace KeyStreamOverlay {
         private void KeyboardHook_OnError(Exception e) {
             InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
         }
-        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
+        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             if (PauseBind != null) {
-                if (PauseBind.Equals(key, Shift, Ctrl, Alt)) {
+                if (PauseBind.Equals(key, Shift, Ctrl, Alt,Home)) {
                     MessageBox.Show("Pause Bind Pressed!");
                 }
             }
@@ -118,7 +118,7 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            MessageBox.Show("Stream View Cleaned up, Restarting Testing Hook...");
+            //MessageBox.Show("Stream View Cleaned up, Restarting Testing Hook...");
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.OnError += KeyboardHook_OnError;
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
@@ -197,7 +197,13 @@ namespace KeyStreamOverlay {
         private void BtnPause_Keybind_Click(object sender, EventArgs e) {
             string[] options = TbOutput.Text.Split('+');
             if (Enum.TryParse(options[^1], out Keys key)) {
-                PauseBind = new(key, options.Contains("Shift"), options.Contains("Ctrl"), options.Contains("Alt"));
+                //Rebuild Pause bind addition.
+                bool Shift = options.Contains(TranslationDict.GetShiftTranslation(Keys.Shift)) || options.Contains("Shift");
+                bool Ctrl = options.Contains(TranslationDict.GetShiftTranslation(Keys.Control)) || options.Contains("Ctrl");
+                bool Alt = options.Contains(TranslationDict.GetShiftTranslation(Keys.Alt)) || options.Contains("Alt");
+                bool Home = options.Contains(TranslationDict.GetShiftTranslation(Keys.LWin)) || options.Contains("LWin");
+
+                PauseBind = new(key, Shift, Ctrl, Alt, Home);
                 MessageBox.Show("Pause Bind Set!");
             } else {
                 MessageBox.Show("Failed to Get Keybind");

@@ -91,24 +91,28 @@ namespace KeyStreamOverlay {
         public readonly bool Shift;
         public readonly bool Ctrl;
         public readonly bool Alt;
+        public readonly bool Home;
 
-        public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt) {
+        public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             this.key = key;
             this.Shift = Shift;
             this.Ctrl = Ctrl;
             this.Alt = Alt;
+            this.Home = Home;
         }
         public bool Equals(KeyCombo other) {
             return this.key == other.key
                 && this.Shift == other.Shift
                 && this.Ctrl == other.Ctrl
-                && this.Alt == other.Alt;
+                && this.Alt == other.Alt
+                && this.Home == other.Home;
         }
-        public bool Equals(Keys otherkey, bool otherShift, bool otherCtrl, bool otherAlt) {
+        public bool Equals(Keys otherkey, bool otherShift, bool otherCtrl, bool otherAlt, bool Home) {
             return this.key == otherkey
                 && this.Shift == otherShift
                 && this.Ctrl == otherCtrl
-                && this.Alt == otherAlt;
+                && this.Alt == otherAlt
+                && this.Home == Home;
         }
     }
 
@@ -128,15 +132,24 @@ namespace KeyStreamOverlay {
             { Keys.D0,"0" },
             { Keys.OemMinus, "-" },
             { Keys.Oemplus, "=" },
+            { Keys.Space, "˽" },
 
-            { Keys.Shift, "⇧" },
-            { Keys.Control, "⎈" },
             { Keys.Alt, "⎇" },
-            { Keys.ShiftKey, "⇧" },
-            { Keys.ControlKey, "⎈" },
             { Keys.Menu, "⎇" },
+            { Keys.LMenu, "⎇" },
+            { Keys.RMenu, "⎇" },
+            { Keys.Shift, "⇧" },
+            { Keys.ShiftKey, "⇧" },
+            { Keys.LShiftKey, "⇧" },
+            { Keys.RShiftKey, "⇧" },
+            { Keys.Control, "⎈" },
+            { Keys.ControlKey, "⎈" },
+            { Keys.LControlKey, "⎈" },
+            { Keys.RControlKey, "⎈" },
 
             { Keys.Escape, "⎋" },
+            { Keys.Tab, "⭾" },
+            { Keys.CapsLock, "⇪" },
             { Keys.Delete, "⌦" },
             { Keys.Enter, "¶" },
             { Keys.Back, "⌫" },

@@ -114,10 +114,10 @@ namespace KeyStreamOverlay {
                 MessageBox.Show("Error: Pause Button");
         }
 
-        KeyCombo Previous_Key = new(Keys.F24,true,true,true);
-        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt) {
+        KeyCombo Previous_Key = new(Keys.F24,true,true,true,true);
+        private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt,bool Home) {
             //listBox1.SelectedIndex = -1;
-            if (PauseButtons.Equals(key, Shift, Ctrl, Alt)) {
+            if (PauseButtons.Equals(key, Shift, Ctrl, Alt, Home)) {
                 Paused = !Paused;
                 BtnPause.Text = Paused ? "Resume" : "Pause";
                 AddToUI(Paused ? "Output Paused" : "Output Un-Paused");
@@ -128,16 +128,21 @@ namespace KeyStreamOverlay {
                 return;
             }
 
-            string sft = Shift ? "Shift+" : "";
-            string ctrl = Ctrl ? "Ctrl+" : "";
-            string alt = Alt ? "Alt+" : "";
+
+            string sft =  Shift ? TranslationDict.GetTranslation(Keys.Shift)+"+" : "";
+            string ctrl = Ctrl ? TranslationDict.GetTranslation(Keys.Control)+ "+" : "";
+            string alt = Alt ? TranslationDict.GetTranslation(Keys.Alt)+"+" : "";
+
+            //string sft = Shift ? "Shift+" : "";
+            //string ctrl = Ctrl ? "Ctrl+" : "";
+            //string alt = Alt ? "Alt+" : "";
             string strkey;
             //Handles holding a key down/spamming it
-            if (Previous_Key.Equals(key, Shift, Ctrl, Alt)) {
+            if (Previous_Key.Equals(key, Shift, Ctrl, Alt, Home)) {
                 ShiftTranslationLogic(AddToUI_Duplicate);
                 return;
             }
-            Previous_Key = new(key, Shift, Ctrl, Alt);
+            Previous_Key = new(key, Shift, Ctrl, Alt, Home);
 
             ShiftTranslationLogic(AddToUI);
             //AddToUI(sft + ctrl + alt + (UseTranslations ? TranslationDict.GetTranslation(key) : key));
