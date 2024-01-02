@@ -198,10 +198,10 @@ namespace KeyStreamOverlay {
             string[] options = TbOutput.Text.Split('+');
             if (Enum.TryParse(options[^1], out Keys key)) {
                 //Rebuild Pause bind addition.
-                bool Shift = options.Contains(TranslationDict.GetShiftTranslation(Keys.Shift)) || options.Contains("Shift");
-                bool Ctrl = options.Contains(TranslationDict.GetShiftTranslation(Keys.Control)) || options.Contains("Ctrl");
-                bool Alt = options.Contains(TranslationDict.GetShiftTranslation(Keys.Alt)) || options.Contains("Alt");
-                bool Home = options.Contains(TranslationDict.GetShiftTranslation(Keys.LWin)) || options.Contains("LWin");
+                bool Shift = options.Contains(TranslationDict.GetTranslation(Keys.Shift)) || options.Contains("Shift");
+                bool Ctrl = options.Contains(TranslationDict.GetTranslation(Keys.Control)) || options.Contains("Ctrl");
+                bool Alt = options.Contains(TranslationDict.GetTranslation(Keys.Alt)) || options.Contains("Alt");
+                bool Home = options.Contains(TranslationDict.GetTranslation(Keys.LWin)) || options.Contains("LWin");
 
                 PauseBind = new(key, Shift, Ctrl, Alt, Home);
                 MessageBox.Show("Pause Bind Set!");
