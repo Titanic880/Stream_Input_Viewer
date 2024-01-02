@@ -2,6 +2,9 @@
 	OBS/Xsplit Testing for Chroma keys/Responsiveness
 
 
+Bug Fix:
+	Needs More Testing. - Rewrite Set Keybind to check Translations for modifier keys
+
 Features:
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App...
