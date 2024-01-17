@@ -40,12 +40,22 @@ namespace KeyStreamOverlay {
             TextClearTimer = new(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
-            GenerateUIControl(OutputType);
+            Control? UserInteraction = GenerateUIControl(OutputType);
+            if(UserInteraction is null) {
+                MessageBox.Show("Failed to generate User output Control, Exiting...");
+                this.Close();
+                return;
+            }
+            Controls.Add(UserInteraction);
+            if(OutputType == StreamOutputType.Textbox) {
+                this.Height = BtnPause.Top + BtnPause.Height + 45;
+            }
+
             InfoLogging.LoggingInit(this.Keylogging);
             TextClearTimer.Start();
         }
 
-        private void GenerateUIControl(StreamOutputType ObjType) {
+        private Control? GenerateUIControl(StreamOutputType ObjType) {
             Control toadd;
             switch (ObjType) {
             case StreamOutputType.Textbox:
@@ -59,9 +69,7 @@ namespace KeyStreamOverlay {
                     TabIndex = 0,
                     Enabled = false
                 };
-
                 BtnPause.Top = toadd.Bottom + 10;
-                this.Height = BtnPause.Top + BtnPause.Height + 45;
                 break;
             case StreamOutputType.Listbox:
                 toadd = new ListBox() {
@@ -82,21 +90,16 @@ namespace KeyStreamOverlay {
                 }
                 break;
             default:
-                return;
+                return null;
             }
-            Controls.Add(toadd);
-        }
-        ~StreamView() {
-            InfoLogging.LoggingInit(false);
-            KeyboardHook?.Dispose();
-            TextClearTimer?.Stop();
-            TextClearTimer?.Dispose();
+            return toadd;
         }
         public new void Dispose() {
             InfoLogging.LoggingInit(false);
             KeyboardHook?.Dispose();
-            TextClearTimer?.Stop();
-            TextClearTimer?.Dispose();
+            TextClearTimer!.Stop();
+            TextClearTimer!.Elapsed -= ActiveTimer_Elapsed;
+            TextClearTimer!.Dispose();
             base.Dispose();
         }
         private void BtnPause_Click(object sender, EventArgs e) {
