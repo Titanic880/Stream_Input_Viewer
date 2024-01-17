@@ -40,7 +40,7 @@ namespace KeyStreamOverlay {
             TextClearTimer = new(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
-            Control? UserInteraction = GenerateUIControl(OutputType);
+            Control? UserInteraction = GenerateUIControl(OutputType,DisplayBackColor,TextColor);
             if(UserInteraction is null) {
                 MessageBox.Show("Failed to generate User output Control, Exiting...");
                 this.Close();
@@ -49,13 +49,14 @@ namespace KeyStreamOverlay {
             Controls.Add(UserInteraction);
             if(OutputType == StreamOutputType.Textbox) {
                 this.Height = BtnPause.Top + BtnPause.Height + 45;
+                BtnPause.Top = UserInteraction.Bottom + 10;
             }
 
             InfoLogging.LoggingInit(this.Keylogging);
             TextClearTimer.Start();
         }
 
-        private Control? GenerateUIControl(StreamOutputType ObjType) {
+        private static Control? GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor,Color TextColor) {
             Control toadd;
             switch (ObjType) {
             case StreamOutputType.Textbox:
@@ -69,7 +70,6 @@ namespace KeyStreamOverlay {
                     TabIndex = 0,
                     Enabled = false
                 };
-                BtnPause.Top = toadd.Bottom + 10;
                 break;
             case StreamOutputType.Listbox:
                 toadd = new ListBox() {
