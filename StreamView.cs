@@ -1,20 +1,17 @@
-﻿using System.Globalization;
-
-namespace KeyStreamOverlay {
+﻿namespace KeyStreamOverlay {
     public partial class StreamView : Form {
 
-        private bool Paused = false;
+        private const int ListMax = 13;
+        private const int TextboxMaxChar = 15;
         private readonly bool UseTranslations = false;
         private readonly bool ShiftToggle = false;
         private readonly bool Keylogging = false;
         private readonly UI_Mimic.UIReader? KeyboardHook;
+        private readonly Control? UserInteractionControl;
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
-        private const int ListMax = 13;
-        private const int TextboxMaxChar = 15;
         private readonly KeyCombo PauseButtons;
-        private readonly Color DisplayBackColor;
-        private readonly Color TextColor;
+        private bool Paused = false;
 
         public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, bool KeyLogging, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
@@ -29,8 +26,6 @@ namespace KeyStreamOverlay {
             this.UseTranslations = UseInputTranslations;
             this.ShiftToggle = ShiftToggle;
             this.Keylogging = KeyLogging;
-            DisplayBackColor = BackColor;
-            this.TextColor = TextColor;
 
 
             KeyboardHook = new UI_Mimic.UIReader(true, AllowedPrograms);
@@ -40,16 +35,16 @@ namespace KeyStreamOverlay {
             TextClearTimer = new(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
-            Control? UserInteraction = GenerateUIControl(OutputType,DisplayBackColor,TextColor);
-            if(UserInteraction is null) {
+            UserInteractionControl = GenerateUIControl(OutputType, BackColor, TextColor);
+            if(UserInteractionControl is null) {
                 MessageBox.Show("Failed to generate User output Control, Exiting...");
                 this.Close();
                 return;
             }
-            Controls.Add(UserInteraction);
+            Controls.Add(UserInteractionControl);
             if(OutputType == StreamOutputType.Textbox) {
                 this.Height = BtnPause.Top + BtnPause.Height + 45;
-                BtnPause.Top = UserInteraction.Bottom + 10;
+                BtnPause.Top = UserInteractionControl.Bottom + 10;
             }
 
             InfoLogging.LoggingInit(this.Keylogging);
@@ -183,36 +178,34 @@ namespace KeyStreamOverlay {
             if (input == "") {
                 return;
             }
-            foreach (Control a in Controls) {
-                if (a is ListBox listBox1) {
-                    for (int i = ListMax - 1; i > 0; i--) {
-                        listBox1.Items[i] = listBox1.Items[i - 1];
-                    }
-                    listBox1.Items[0] = input;
-                } else if (a is TextBox TbUI) {
-                    TbUI.Text += input;
-                    if (TbUI.Text.Length > TextboxMaxChar) {
-                        TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
-                    }
+            if (UserInteractionControl is ListBox listBox1) {
+                for (int i = ListMax - 1; i > 0; i--) {
+                    listBox1.Items[i] = listBox1.Items[i - 1];
+                }
+                listBox1.Items[0] = input;
+            } else if (UserInteractionControl is TextBox TbUI) {
+                TbUI.Text += input;
+                if (TbUI.Text.Length > TextboxMaxChar) {
+                    TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
                 }
             }
         }
         private void AddToUI_Duplicate(string input) {
-            if (input == "")
+            if (input == "") {
                 return;
-            foreach (Control a in Controls) {
-                if (a is ListBox listBox1) {
-                    listBox1.Items[0] += input;
-                    return;
-                } else if (a is TextBox TbUI) {
-                    TbUI.Text += input;
-                    if (TbUI.Text.Length > TextboxMaxChar) {
-                        TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
-                    }
-                    return;
+            }
+            if (UserInteractionControl is ListBox listBox1) {
+                listBox1.Items[0] += input;
+                return;
+            } else if (UserInteractionControl is TextBox TbUI) {
+                TbUI.Text += input;
+                if (TbUI.Text.Length > TextboxMaxChar) {
+                    TbUI.Text = TbUI.Text.Remove(0, TbUI.Text.Length - TextboxMaxChar);
                 }
+                return;
             }
         }
+
 
         private void ActiveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e) {
             if (!this.IsDisposed) {
