@@ -19,8 +19,6 @@ namespace KeyStreamOverlay {
         public StreamView(StreamOutputType OutputType, bool UseInputTranslations,bool ShiftToggle, bool KeyLogging, string[] AllowedWindows, KeyCombo PauseBind, Color BackColor, Color TextColor) {
             InitializeComponent();
 
-            
-
             this.TopMost = true;
             this.MinimizeBox = false;
             this.MaximizeBox = false;
@@ -179,8 +177,9 @@ namespace KeyStreamOverlay {
         }
 
         private void AddToUI(string input) {
-            if (input == "")
+            if (input == "") {
                 return;
+            }
             foreach (Control a in Controls) {
                 if (a is ListBox listBox1) {
                     for (int i = ListMax - 1; i > 0; i--) {
