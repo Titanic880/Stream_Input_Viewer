@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System.ComponentModel.Design;
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
@@ -111,6 +110,7 @@ namespace KeyStreamOverlay {
                 return;
             }
             KeyboardHook!.Dispose();
+            KeyboardHook = null;
             this.Hide();
             StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), CBTranslationToggle.Checked,CBShiftToggle.Checked, CBLogToggle.Checked, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
             view.ShowDialog();
@@ -118,7 +118,6 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            //MessageBox.Show("Stream View Cleaned up, Restarting Testing Hook...");
             KeyboardHook = new(false, new string[] { this.Text });
             KeyboardHook.OnError += KeyboardHook_OnError;
             KeyboardHook.KeyDown += KeyboardHook_KeyDown;
@@ -157,7 +156,6 @@ namespace KeyStreamOverlay {
                     LstTracked.Items.AddRange(SaveInfo.PreallowedWindows);
                     this.PauseBind = SaveInfo.PauseBind;
                     this.ImportedSave = SaveInfo.SaveLocation;
-                    //CBGlobal.Checked = SaveInfo.Global;
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;

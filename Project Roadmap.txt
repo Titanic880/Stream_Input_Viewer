@@ -6,6 +6,14 @@
 Bug Fix:
 	Rewrite Set Keybind to check Translations for modifier keys
 	- Needs More Testing. 
+	Fix StreamView Timer Cleanup
+	Fix StreamView Dynamic Sizing
+	- Textbox view:
+		-Short Textbox
+		-Cuts off Pause/Unpause button
+	- List View:
+		-
+
 
 Features:
 	Support for Pictures/Bitmaps?
