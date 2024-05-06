@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 
 namespace KeyStreamOverlay {
+    //TODO: Rebuild for ease of development
     public class SaveData {
         public readonly string SaveLocation;
         public readonly KeyCombo PauseBind;
@@ -9,6 +10,9 @@ namespace KeyStreamOverlay {
         public readonly Dictionary<Keys, string> translations = new();
         public readonly int[] BackColor = new int[4] { 255,0,255,0 };
         public readonly int[] TextColor = new int[4] { 255,0,0,0 };
+        public readonly int CharacterLineLimit = 13;
+        public readonly int OutputControl = 0;
+
         [IgnoreDataMember]
         public Color GetBackColor {
             get =>
@@ -25,9 +29,27 @@ namespace KeyStreamOverlay {
         public readonly bool DeleteLogFileOnLaunch = false;
         public readonly bool DeleteLogFileOnClose = false;
         public readonly bool UseTranslations = true;
+        public readonly bool MouseClickToggle = false;
+        public readonly bool ModifierAsPrimary = false;
 
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows,  Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled, bool DeleteLogFileLaunch, bool DeleteLogFileClose,bool UseTranslations) {
+        public SaveData(
+            string SaveLocation, 
+            KeyCombo PauseBind, 
+            string[] PreallowedWindows,  
+            Dictionary<Keys, string> translations, 
+            Color StreamViewBackColor,
+            Color StreamViewTextColor,
+            bool QuickLaunch, 
+            bool ShiftToggle, 
+            bool LoggingHookEnabled, 
+            bool DeleteLogFileOnLaunch, 
+            bool DeleteLogFileOnClose,
+            bool UseTranslations, 
+            int CharacterLineLimit,
+            bool MouseClickToggle,
+            bool ModifierAsPrimary,
+            int OutputControl
+            ) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -38,14 +60,34 @@ namespace KeyStreamOverlay {
             
             this.QuickLaunch = QuickLaunch;
             this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = loggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileClose;
+            this.LoggingHookEnabled = LoggingHookEnabled;
+            this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
+            this.DeleteLogFileOnClose = DeleteLogFileOnClose;
             this.UseTranslations = UseTranslations;
+            this.CharacterLineLimit = CharacterLineLimit;
+            this.MouseClickToggle = MouseClickToggle;
+            this.ModifierAsPrimary = ModifierAsPrimary;
+            this.OutputControl = OutputControl;
         }
         [JsonConstructor]
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, 
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileOnLaunch, bool DeleteLogFileOnClose,bool UseTranslations) {
+        public SaveData(
+            string SaveLocation, 
+            KeyCombo PauseBind, 
+            string[] PreallowedWindows, 
+            Dictionary<Keys, string> translations, 
+            int[] BackColor, 
+            int[] TextColor, 
+            bool QuickLaunch, 
+            bool ShiftToggle, 
+            bool LoggingHookEnabled,
+            bool DeleteLogFileOnLaunch, 
+            bool DeleteLogFileOnClose,
+            bool UseTranslations, 
+            int CharacterLineLimit,
+            bool MouseClickToggle,
+            bool ModifierAsPrimary,
+            int OutputControl
+            ) {
             this.SaveLocation = SaveLocation;
             this.PauseBind = PauseBind;
             this.PreallowedWindows = PreallowedWindows;
@@ -53,10 +95,15 @@ namespace KeyStreamOverlay {
             
             this.QuickLaunch = QuickLaunch;
             this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = loggingHookEnabled;
+            this.LoggingHookEnabled = LoggingHookEnabled;
             this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
             this.DeleteLogFileOnClose = DeleteLogFileOnClose;
             this.UseTranslations = UseTranslations;
+            this.CharacterLineLimit = CharacterLineLimit;
+
+            this.MouseClickToggle = MouseClickToggle;
+            this.ModifierAsPrimary = ModifierAsPrimary;
+            this.OutputControl = OutputControl;
 
             if (TextColor.Length > 4)
                 TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };
@@ -78,7 +125,7 @@ namespace KeyStreamOverlay {
             }
             this.TextColor = TextColor;
             this.BackColor = BackColor;
-            LoggingHookEnabled = loggingHookEnabled;
+            this.LoggingHookEnabled = LoggingHookEnabled;
         }
     }
 
@@ -92,7 +139,8 @@ namespace KeyStreamOverlay {
         public readonly bool Ctrl;
         public readonly bool Alt;
         public readonly bool Home;
-
+        private readonly MouseButtons? MouseButton = null;
+        [JsonConstructor]
         public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             this.key = key;
             this.Shift = Shift;
@@ -100,12 +148,24 @@ namespace KeyStreamOverlay {
             this.Alt = Alt;
             this.Home = Home;
         }
+
+        public KeyCombo(MouseButtons MouseButton) {
+            this.MouseButton = MouseButton;
+            key         = Keys.None;
+            Shift       = false;
+            Ctrl        = false;
+            Alt         = false;
+            Home        = false;
+        }
         public bool Equals(KeyCombo other) {
-            return this.key == other.key
-                && this.Shift == other.Shift
-                && this.Ctrl == other.Ctrl
-                && this.Alt == other.Alt
-                && this.Home == other.Home;
+            if (MouseButton != null) {
+                return this.MouseButton! == other.MouseButton;
+            }
+            return (this.key   == other.key
+                    && this.Shift == other.Shift
+                    && this.Ctrl  == other.Ctrl
+                    && this.Alt   == other.Alt
+                    && this.Home  == other.Home);
         }
         public bool Equals(Keys otherkey, bool otherShift, bool otherCtrl, bool otherAlt, bool Home) {
             return this.key == otherkey

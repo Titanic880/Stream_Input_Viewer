@@ -39,19 +39,21 @@
             TbTranslation = new TextBox();
             CBKeys = new ComboBox();
             groupBox1 = new GroupBox();
+            BtnResetTranslations = new Button();
             CBTranslationToggle = new CheckBox();
             BtnBackColorPicker = new Button();
             BtnTextColorPicker = new Button();
             CBOutputTypes = new ComboBox();
             LblUserOutput = new Label();
             groupBox2 = new GroupBox();
+            CBModPrim = new CheckBox();
+            CBMouseOut = new CheckBox();
             CBSkipSetupView = new CheckBox();
             CBShiftToggle = new CheckBox();
             CBDeleteLogClose = new CheckBox();
             CBDeleteLogLaunch = new CheckBox();
             CBLogToggle = new CheckBox();
             groupBox3 = new GroupBox();
-            BtnResetTranslations = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -88,9 +90,9 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(342, 251);
+            BtnStart.Location = new Point(342, 248);
             BtnStart.Name = "BtnStart";
-            BtnStart.Size = new Size(318, 113);
+            BtnStart.Size = new Size(324, 116);
             BtnStart.TabIndex = 5;
             BtnStart.Text = "Start StreamView";
             BtnStart.UseVisualStyleBackColor = true;
@@ -213,6 +215,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Translation Options";
             // 
+            // BtnResetTranslations
+            // 
+            BtnResetTranslations.Location = new Point(167, 161);
+            BtnResetTranslations.Name = "BtnResetTranslations";
+            BtnResetTranslations.Size = new Size(151, 23);
+            BtnResetTranslations.TabIndex = 31;
+            BtnResetTranslations.Text = "Reset to Default";
+            BtnResetTranslations.UseVisualStyleBackColor = true;
+            BtnResetTranslations.Click += BtnResetTranslations_Click;
+            // 
             // CBTranslationToggle
             // 
             CBTranslationToggle.AutoSize = true;
@@ -264,6 +276,8 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(CBModPrim);
+            groupBox2.Controls.Add(CBMouseOut);
             groupBox2.Controls.Add(CBSkipSetupView);
             groupBox2.Controls.Add(CBShiftToggle);
             groupBox2.Controls.Add(CBDeleteLogClose);
@@ -275,10 +289,30 @@
             groupBox2.Controls.Add(CBOutputTypes);
             groupBox2.Location = new Point(8, 239);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(328, 125);
+            groupBox2.Size = new Size(328, 160);
             groupBox2.TabIndex = 25;
             groupBox2.TabStop = false;
             groupBox2.Text = "General Settings";
+            // 
+            // CBModPrim
+            // 
+            CBModPrim.AutoSize = true;
+            CBModPrim.Location = new Point(150, 132);
+            CBModPrim.Name = "CBModPrim";
+            CBModPrim.Size = new Size(170, 19);
+            CBModPrim.TabIndex = 31;
+            CBModPrim.Text = "Disable Modifier as Primary";
+            CBModPrim.UseVisualStyleBackColor = true;
+            // 
+            // CBMouseOut
+            // 
+            CBMouseOut.AutoSize = true;
+            CBMouseOut.Location = new Point(150, 114);
+            CBMouseOut.Name = "CBMouseOut";
+            CBMouseOut.Size = new Size(166, 19);
+            CBMouseOut.TabIndex = 30;
+            CBMouseOut.Text = "Toggle mouse click output";
+            CBMouseOut.UseVisualStyleBackColor = true;
             // 
             // CBSkipSetupView
             // 
@@ -305,9 +339,9 @@
             CBDeleteLogClose.AutoSize = true;
             CBDeleteLogClose.Location = new Point(150, 96);
             CBDeleteLogClose.Name = "CBDeleteLogClose";
-            CBDeleteLogClose.Size = new Size(147, 19);
+            CBDeleteLogClose.Size = new Size(145, 19);
             CBDeleteLogClose.TabIndex = 27;
-            CBDeleteLogClose.Text = "Delete log File on close";
+            CBDeleteLogClose.Text = "Delete log file on close";
             CBDeleteLogClose.UseVisualStyleBackColor = true;
             // 
             // CBDeleteLogLaunch
@@ -347,21 +381,11 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Programs to Allow input tracking";
             // 
-            // BtnResetTranslations
-            // 
-            BtnResetTranslations.Location = new Point(167, 161);
-            BtnResetTranslations.Name = "BtnResetTranslations";
-            BtnResetTranslations.Size = new Size(151, 23);
-            BtnResetTranslations.TabIndex = 31;
-            BtnResetTranslations.Text = "Reset to Default";
-            BtnResetTranslations.UseVisualStyleBackColor = true;
-            BtnResetTranslations.Click += BtnResetTranslations_Click;
-            // 
             // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(689, 383);
+            ClientSize = new Size(689, 470);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(BtnStart);
@@ -409,5 +433,7 @@
         private CheckBox CBSkipSetupView;
         private CheckBox CBTranslationToggle;
         private Button BtnResetTranslations;
+        private CheckBox CBModPrim;
+        private CheckBox CBMouseOut;
     }
 }

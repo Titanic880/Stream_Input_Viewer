@@ -1,11 +1,14 @@
 using Newtonsoft.Json;
+using UI_Mimic.Windows;
+
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
 
-        private UI_Mimic.UIReader? KeyboardHook;
+        private UIReader? UIReaderHook;
         private KeyCombo PauseBind;
         private const string DefaultSave = "Save.json";
+        private int CharacterLineLimit;
         private string ImportedSave { get; set; } = "";
         public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
         private string SaveLocation {
@@ -19,6 +22,23 @@ namespace KeyStreamOverlay {
                 return ret;
             }
         }
+
+        public readonly static Keys[] KeyControl = {
+                 Keys.Shift,
+                 Keys.ShiftKey,
+                 Keys.LShiftKey,
+                 Keys.RShiftKey,
+                 Keys.Control,
+                 Keys.ControlKey,
+                 Keys.LControlKey,
+                 Keys.RControlKey,
+                 Keys.Alt,
+                 Keys.Menu,
+                 Keys.LMenu,
+                 Keys.RMenu,
+                 Keys.Home,
+                };
+
         public MainCustomize() {
             InitializeComponent();
             this.MaximizeBox = false;
@@ -26,10 +46,14 @@ namespace KeyStreamOverlay {
             this.HelpButton = true;
             this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
-            KeyboardHook = new(false, new string[] { this.Text });
-            KeyboardHook.KeyDown += KeyboardHook_KeyDown;
-            KeyboardHook.OnError += KeyboardHook_OnError;
-            PauseBind = new(Keys.Insert, true, true, true,true);
+            UIReaderHook =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook.KeyDown += KeyboardHook_KeyDown;
+            UIReaderHook.OnError += KeyboardHook_OnError;
+            PauseBind            =  new KeyCombo(Keys.Insert, true, true, true,true);
+
+            UIReaderHook = new UIReader(false, new string[] { this.Text },UIReader.HookTypePub.Mouse);
+            UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
+
             CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
             CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
@@ -65,12 +89,20 @@ namespace KeyStreamOverlay {
         private void KeyboardHook_OnError(Exception e) {
             InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
         }
+        
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             if (PauseBind != null) {
-                if (PauseBind.Equals(key, Shift, Ctrl, Alt,Home)) {
+                if (PauseBind.Equals(key, Shift, Ctrl, Alt, Home)) {
                     MessageBox.Show("Pause Bind Pressed!");
                 }
             }
+            
+            if (CBModPrim.Checked is false) {
+                if (KeyControl.Contains(key)) {
+                    return;
+                }
+            }
+
             string sft =  Shift ? TranslationDict.GetTranslation(Keys.Shift)+"+" : "";
             string ctrl = Ctrl ? TranslationDict.GetTranslation(Keys.Control)+ "+" : "";
             string alt = Alt ? TranslationDict.GetTranslation(Keys.Alt)+"+" : "";
@@ -94,6 +126,23 @@ namespace KeyStreamOverlay {
                 TbOutput.Text = sft + ctrl + alt + strkey;
             }
         }
+        private void MouseHook_OnMouseDown(MouseButtons MouseAction) {
+            if(CBMouseOut.Checked is false) {
+                return;
+            }
+            string output = MouseAction switch {
+                MouseButtons.Left     => "M1",
+                MouseButtons.Right    => "M2",
+                MouseButtons.Middle   => "M3",
+                MouseButtons.XButton1 => "MB1",
+                MouseButtons.XButton2 => "MB2",
+                _                     => ""
+            };
+            if (output == "") {
+                return;
+            }
+            TbOutput.Text = output;
+        }
         #endregion FormControl
         #region Functions
         private void LoadTranslations() {
@@ -109,21 +158,33 @@ namespace KeyStreamOverlay {
                 MessageBox.Show("List is empty or a pause bind has not been set...");
                 return;
             }
-            KeyboardHook!.Dispose();
-            KeyboardHook = null;
+            UIReaderHook!.Dispose();
+            UIReaderHook = null;
             this.Hide();
-            StreamView? view = new(Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!), CBTranslationToggle.Checked,CBShiftToggle.Checked, CBLogToggle.Checked, GetAllowedWindows(), PauseBind, BtnBackColorPicker.BackColor, BtnTextColorPicker.ForeColor);
+            StreamView? view = new StreamView(
+                Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!),
+                CBTranslationToggle.Checked, 
+                CBShiftToggle.Checked, 
+                CBLogToggle.Checked, 
+                GetAllowedWindows(), 
+                PauseBind,
+                BtnBackColorPicker.BackColor, 
+                BtnTextColorPicker.ForeColor,
+                CharacterLineLimit,
+                CBMouseOut.Checked,
+                CBModPrim.Checked
+                );
             view.ShowDialog();
             view.Close();
             view.Dispose();
             view = null;
             this.Show();
-            KeyboardHook = new(false, new string[] { this.Text });
-            KeyboardHook.OnError += KeyboardHook_OnError;
-            KeyboardHook.KeyDown += KeyboardHook_KeyDown;
+            UIReaderHook         =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook.OnError += KeyboardHook_OnError;
+            UIReaderHook.KeyDown += KeyboardHook_KeyDown;
         }
         private string[] GetAllowedWindows() {
-            List<string> AllowedPrograms = new();
+            List<string> AllowedPrograms = new List<string>();
             for (int i = 0; i < LstTracked.Items.Count; i++)
                 AllowedPrograms.Add(LstTracked.Items[i].ToString()!);
             return AllowedPrograms.ToArray();
@@ -132,6 +193,9 @@ namespace KeyStreamOverlay {
             if (!Directory.Exists(DefaultFolder)) {
                 Directory.CreateDirectory(DefaultFolder);
             }
+
+
+            //TODO: Sys rewrite
             File.WriteAllText(SaveLocation,
             JsonConvert.SerializeObject(
                 new SaveData(SaveLocation, PauseBind,
@@ -140,9 +204,13 @@ namespace KeyStreamOverlay {
                     BtnTextColorPicker.ForeColor,
                     CBSkipSetupView.Checked, CBShiftToggle.Checked,
                     CBLogToggle.Checked, CBDeleteLogLaunch.Checked,
-                    CBDeleteLogClose.Checked, CBTranslationToggle.Checked)
+                    CBDeleteLogClose.Checked, CBTranslationToggle.Checked
+                    , 14 //Number is CharacterLineLimit (Only changable via Config.json)
+                    , CBMouseOut.Checked,CBModPrim.Checked
+                    , CBOutputTypes.SelectedIndex
+                    ) 
                 , Formatting.Indented)
-            );
+            ); 
         }
         private void JSONLoad() {
             if (!File.Exists(SaveLocation)) {
@@ -165,6 +233,13 @@ namespace KeyStreamOverlay {
                     CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
                     CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
                     CBTranslationToggle.Checked = SaveInfo.UseTranslations;
+                    CharacterLineLimit = SaveInfo.CharacterLineLimit;
+                    CBMouseOut.Checked = SaveInfo.MouseClickToggle;
+                    CBModPrim.Checked = SaveInfo.ModifierAsPrimary;
+                    CBOutputTypes.SelectedIndex = 
+                        SaveInfo.OutputControl <= CBOutputTypes.Items.Count 
+                        ? SaveInfo.OutputControl 
+                        : 0;
                 }
                 InfoLogging.LoggingInit(CBLogToggle.Checked);
                 LoadTranslations();
@@ -201,7 +276,7 @@ namespace KeyStreamOverlay {
                 bool Alt = options.Contains(TranslationDict.GetTranslation(Keys.Alt)) || options.Contains("Alt");
                 bool Home = options.Contains(TranslationDict.GetTranslation(Keys.LWin)) || options.Contains("LWin");
 
-                PauseBind = new(key, Shift, Ctrl, Alt, Home);
+                PauseBind = new KeyCombo(key, Shift, Ctrl, Alt, Home);
                 MessageBox.Show("Pause Bind Set!");
             } else {
                 MessageBox.Show("Failed to Get Keybind");
@@ -281,11 +356,11 @@ namespace KeyStreamOverlay {
         private void BtnColorChange_Click(object sender, EventArgs e) {
             ColorDialog dialog;
             if (((Button)sender).Name == "BtnBackColorPicker") {
-                dialog = new() {
+                dialog = new ColorDialog {
                     Color = BtnBackColorPicker.BackColor
                 };
             } else {
-                dialog = new() {
+                dialog = new ColorDialog {
                     Color = BtnTextColorPicker.ForeColor
                 };
             }
