@@ -196,7 +196,8 @@ namespace KeyStreamOverlay {
                 DeleteLogFileOnClose = CBDeleteLogClose.Checked,
                 UseTranslations = CBTranslationToggle.Checked,
                 MouseClickToggle = CBMouseOut.Checked,
-                ModifierAsPrimary = CBModPrim.Checked
+                ModifierAsPrimary = CBModPrim.Checked,
+                OutputControl = (StreamOutputType)CBOutputTypes.SelectedIndex
             };
             File.WriteAllText(SaveData.SaveLocation, JsonConvert.SerializeObject(SD, Formatting.Indented));
         }
