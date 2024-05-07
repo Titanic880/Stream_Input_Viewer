@@ -47,13 +47,13 @@ namespace KeyStreamOverlay {
             this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
             UIReaderHook =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
             UIReaderHook.OnError += KeyboardHook_OnError;
-            PauseBind            =  new KeyCombo(Keys.Insert, true, true, true,true);
-
-            UIReaderHook = new UIReader(false, new string[] { this.Text },UIReader.HookTypePub.Mouse);
+            UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
             UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
 
+            PauseBind            =  new KeyCombo(Keys.Insert, true, true, true,true);
             CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
             CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
@@ -179,9 +179,12 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            UIReaderHook         =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook          =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
             UIReaderHook.OnError += KeyboardHook_OnError;
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
+            UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
         }
         private string[] GetAllowedWindows() {
             List<string> AllowedPrograms = new List<string>();
