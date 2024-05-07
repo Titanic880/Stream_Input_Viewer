@@ -11,8 +11,7 @@ namespace KeyStreamOverlay {
         private readonly bool Keylogging = false;
         private readonly bool MouseClickToggle = false;
         private readonly bool ModifierAsPrimary = false;
-        private readonly UIReader? KeyboardHook;
-        private readonly UIReader? MouseHook;
+        private readonly UIReader? UIHook;
         private readonly Control? UserInteractionControl;
         private readonly string[] AllowedPrograms;
         private readonly System.Timers.Timer TextClearTimer;
@@ -49,14 +48,13 @@ namespace KeyStreamOverlay {
             this.MouseClickToggle  = MouseClickToggle;
             this.ModifierAsPrimary = ModifierAsPrimary;
 
-            this.KeyboardHook     =  new UI_Mimic.Windows.UIReader(true, AllowedPrograms);
-            KeyboardHook.OnError += KeyboardHook_OnError;
-            KeyboardHook.KeyDown += KeyboardHook_KeyDown;
+            this.UIHook     =  new UI_Mimic.Windows.UIReader(true, AllowedPrograms);
+            this.UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook.OnError += KeyboardHook_OnError;
+            UIHook.KeyDown += KeyboardHook_KeyDown;
 
-            this.MouseHook          = new UI_Mimic.Windows.UIReader(true, AllowedPrograms,
-                UI_Mimic.Windows.UIReader.HookTypePub.Mouse);
-            MouseHook.OnError      += KeyboardHook_OnError;
-            MouseHook.OnMouseDown  += MouseHookOnOnMouseClick;
+            this.UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook.OnMouseDown  += MouseHookOnOnMouseClick;
 
             this.TextClearTimer     =  new Timer(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
@@ -77,7 +75,6 @@ namespace KeyStreamOverlay {
             InfoLogging.LoggingInit(this.Keylogging);
             TextClearTimer.Start();
         }
-
         private static Control? GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor, Color TextColor) {
             Control toadd;
             switch (ObjType) {
@@ -121,7 +118,7 @@ namespace KeyStreamOverlay {
 
         public new void Dispose() {
             InfoLogging.LoggingInit(false);
-            KeyboardHook?.Dispose();
+            UIHook?.Dispose();
             TextClearTimer!.Stop();
             TextClearTimer!.Elapsed -= ActiveTimer_Elapsed;
             TextClearTimer!.Dispose();
