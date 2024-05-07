@@ -32,14 +32,14 @@ namespace KeyStreamOverlay {
             this.HelpButton = true;
             this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
-            UIReaderHook =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook = new UIReader(false, new string[] { this.Text });
             UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
             UIReaderHook.OnError += KeyboardHook_OnError;
             UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
             UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
 
-            PauseBind            =  new KeyCombo(Keys.Insert, true, true, true,true);
+            PauseBind = new KeyCombo(Keys.Insert, true, true, true, true);
             CBOutputTypes.Items.AddRange(Enum.GetNames(typeof(StreamOutputType)));
             CBOutputTypes.SelectedIndex = 0;
             JSONLoad();
@@ -75,14 +75,14 @@ namespace KeyStreamOverlay {
         private void KeyboardHook_OnError(Exception e) {
             InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
         }
-        
+
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             if (PauseBind != null) {
                 if (PauseBind.Equals(key, Shift, Ctrl, Alt, Home)) {
                     MessageBox.Show("Pause Bind Pressed!");
                 }
             }
-            
+
             if (CBModPrim.Checked is false) {
                 if (KeyControl.Contains(key)) {
                     return;
@@ -113,7 +113,7 @@ namespace KeyStreamOverlay {
             }
         }
         private void MouseHook_OnMouseDown(MouseButtons MouseAction) {
-            if(CBMouseOut.Checked is false) {
+            if (CBMouseOut.Checked is false) {
                 return;
             }
             string output = MouseAction switch {
@@ -149,12 +149,12 @@ namespace KeyStreamOverlay {
             this.Hide();
             StreamView? view = new StreamView(
                 Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!),
-                CBTranslationToggle.Checked, 
-                CBShiftToggle.Checked, 
-                CBLogToggle.Checked, 
-                GetAllowedWindows(), 
+                CBTranslationToggle.Checked,
+                CBShiftToggle.Checked,
+                CBLogToggle.Checked,
+                GetAllowedWindows(),
                 PauseBind,
-                BtnBackColorPicker.BackColor, 
+                BtnBackColorPicker.BackColor,
                 BtnTextColorPicker.ForeColor,
                 CharacterLineLimit,
                 CBMouseOut.Checked,
@@ -165,7 +165,7 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            UIReaderHook          =  new UIReader(false, new string[] { this.Text });
+            UIReaderHook = new UIReader(false, new string[] { this.Text });
             UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
             UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
             UIReaderHook.OnError += KeyboardHook_OnError;
@@ -330,7 +330,7 @@ namespace KeyStreamOverlay {
         }
         private void BtnResetTranslations_Click(object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show("Would you like to reset ALL translations to default?\nPlease note, this also deletes custom translations","Are you sure?",MessageBoxButtons.YesNo);
-            if(dr == DialogResult.Yes) {
+            if (dr == DialogResult.Yes) {
                 TranslationDict.RestoreDefaults();
                 LoadTranslations();
             }
@@ -359,5 +359,22 @@ namespace KeyStreamOverlay {
             dialog.Dispose();
         }
         #endregion GeneralSettings Events
+
+        private void BtnAutoCatchName_Click(object sender, EventArgs e) {
+            MessageBox.Show("After Closing this popup open the window you want to catch the name of\n another popup will happen when it is done...");
+            for(int i = 5; i != 0; i--) {
+                Invoke(() => BtnAutoCatchName.Text = i.ToString());
+                this.Update();
+                //Sleep for 1 second so we can update the UI every Second
+                System.Threading.Thread.Sleep(1000);
+            }
+            string selectedwindow = UI_Mimic.Windows.WindowInfo.GetActiveWindowTitle();
+            DialogResult res = MessageBox.Show($"Window with the name of: '{selectedwindow}' was caught!\n(Please note that names can sometimes be inaccurate to the title provided but still relevant)\n is this correct?","",MessageBoxButtons.YesNo);
+            
+            if(res == DialogResult.Yes) {
+                LstTracked.Items.Add(selectedwindow);
+            }
+            BtnAutoCatchName.Text = "Auto Grab Window Name";
+        }
     }
 }

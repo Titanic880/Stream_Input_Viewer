@@ -54,6 +54,7 @@
             CBDeleteLogLaunch = new CheckBox();
             CBLogToggle = new CheckBox();
             groupBox3 = new GroupBox();
+            BtnAutoCatchName = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -75,12 +76,12 @@
             LstTracked.ItemHeight = 15;
             LstTracked.Location = new Point(4, 16);
             LstTracked.Name = "LstTracked";
-            LstTracked.Size = new Size(158, 199);
+            LstTracked.Size = new Size(158, 244);
             LstTracked.TabIndex = 1;
             // 
             // BtnPauseKeybind
             // 
-            BtnPauseKeybind.Location = new Point(172, 186);
+            BtnPauseKeybind.Location = new Point(169, 231);
             BtnPauseKeybind.Name = "BtnPauseKeybind";
             BtnPauseKeybind.Size = new Size(151, 29);
             BtnPauseKeybind.TabIndex = 3;
@@ -101,7 +102,7 @@
             // TbOutput
             // 
             TbOutput.Enabled = false;
-            TbOutput.Location = new Point(172, 159);
+            TbOutput.Location = new Point(169, 204);
             TbOutput.Name = "TbOutput";
             TbOutput.Size = new Size(151, 23);
             TbOutput.TabIndex = 7;
@@ -109,7 +110,7 @@
             // LblOut
             // 
             LblOut.AutoSize = true;
-            LblOut.Location = new Point(168, 139);
+            LblOut.Location = new Point(165, 184);
             LblOut.Name = "LblOut";
             LblOut.Size = new Size(160, 15);
             LblOut.TabIndex = 8;
@@ -135,7 +136,7 @@
             // 
             // BtnForceSave
             // 
-            BtnForceSave.Location = new Point(172, 103);
+            BtnForceSave.Location = new Point(172, 158);
             BtnForceSave.Name = "BtnForceSave";
             BtnForceSave.Size = new Size(151, 23);
             BtnForceSave.TabIndex = 11;
@@ -287,7 +288,7 @@
             groupBox2.Controls.Add(LblUserOutput);
             groupBox2.Controls.Add(BtnTextColorPicker);
             groupBox2.Controls.Add(CBOutputTypes);
-            groupBox2.Location = new Point(8, 239);
+            groupBox2.Location = new Point(8, 298);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(328, 160);
             groupBox2.TabIndex = 25;
@@ -366,6 +367,7 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(BtnAutoCatchName);
             groupBox3.Controls.Add(LstTracked);
             groupBox3.Controls.Add(BtnAddProgram);
             groupBox3.Controls.Add(BtnForceSave);
@@ -376,10 +378,20 @@
             groupBox3.Controls.Add(LblOut);
             groupBox3.Location = new Point(8, 12);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(328, 221);
+            groupBox3.Size = new Size(328, 280);
             groupBox3.TabIndex = 26;
             groupBox3.TabStop = false;
             groupBox3.Text = "Programs to Allow input tracking";
+            // 
+            // BtnAutoCatchName
+            // 
+            BtnAutoCatchName.Location = new Point(172, 103);
+            BtnAutoCatchName.Name = "BtnAutoCatchName";
+            BtnAutoCatchName.Size = new Size(151, 23);
+            BtnAutoCatchName.TabIndex = 12;
+            BtnAutoCatchName.Text = "Auto Grab Window Name";
+            BtnAutoCatchName.UseVisualStyleBackColor = true;
+            BtnAutoCatchName.Click += BtnAutoCatchName_Click;
             // 
             // MainCustomize
             // 
@@ -435,5 +447,6 @@
         private Button BtnResetTranslations;
         private CheckBox CBModPrim;
         private CheckBox CBMouseOut;
+        private Button BtnAutoCatchName;
     }
 }
