@@ -2,130 +2,36 @@
 using Newtonsoft.Json;
 
 namespace KeyStreamOverlay {
-    //TODO: Rebuild for ease of development
-    public class SaveData {
-        public readonly string SaveLocation;
-        public readonly KeyCombo PauseBind;
-        public readonly string[] PreallowedWindows;
-        public readonly Dictionary<Keys, string> translations = new();
-        public readonly int[] BackColor = new int[4] { 255,0,255,0 };
-        public readonly int[] TextColor = new int[4] { 255,0,0,0 };
-        public readonly int CharacterLineLimit = 13;
-        public readonly int OutputControl = 0;
+    internal class SaveData {
+        #region DataBlock
+        public static string SaveFolder { get; set; } = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
+        public static string SaveLocation { get; set; } = SaveFolder + "Save_Debug.json";
+        public KeyCombo PauseBind { get; set; } = new KeyCombo(Keys.Insert, true, true, true, true);
+        public string[] PreAllowedWindows { get; set; } = Array.Empty<string>();
+        public Dictionary<Keys, string> translations { get; set; } = new();
+
+        //Change to literal value after first run
+        public int BackColor { get; set; } = -16711936;
+        public int TextColor { get; set; } = -986896;
+        public int CharacterLineLimit { get; set; } = 13;          
+        public StreamOutputType OutputControl { get; set; } = 0;
+        public bool QuickLaunch { get; set; } = false;
+        public bool ShiftToggle { get; set; } = false;
+        public bool LoggingHookEnabled { get; set; } = false;
+        public bool DeleteLogFileOnLaunch { get; set; } = false;
+        public bool DeleteLogFileOnClose { get; set; } = false;
+        public bool UseTranslations { get; set; } = true;
+        public bool MouseClickToggle { get; set; } = false;
+        public bool ModifierAsPrimary { get; set; } = false;
+        #endregion
 
         [IgnoreDataMember]
         public Color GetBackColor {
-            get =>
-                Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
+            get => Color.FromArgb(BackColor);
         }
         [IgnoreDataMember]
         public Color GetTextColor {
-            get =>
-                Color.FromArgb(TextColor[0], TextColor[1], TextColor[2], TextColor[3]);
-        }
-        public readonly bool QuickLaunch = false;
-        public readonly bool ShiftToggle = false;
-        public readonly bool LoggingHookEnabled = false;
-        public readonly bool DeleteLogFileOnLaunch = false;
-        public readonly bool DeleteLogFileOnClose = false;
-        public readonly bool UseTranslations = true;
-        public readonly bool MouseClickToggle = false;
-        public readonly bool ModifierAsPrimary = false;
-
-        public SaveData(
-            string SaveLocation, 
-            KeyCombo PauseBind, 
-            string[] PreallowedWindows,  
-            Dictionary<Keys, string> translations, 
-            Color StreamViewBackColor,
-            Color StreamViewTextColor,
-            bool QuickLaunch, 
-            bool ShiftToggle, 
-            bool LoggingHookEnabled, 
-            bool DeleteLogFileOnLaunch, 
-            bool DeleteLogFileOnClose,
-            bool UseTranslations, 
-            int CharacterLineLimit,
-            bool MouseClickToggle,
-            bool ModifierAsPrimary,
-            int OutputControl
-            ) {
-            this.SaveLocation = SaveLocation;
-            this.PauseBind = PauseBind;
-            this.PreallowedWindows = PreallowedWindows;
-            this.translations = translations;
-
-            this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
-            this.TextColor = new int[] {StreamViewTextColor.A, StreamViewTextColor.R,StreamViewTextColor.G, StreamViewTextColor.B };
-            
-            this.QuickLaunch = QuickLaunch;
-            this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = LoggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileOnClose;
-            this.UseTranslations = UseTranslations;
-            this.CharacterLineLimit = CharacterLineLimit;
-            this.MouseClickToggle = MouseClickToggle;
-            this.ModifierAsPrimary = ModifierAsPrimary;
-            this.OutputControl = OutputControl;
-        }
-        [JsonConstructor]
-        public SaveData(
-            string SaveLocation, 
-            KeyCombo PauseBind, 
-            string[] PreallowedWindows, 
-            Dictionary<Keys, string> translations, 
-            int[] BackColor, 
-            int[] TextColor, 
-            bool QuickLaunch, 
-            bool ShiftToggle, 
-            bool LoggingHookEnabled,
-            bool DeleteLogFileOnLaunch, 
-            bool DeleteLogFileOnClose,
-            bool UseTranslations, 
-            int CharacterLineLimit,
-            bool MouseClickToggle,
-            bool ModifierAsPrimary,
-            int OutputControl
-            ) {
-            this.SaveLocation = SaveLocation;
-            this.PauseBind = PauseBind;
-            this.PreallowedWindows = PreallowedWindows;
-            this.translations = translations;
-            
-            this.QuickLaunch = QuickLaunch;
-            this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = LoggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileOnClose;
-            this.UseTranslations = UseTranslations;
-            this.CharacterLineLimit = CharacterLineLimit;
-
-            this.MouseClickToggle = MouseClickToggle;
-            this.ModifierAsPrimary = ModifierAsPrimary;
-            this.OutputControl = OutputControl;
-
-            if (TextColor.Length > 4)
-                TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };
-            for (int i = 0; i < 4; i++) {
-                if (TextColor[i] > 255) {
-                    TextColor[i] = 255;
-                } else if (TextColor[i] < 0) {
-                    TextColor[i] = 0;
-                }
-            }
-            if (BackColor.Length > 4)
-                BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
-            for (int i = 0; i < 4; i++) {
-                if (BackColor[i] > 255) {
-                    BackColor[i] = 255;
-                } else if (BackColor[i] < 0) {
-                    BackColor[i] = 0;
-                }
-            }
-            this.TextColor = TextColor;
-            this.BackColor = BackColor;
-            this.LoggingHookEnabled = LoggingHookEnabled;
+            get => Color.FromArgb(TextColor);
         }
     }
 

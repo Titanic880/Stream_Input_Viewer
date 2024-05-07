@@ -7,21 +7,7 @@ namespace KeyStreamOverlay {
 
         private UIReader? UIReaderHook;
         private KeyCombo PauseBind;
-        private const string DefaultSave = "Save.json";
         private int CharacterLineLimit;
-        private string ImportedSave { get; set; } = "";
-        public readonly static string DefaultFolder = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
-        private string SaveLocation {
-            get {
-                string ret = DefaultFolder;
-                if (ImportedSave.Contains('\\')) {
-                    ret = ImportedSave;
-                } else {
-                    ret += (ImportedSave == "" ? DefaultSave : ImportedSave);
-                }
-                return ret;
-            }
-        }
 
         public readonly static Keys[] KeyControl = {
                  Keys.Shift,
@@ -74,7 +60,7 @@ namespace KeyStreamOverlay {
                           "\n'Enter program name here'" +
                           $"\nEX: this window is '{this.Text}'" +
                           "\n\nAll associated files can be found at:" +
-                          $"\n{DefaultFolder}");
+                          $"\n{SaveData.SaveFolder}");
         }
         #region FormControl
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
@@ -193,40 +179,38 @@ namespace KeyStreamOverlay {
             return AllowedPrograms.ToArray();
         }
         private void JSONSave() {
-            if (!Directory.Exists(DefaultFolder)) {
-                Directory.CreateDirectory(DefaultFolder);
+            if (!Directory.Exists(SaveData.SaveFolder)) {
+                Directory.CreateDirectory(SaveData.SaveFolder);
             }
-
-
-            //TODO: Sys rewrite
-            File.WriteAllText(SaveLocation,
-            JsonConvert.SerializeObject(
-                new SaveData(SaveLocation, PauseBind,
-                    GetAllowedWindows(), TranslationDict.Translations,
-                    BtnBackColorPicker.BackColor,
-                    BtnTextColorPicker.ForeColor,
-                    CBSkipSetupView.Checked, CBShiftToggle.Checked,
-                    CBLogToggle.Checked, CBDeleteLogLaunch.Checked,
-                    CBDeleteLogClose.Checked, CBTranslationToggle.Checked
-                    , 14 //Number is CharacterLineLimit (Only changable via Config.json)
-                    , CBMouseOut.Checked,CBModPrim.Checked
-                    , CBOutputTypes.SelectedIndex
-                    ) 
-                , Formatting.Indented)
-            ); 
+            SaveData SD = new() {
+                PauseBind = this.PauseBind,
+                PreAllowedWindows = GetAllowedWindows(),
+                translations = TranslationDict.Translations,
+                BackColor = BtnBackColorPicker.BackColor.ToArgb(),
+                TextColor = BtnTextColorPicker.BackColor.ToArgb(),
+                CharacterLineLimit = this.CharacterLineLimit,
+                QuickLaunch = CBSkipSetupView.Checked,
+                ShiftToggle = CBShiftToggle.Checked,
+                LoggingHookEnabled = CBLogToggle.Checked,
+                DeleteLogFileOnLaunch = CBDeleteLogLaunch.Checked,
+                DeleteLogFileOnClose = CBDeleteLogClose.Checked,
+                UseTranslations = CBTranslationToggle.Checked,
+                MouseClickToggle = CBMouseOut.Checked,
+                ModifierAsPrimary = CBModPrim.Checked
+            };
+            File.WriteAllText(SaveData.SaveLocation, JsonConvert.SerializeObject(SD, Formatting.Indented));
         }
         private void JSONLoad() {
-            if (!File.Exists(SaveLocation)) {
+            if (!File.Exists(SaveData.SaveLocation)) {
                 MessageBox.Show("Save file not found...\nLoading Defaults...");
                 MessageBox.Show("PLEASE KNOW: This program READS EVERY KEY INPUT YOU DO, even if it is not shown\nIt does not log/record any inputs without user permission.");
                 JSONSave();
             }
             try {
-                SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(SaveLocation));
+                SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(SaveData.SaveLocation));
                 if (SaveInfo != null) {
-                    LstTracked.Items.AddRange(SaveInfo.PreallowedWindows);
+                    LstTracked.Items.AddRange(SaveInfo.PreAllowedWindows);
                     this.PauseBind = SaveInfo.PauseBind;
-                    this.ImportedSave = SaveInfo.SaveLocation;
                     TranslationDict.LoadTranslations(SaveInfo.translations);
                     BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
                     BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
@@ -239,10 +223,7 @@ namespace KeyStreamOverlay {
                     CharacterLineLimit = SaveInfo.CharacterLineLimit;
                     CBMouseOut.Checked = SaveInfo.MouseClickToggle;
                     CBModPrim.Checked = SaveInfo.ModifierAsPrimary;
-                    CBOutputTypes.SelectedIndex = 
-                        SaveInfo.OutputControl <= CBOutputTypes.Items.Count 
-                        ? SaveInfo.OutputControl 
-                        : 0;
+                    CBOutputTypes.SelectedIndex = (int)SaveInfo.OutputControl;
                 }
                 InfoLogging.LoggingInit(CBLogToggle.Checked);
                 LoadTranslations();
