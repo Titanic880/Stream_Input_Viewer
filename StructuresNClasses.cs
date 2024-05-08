@@ -3,82 +3,36 @@ using Newtonsoft.Json;
 
 namespace KeyStreamOverlay {
     public class SaveData {
-        public readonly string SaveLocation;
-        public readonly KeyCombo PauseBind;
-        public readonly string[] PreallowedWindows;
-        public readonly Dictionary<Keys, string> translations = new();
-        public readonly int[] BackColor = new int[4] { 255,0,255,0 };
-        public readonly int[] TextColor = new int[4] { 255,0,0,0 };
+        #region DataBlock
+        public static string SaveFolder { get; set; } = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
+        public static string SaveLocation { get; set; } = SaveFolder + "Save_Debug.json";
+        public KeyCombo PauseBind { get; set; } = new KeyCombo(Keys.Insert, true, true, true, true);
+        public string[] PreAllowedWindows { get; set; } = Array.Empty<string>();
+        public Dictionary<Keys, string> Translations { get; set; } = new();
+
+        //Change to literal value after first run
+        public int BackColor { get; set; } = -16711936;
+        public int TextColor { get; set; } = -986896;
+        public int CharacterLineLimit { get; set; } = 13;          
+        public StreamOutputType OutputControl { get; set; } = 0;
+        public bool QuickLaunch { get; set; } = false;
+        public bool ShiftToggle { get; set; } = false;
+        public bool LoggingHookEnabled { get; set; } = false;
+        public bool DeleteLogFileOnLaunch { get; set; } = false;
+        public bool DeleteLogFileOnClose { get; set; } = false;
+        public bool UseTranslations { get; set; } = true;
+        public bool MouseClickToggle { get; set; } = false;
+        public bool ModifierAsPrimary { get; set; } = false;
+        public bool DuplicateSpamProtect { get; set; } = false;
+        #endregion
+
         [IgnoreDataMember]
         public Color GetBackColor {
-            get =>
-                Color.FromArgb(BackColor[0], BackColor[1], BackColor[2], BackColor[3]);
+            get => Color.FromArgb(BackColor);
         }
         [IgnoreDataMember]
         public Color GetTextColor {
-            get =>
-                Color.FromArgb(TextColor[0], TextColor[1], TextColor[2], TextColor[3]);
-        }
-        public readonly bool QuickLaunch = false;
-        public readonly bool ShiftToggle = false;
-        public readonly bool LoggingHookEnabled = false;
-        public readonly bool DeleteLogFileOnLaunch = false;
-        public readonly bool DeleteLogFileOnClose = false;
-        public readonly bool UseTranslations = true;
-
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows,  Dictionary<Keys, string> translations, Color StreamViewBackColor,Color StreamViewTextColor,
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled, bool DeleteLogFileLaunch, bool DeleteLogFileClose,bool UseTranslations) {
-            this.SaveLocation = SaveLocation;
-            this.PauseBind = PauseBind;
-            this.PreallowedWindows = PreallowedWindows;
-            this.translations = translations;
-
-            this.BackColor = new int[] { StreamViewBackColor.A, StreamViewBackColor.R, StreamViewBackColor.G, StreamViewBackColor.B };
-            this.TextColor = new int[] {StreamViewTextColor.A, StreamViewTextColor.R,StreamViewTextColor.G, StreamViewTextColor.B };
-            
-            this.QuickLaunch = QuickLaunch;
-            this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = loggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileClose;
-            this.UseTranslations = UseTranslations;
-        }
-        [JsonConstructor]
-        public SaveData(string SaveLocation, KeyCombo PauseBind, string[] PreallowedWindows, Dictionary<Keys, string> translations, int[] BackColor, int[] TextColor, 
-            bool QuickLaunch, bool ShiftToggle, bool loggingHookEnabled,bool DeleteLogFileOnLaunch, bool DeleteLogFileOnClose,bool UseTranslations) {
-            this.SaveLocation = SaveLocation;
-            this.PauseBind = PauseBind;
-            this.PreallowedWindows = PreallowedWindows;
-            this.translations = translations;
-            
-            this.QuickLaunch = QuickLaunch;
-            this.ShiftToggle = ShiftToggle;
-            this.LoggingHookEnabled = loggingHookEnabled;
-            this.DeleteLogFileOnLaunch = DeleteLogFileOnLaunch;
-            this.DeleteLogFileOnClose = DeleteLogFileOnClose;
-            this.UseTranslations = UseTranslations;
-
-            if (TextColor.Length > 4)
-                TextColor = new int[4] { TextColor[0], TextColor[1], TextColor[2], TextColor[3] };
-            for (int i = 0; i < 4; i++) {
-                if (TextColor[i] > 255) {
-                    TextColor[i] = 255;
-                } else if (TextColor[i] < 0) {
-                    TextColor[i] = 0;
-                }
-            }
-            if (BackColor.Length > 4)
-                BackColor = new int[4] { BackColor[0], BackColor[1], BackColor[2], BackColor[3] };
-            for (int i = 0; i < 4; i++) {
-                if (BackColor[i] > 255) {
-                    BackColor[i] = 255;
-                } else if (BackColor[i] < 0) {
-                    BackColor[i] = 0;
-                }
-            }
-            this.TextColor = TextColor;
-            this.BackColor = BackColor;
-            LoggingHookEnabled = loggingHookEnabled;
+            get => Color.FromArgb(TextColor);
         }
     }
 
@@ -91,24 +45,41 @@ namespace KeyStreamOverlay {
         public readonly bool Shift;
         public readonly bool Ctrl;
         public readonly bool Alt;
-
-        public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt) {
+        public readonly bool Home;
+        private readonly MouseButtons? MouseButton = null;
+        [JsonConstructor]
+        public KeyCombo(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             this.key = key;
             this.Shift = Shift;
             this.Ctrl = Ctrl;
             this.Alt = Alt;
+            this.Home = Home;
+        }
+
+        public KeyCombo(MouseButtons MouseButton) {
+            this.MouseButton = MouseButton;
+            key         = Keys.None;
+            Shift       = false;
+            Ctrl        = false;
+            Alt         = false;
+            Home        = false;
         }
         public bool Equals(KeyCombo other) {
-            return this.key == other.key
-                && this.Shift == other.Shift
-                && this.Ctrl == other.Ctrl
-                && this.Alt == other.Alt;
+            if (MouseButton != null) {
+                return this.MouseButton! == other.MouseButton;
+            }
+            return (this.key   == other.key
+                    && this.Shift == other.Shift
+                    && this.Ctrl  == other.Ctrl
+                    && this.Alt   == other.Alt
+                    && this.Home  == other.Home);
         }
-        public bool Equals(Keys otherkey, bool otherShift, bool otherCtrl, bool otherAlt) {
+        public bool Equals(Keys otherkey, bool otherShift, bool otherCtrl, bool otherAlt, bool Home) {
             return this.key == otherkey
                 && this.Shift == otherShift
                 && this.Ctrl == otherCtrl
-                && this.Alt == otherAlt;
+                && this.Alt == otherAlt
+                && this.Home == Home;
         }
     }
 
@@ -128,9 +99,29 @@ namespace KeyStreamOverlay {
             { Keys.D0,"0" },
             { Keys.OemMinus, "-" },
             { Keys.Oemplus, "=" },
+            { Keys.Space, "˽" },
 
-            { Keys.Menu, "LAlt" },
-            { Keys.LWin, "Win" },
+            { Keys.Alt, "⎇" },
+            { Keys.Menu, "⎇" },
+            { Keys.LMenu, "⎇" },
+            { Keys.RMenu, "⎇" },
+            { Keys.Shift, "⇧" },
+            { Keys.ShiftKey, "⇧" },
+            { Keys.LShiftKey, "⇧" },
+            { Keys.RShiftKey, "⇧" },
+            { Keys.Control, "⎈" },
+            { Keys.ControlKey, "⎈" },
+            { Keys.LControlKey, "⎈" },
+            { Keys.RControlKey, "⎈" },
+
+            { Keys.Escape, "⎋" },
+            { Keys.Tab, "⭾" },
+            { Keys.CapsLock, "⇪" },
+            { Keys.Delete, "⌦" },
+            { Keys.Enter, "¶" },
+            { Keys.Back, "⌫" },
+            { Keys.LWin, "⌂" },
+            { Keys.RWin, "⌂" },
 
             { Keys.OemOpenBrackets, "[" },
             { Keys.Oem6, "]" },
@@ -168,7 +159,8 @@ namespace KeyStreamOverlay {
 
             { Keys.Oemcomma, "<" },
             { Keys.OemPeriod, ">" },
-            { Keys.OemQuestion , "?" }
+            { Keys.OemQuestion , "?" },
+
         };
         public static Dictionary<Keys, string> Translations { get; private set; } = new();
         /// <summary>
