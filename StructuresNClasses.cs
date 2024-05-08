@@ -2,13 +2,13 @@
 using Newtonsoft.Json;
 
 namespace KeyStreamOverlay {
-    internal class SaveData {
+    public class SaveData {
         #region DataBlock
         public static string SaveFolder { get; set; } = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
         public static string SaveLocation { get; set; } = SaveFolder + "Save_Debug.json";
         public KeyCombo PauseBind { get; set; } = new KeyCombo(Keys.Insert, true, true, true, true);
         public string[] PreAllowedWindows { get; set; } = Array.Empty<string>();
-        public Dictionary<Keys, string> translations { get; set; } = new();
+        public Dictionary<Keys, string> Translations { get; set; } = new();
 
         //Change to literal value after first run
         public int BackColor { get; set; } = -16711936;
@@ -23,6 +23,7 @@ namespace KeyStreamOverlay {
         public bool UseTranslations { get; set; } = true;
         public bool MouseClickToggle { get; set; } = false;
         public bool ModifierAsPrimary { get; set; } = false;
+        public bool DuplicateSpamProtect { get; set; } = false;
         #endregion
 
         [IgnoreDataMember]

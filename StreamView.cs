@@ -4,75 +4,63 @@ using UI_Mimic.Windows;
 namespace KeyStreamOverlay {
     public partial class StreamView : Form {
 
-        private const int ListMax = 13;
-        private readonly int TextboxMaxChar = 15;
-        private readonly bool UseTranslations = false;
-        private readonly bool ShiftToggle = false;
-        private readonly bool Keylogging = false;
-        private readonly bool MouseClickToggle = false;
-        private readonly bool ModifierAsPrimary = false;
-        private readonly UIReader? UIHook;
-        private readonly Control? UserInteractionControl;
-        private readonly string[] AllowedPrograms;
-        private readonly System.Timers.Timer TextClearTimer;
+        private UIReader? UIHook;
+        private Control? UserInteractionControl;
+        private readonly Timer TextClearTimer;
         private readonly KeyCombo PauseButtons;
+        
+        private const int ListMax = 13;
+        private int TextboxMaxChar = 15;
+        
+        private bool UseTranslations = false;
+        private bool ShiftToggle = false;
+        private bool Keylogging = false;
+        private bool MouseClickToggle = false;
+        private bool ModifierAsPrimary = false;
         private bool Paused = false;
 
-        public StreamView(
-            StreamOutputType OutputType, 
-            bool UseInputTranslations, 
-            bool ShiftToggle, 
-            bool KeyLogging,
-            string[] AllowedWindows, 
-            KeyCombo PauseBind, 
-            Color BackColor,
-            Color TextColor,
-            int CharacterLineLimit,
-            bool MouseClickToggle,
-            bool ModifierAsPrimary
-        ) {
+        public StreamView(SaveData Save) {
             InitializeComponent();
             //TODO: Directional Spam protection toggle
-            this.TopMost      = true;
-            this.MinimizeBox  = false;
-            this.MaximizeBox  = false;
-            this.AcceptButton = BtnPause;
+            TopMost = true;
+            MinimizeBox = false;
+            MaximizeBox = false;
+            AcceptButton = BtnPause;
 
-            AllowedPrograms        = AllowedWindows;
-            PauseButtons           = PauseBind;
-            this.UseTranslations   = UseInputTranslations;
-            this.ShiftToggle       = ShiftToggle;
-            this.Keylogging        = KeyLogging;
+            PauseButtons = Save.PauseBind;
+            UseTranslations = Save.UseTranslations;
+            ShiftToggle = Save.ShiftToggle;
+            Keylogging = Save.LoggingHookEnabled;
 
-            this.TextboxMaxChar    = CharacterLineLimit;
-            this.MouseClickToggle  = MouseClickToggle;
-            this.ModifierAsPrimary = ModifierAsPrimary;
+            TextboxMaxChar = Save.CharacterLineLimit;
+            MouseClickToggle = Save.MouseClickToggle;
+            ModifierAsPrimary = Save.ModifierAsPrimary;
 
-            this.UIHook     =  new UI_Mimic.Windows.UIReader(true, AllowedPrograms);
-            this.UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook = new UI_Mimic.Windows.UIReader(true, Save.PreAllowedWindows);
+            UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
             UIHook.OnError += KeyboardHook_OnError;
             UIHook.KeyDown += KeyboardHook_KeyDown;
+            UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook.OnMouseDown += MouseHookOnOnMouseClick;
 
-            this.UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
-            UIHook.OnMouseDown  += MouseHookOnOnMouseClick;
-
-            this.TextClearTimer     =  new Timer(4000);
+            TextClearTimer = new Timer(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
-            this.UserInteractionControl = GenerateUIControl(OutputType, BackColor, TextColor);
+            UserInteractionControl = GenerateUIControl(Save.OutputControl, Save.GetBackColor, Save.GetTextColor);
             if (UserInteractionControl is null) {
                 MessageBox.Show("Failed to generate User output Control, Exiting...");
-                this.Close();
+                Close();
                 return;
             }
 
             Controls.Add(UserInteractionControl);
-            if (OutputType == StreamOutputType.Textbox) {
-                this.Height  = BtnPause.Height + 100;
+            if (Save.OutputControl == StreamOutputType.Textbox) {
+                Height = BtnPause.Height + 100;
                 BtnPause.Top = UserInteractionControl.Bottom + 10;
             }
+            InfoLogging.LoggingInit(Save.LoggingHookEnabled);
 
-            InfoLogging.LoggingInit(this.Keylogging);
+            
             TextClearTimer.Start();
         }
         private static Control? GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor, Color TextColor) {

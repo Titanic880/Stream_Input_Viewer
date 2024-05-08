@@ -147,19 +147,7 @@ namespace KeyStreamOverlay {
             UIReaderHook!.Dispose();
             UIReaderHook = null;
             this.Hide();
-            StreamView? view = new StreamView(
-                Enum.Parse<StreamOutputType>(CBOutputTypes.SelectedItem.ToString()!),
-                CBTranslationToggle.Checked,
-                CBShiftToggle.Checked,
-                CBLogToggle.Checked,
-                GetAllowedWindows(),
-                PauseBind,
-                BtnBackColorPicker.BackColor,
-                BtnTextColorPicker.ForeColor,
-                CharacterLineLimit,
-                CBMouseOut.Checked,
-                CBModPrim.Checked
-                );
+            StreamView? view = new(GenerateSave());
             view.ShowDialog();
             view.Close();
             view.Dispose();
@@ -173,19 +161,16 @@ namespace KeyStreamOverlay {
             UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
         }
         private string[] GetAllowedWindows() {
-            List<string> AllowedPrograms = new List<string>();
+            List<string> AllowedPrograms = new();
             for (int i = 0; i < LstTracked.Items.Count; i++)
                 AllowedPrograms.Add(LstTracked.Items[i].ToString()!);
             return AllowedPrograms.ToArray();
         }
-        private void JSONSave() {
-            if (!Directory.Exists(SaveData.SaveFolder)) {
-                Directory.CreateDirectory(SaveData.SaveFolder);
-            }
-            SaveData SD = new() {
+        private SaveData GenerateSave() {
+            return new SaveData() {
                 PauseBind = this.PauseBind,
                 PreAllowedWindows = GetAllowedWindows(),
-                translations = TranslationDict.Translations,
+                Translations = TranslationDict.Translations,
                 BackColor = BtnBackColorPicker.BackColor.ToArgb(),
                 TextColor = BtnTextColorPicker.BackColor.ToArgb(),
                 CharacterLineLimit = this.CharacterLineLimit,
@@ -199,7 +184,31 @@ namespace KeyStreamOverlay {
                 ModifierAsPrimary = CBModPrim.Checked,
                 OutputControl = (StreamOutputType)CBOutputTypes.SelectedIndex
             };
-            File.WriteAllText(SaveData.SaveLocation, JsonConvert.SerializeObject(SD, Formatting.Indented));
+        }
+        private void LoadSave(SaveData SaveInfo) {
+            LstTracked.Items.AddRange(SaveInfo.PreAllowedWindows);
+            this.PauseBind = SaveInfo.PauseBind;
+            TranslationDict.LoadTranslations(SaveInfo.Translations);
+            BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
+            BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
+            CBSkipSetupView.Checked = SaveInfo.QuickLaunch;
+            CBShiftToggle.Checked = SaveInfo.ShiftToggle;
+            CBLogToggle.Checked = SaveInfo.LoggingHookEnabled;
+            CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
+            CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
+            CBTranslationToggle.Checked = SaveInfo.UseTranslations;
+            CharacterLineLimit = SaveInfo.CharacterLineLimit;
+            CBMouseOut.Checked = SaveInfo.MouseClickToggle;
+            CBModPrim.Checked = SaveInfo.ModifierAsPrimary;
+            CBOutputTypes.SelectedIndex = (int)SaveInfo.OutputControl;
+            InfoLogging.LoggingInit(CBLogToggle.Checked);
+        }
+
+        private void JSONSave() {
+            if (!Directory.Exists(SaveData.SaveFolder)) {
+                Directory.CreateDirectory(SaveData.SaveFolder);
+            }
+            File.WriteAllText(SaveData.SaveLocation, JsonConvert.SerializeObject(GenerateSave(), Formatting.Indented));
         }
         private void JSONLoad() {
             if (!File.Exists(SaveData.SaveLocation)) {
@@ -210,23 +219,8 @@ namespace KeyStreamOverlay {
             try {
                 SaveData? SaveInfo = JsonConvert.DeserializeObject<SaveData>(File.ReadAllText(SaveData.SaveLocation));
                 if (SaveInfo != null) {
-                    LstTracked.Items.AddRange(SaveInfo.PreAllowedWindows);
-                    this.PauseBind = SaveInfo.PauseBind;
-                    TranslationDict.LoadTranslations(SaveInfo.translations);
-                    BtnBackColorPicker.BackColor = SaveInfo.GetBackColor;
-                    BtnTextColorPicker.ForeColor = SaveInfo.GetTextColor;
-                    CBSkipSetupView.Checked = SaveInfo.QuickLaunch;
-                    CBShiftToggle.Checked = SaveInfo.ShiftToggle;
-                    CBLogToggle.Checked = SaveInfo.LoggingHookEnabled;
-                    CBDeleteLogLaunch.Checked = SaveInfo.DeleteLogFileOnLaunch;
-                    CBDeleteLogClose.Checked = SaveInfo.DeleteLogFileOnClose;
-                    CBTranslationToggle.Checked = SaveInfo.UseTranslations;
-                    CharacterLineLimit = SaveInfo.CharacterLineLimit;
-                    CBMouseOut.Checked = SaveInfo.MouseClickToggle;
-                    CBModPrim.Checked = SaveInfo.ModifierAsPrimary;
-                    CBOutputTypes.SelectedIndex = (int)SaveInfo.OutputControl;
+                    LoadSave(SaveInfo);
                 }
-                InfoLogging.LoggingInit(CBLogToggle.Checked);
                 LoadTranslations();
             } catch (Exception ex) {
                 MessageBox.Show($"Failed to grab saved Data: {ex.Message}");
@@ -359,8 +353,6 @@ namespace KeyStreamOverlay {
             }
             dialog.Dispose();
         }
-        #endregion GeneralSettings Events
-
         private void BtnAutoCatchName_Click(object sender, EventArgs e) {
             MessageBox.Show("After Closing this popup open the window you want to catch the name of\n another popup will happen when it is done...");
             for(int i = 5; i != 0; i--) {
@@ -377,5 +369,7 @@ namespace KeyStreamOverlay {
             }
             BtnAutoCatchName.Text = "Auto Grab Window Name";
         }
+        #endregion GeneralSettings Events
+
     }
 }
