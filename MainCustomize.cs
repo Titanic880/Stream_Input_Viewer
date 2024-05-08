@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
+using UI_Mimic;
 using UI_Mimic.Windows;
 
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {
 
-        private UIReader? UIReaderHook;
+        private InputReader? UIReaderHook;
         private KeyCombo PauseBind;
         private int CharacterLineLimit;
 
@@ -32,11 +33,11 @@ namespace KeyStreamOverlay {
             this.HelpButton = true;
             this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
-            UIReaderHook = new UIReader(false, new string[] { this.Text });
-            UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIReaderHook = InputReader.ReaderFactory(false, new string[] { this.Text });
+            UIReaderHook.GenerateHook(HookTypePub.Keyboard);
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
             UIReaderHook.OnError += KeyboardHook_OnError;
-            UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
+            UIReaderHook.GenerateHook(HookTypePub.Mouse);
             UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;
 
             PauseBind = new KeyCombo(Keys.Insert, true, true, true, true);
@@ -153,9 +154,9 @@ namespace KeyStreamOverlay {
             view.Dispose();
             view = null;
             this.Show();
-            UIReaderHook = new UIReader(false, new string[] { this.Text });
-            UIReaderHook.GenerateHook(UIReader.HookTypePub.Keyboard);
-            UIReaderHook.GenerateHook(UIReader.HookTypePub.Mouse);
+            UIReaderHook = InputReader.ReaderFactory(false, new string[] { this.Text });
+            UIReaderHook.GenerateHook(HookTypePub.Keyboard);
+            UIReaderHook.GenerateHook(HookTypePub.Mouse);
             UIReaderHook.OnError += KeyboardHook_OnError;
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
             UIReaderHook.OnMouseDown += MouseHook_OnMouseDown;

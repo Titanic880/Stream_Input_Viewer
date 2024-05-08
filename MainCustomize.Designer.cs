@@ -76,14 +76,14 @@
             LstTracked.ItemHeight = 15;
             LstTracked.Location = new Point(4, 16);
             LstTracked.Name = "LstTracked";
-            LstTracked.Size = new Size(158, 244);
+            LstTracked.Size = new Size(158, 214);
             LstTracked.TabIndex = 1;
             // 
             // BtnPauseKeybind
             // 
-            BtnPauseKeybind.Location = new Point(169, 231);
+            BtnPauseKeybind.Location = new Point(169, 207);
             BtnPauseKeybind.Name = "BtnPauseKeybind";
-            BtnPauseKeybind.Size = new Size(151, 29);
+            BtnPauseKeybind.Size = new Size(151, 23);
             BtnPauseKeybind.TabIndex = 3;
             BtnPauseKeybind.Text = "Set Pause Keybind";
             BtnPauseKeybind.UseVisualStyleBackColor = true;
@@ -91,9 +91,9 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(504, 249);
+            BtnStart.Location = new Point(672, 178);
             BtnStart.Name = "BtnStart";
-            BtnStart.Size = new Size(156, 116);
+            BtnStart.Size = new Size(328, 55);
             BtnStart.TabIndex = 5;
             BtnStart.Text = "Start StreamView";
             BtnStart.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@
             // TbOutput
             // 
             TbOutput.Enabled = false;
-            TbOutput.Location = new Point(169, 204);
+            TbOutput.Location = new Point(169, 178);
             TbOutput.Name = "TbOutput";
             TbOutput.Size = new Size(151, 23);
             TbOutput.TabIndex = 7;
@@ -110,7 +110,7 @@
             // LblOut
             // 
             LblOut.AutoSize = true;
-            LblOut.Location = new Point(165, 184);
+            LblOut.Location = new Point(165, 158);
             LblOut.Name = "LblOut";
             LblOut.Size = new Size(160, 15);
             LblOut.TabIndex = 8;
@@ -136,7 +136,7 @@
             // 
             // BtnForceSave
             // 
-            BtnForceSave.Location = new Point(172, 158);
+            BtnForceSave.Location = new Point(172, 132);
             BtnForceSave.Name = "BtnForceSave";
             BtnForceSave.Size = new Size(151, 23);
             BtnForceSave.TabIndex = 11;
@@ -178,7 +178,7 @@
             // 
             LstTranslations.FormattingEnabled = true;
             LstTranslations.ItemHeight = 15;
-            LstTranslations.Location = new Point(4, 16);
+            LstTranslations.Location = new Point(3, 16);
             LstTranslations.Name = "LstTranslations";
             LstTranslations.Size = new Size(158, 199);
             LstTranslations.TabIndex = 16;
@@ -288,7 +288,7 @@
             groupBox2.Controls.Add(LblUserOutput);
             groupBox2.Controls.Add(BtnTextColorPicker);
             groupBox2.Controls.Add(CBOutputTypes);
-            groupBox2.Location = new Point(8, 286);
+            groupBox2.Location = new Point(672, 12);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(328, 160);
             groupBox2.TabIndex = 25;
@@ -369,16 +369,16 @@
             // 
             groupBox3.Controls.Add(BtnAutoCatchName);
             groupBox3.Controls.Add(LstTracked);
+            groupBox3.Controls.Add(BtnPauseKeybind);
             groupBox3.Controls.Add(BtnAddProgram);
             groupBox3.Controls.Add(BtnForceSave);
-            groupBox3.Controls.Add(BtnPauseKeybind);
             groupBox3.Controls.Add(BtnRemove);
             groupBox3.Controls.Add(TbOutput);
             groupBox3.Controls.Add(TbTracked);
             groupBox3.Controls.Add(LblOut);
             groupBox3.Location = new Point(8, 12);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(328, 268);
+            groupBox3.Size = new Size(328, 234);
             groupBox3.TabIndex = 26;
             groupBox3.TabStop = false;
             groupBox3.Text = "Programs to Allow input tracking";
@@ -397,7 +397,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(689, 455);
+            ClientSize = new Size(1008, 253);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(BtnStart);

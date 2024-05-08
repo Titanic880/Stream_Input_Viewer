@@ -1,22 +1,23 @@
 ﻿using Timer = System.Timers.Timer;
-using UI_Mimic.Windows;
+using UI_Mimic;
 
 namespace KeyStreamOverlay {
     public partial class StreamView : Form {
 
-        private UIReader? UIHook;
-        private Control? UserInteractionControl;
+        private readonly InputReader? UIHook;
+        private readonly Control? UserInteractionControl;
         private readonly Timer TextClearTimer;
         private readonly KeyCombo PauseButtons;
         
         private const int ListMax = 13;
-        private int TextboxMaxChar = 15;
-        
-        private bool UseTranslations = false;
-        private bool ShiftToggle = false;
-        private bool Keylogging = false;
-        private bool MouseClickToggle = false;
-        private bool ModifierAsPrimary = false;
+        private readonly int TextboxMaxChar = 15;
+        private readonly bool UseTranslations = false;
+        private readonly bool ShiftToggle = false;
+        private readonly bool Keylogging = false;
+        private readonly bool MouseClickToggle = false;
+        private readonly bool ModifierAsPrimary = false;
+        private readonly bool DuplicateSpamProtect = false;
+
         private bool Paused = false;
 
         public StreamView(SaveData Save) {
@@ -35,12 +36,13 @@ namespace KeyStreamOverlay {
             TextboxMaxChar = Save.CharacterLineLimit;
             MouseClickToggle = Save.MouseClickToggle;
             ModifierAsPrimary = Save.ModifierAsPrimary;
+            DuplicateSpamProtect = Save.DuplicateSpamProtect;
 
-            UIHook = new UI_Mimic.Windows.UIReader(true, Save.PreAllowedWindows);
-            UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook = InputReader.ReaderFactory(true, Save.PreAllowedWindows);
+            UIHook.GenerateHook(HookTypePub.Keyboard);
             UIHook.OnError += KeyboardHook_OnError;
             UIHook.KeyDown += KeyboardHook_KeyDown;
-            UIHook.GenerateHook(UIReader.HookTypePub.Keyboard);
+            UIHook.GenerateHook(HookTypePub.Keyboard);
             UIHook.OnMouseDown += MouseHookOnOnMouseClick;
 
             TextClearTimer = new Timer(4000);
@@ -157,12 +159,14 @@ namespace KeyStreamOverlay {
             //string ctrl = Ctrl ? "Ctrl+" : "";
             //string alt = Alt ? "Alt+" : "";
             string strkey = "";
-            if(Shift || Ctrl || Alt) {
+            if((Shift || Ctrl || Alt) && ShiftToggle is false) {
                 strkey = " ";
             }
             //Handles holding a key down/spamming it
             if (Previous_Key.Equals(key, Shift, Ctrl, Alt, Home)) {
-                ShiftTranslationLogic(AddToUI_Duplicate);
+                if (DuplicateSpamProtect is false) {
+                    ShiftTranslationLogic(AddToUI_Duplicate);
+                }
                 return;
             }
 
@@ -221,7 +225,9 @@ namespace KeyStreamOverlay {
             }
 
             if (Previous_Key.Equals(new KeyCombo(mouseaction))) {
-                AddToUI_Duplicate(output);
+                if (DuplicateSpamProtect is false) {
+                    AddToUI_Duplicate(output);
+                }
                 return;
             }
 
