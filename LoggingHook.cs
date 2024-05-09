@@ -3,10 +3,10 @@
         public static bool HookActive { get; private set; } = false;
         public static bool HookPaused { get; private set; } = false;
         public static string LogToLocation { get {
-                return MainCustomize.DefaultFolder + DefaultLogFile;
+                return SaveData.SaveFolder + DefaultLogFile;
             } }
         public static string ErrorLogToLocation { get {
-                return MainCustomize.DefaultFolder + DefaultErrorFile;
+                return SaveData.SaveFolder + DefaultErrorFile;
             } }
         private const string DefaultLogFile = "KeyLog.txt";
         private const string DefaultErrorFile = "Errors.txt";
@@ -25,8 +25,8 @@
             return Task.CompletedTask;
         }
         public static void Hookinit(bool HookActiveStatus = false) {
-            if (!Directory.Exists(MainCustomize.DefaultFolder)) {
-                Directory.CreateDirectory(MainCustomize.DefaultFolder);
+            if (!Directory.Exists(SaveData.SaveFolder)) {
+                Directory.CreateDirectory(SaveData.SaveFolder);
                 File.Create(LogToLocation).Close();
             }else if (!File.Exists(DefaultLogFile)) {
                 File.Create(LogToLocation).Close();

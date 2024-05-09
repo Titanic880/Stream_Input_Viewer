@@ -173,7 +173,7 @@ namespace KeyStreamOverlay {
                 PreAllowedWindows = GetAllowedWindows(),
                 Translations = TranslationDict.Translations,
                 BackColor = BtnBackColorPicker.BackColor.ToArgb(),
-                TextColor = BtnTextColorPicker.BackColor.ToArgb(),
+                TextColor = BtnTextColorPicker.ForeColor.ToArgb(),
                 CharacterLineLimit = this.CharacterLineLimit,
                 QuickLaunch = CBSkipSetupView.Checked,
                 ShiftToggle = CBShiftToggle.Checked,
