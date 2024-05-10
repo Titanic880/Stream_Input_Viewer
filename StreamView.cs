@@ -22,7 +22,7 @@ namespace KeyStreamOverlay {
 
         public StreamView(SaveData Save) {
             InitializeComponent();
-            //TODO: Directional Spam protection toggle
+            
             TopMost = true;
             MinimizeBox = false;
             MaximizeBox = false;
@@ -35,7 +35,7 @@ namespace KeyStreamOverlay {
 
             TextboxMaxChar = Save.CharacterLineLimit;
             MouseClickToggle = Save.MouseClickToggle;
-            ModifierAsPrimary = Save.ModifierAsPrimary;
+            ModifierAsPrimary = !Save.ModifierAsPrimary;
             DuplicateSpamProtect = Save.DuplicateSpamProtect;
 
             UIHook = InputReader.ReaderFactory(true, Save.PreAllowedWindows);
@@ -133,6 +133,9 @@ namespace KeyStreamOverlay {
         KeyCombo Previous_Key = new(Keys.F24, true, true, true, true);
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
+            if(Shift && key == Keys.Space) {
+                string breakpoint = "";
+            }
             if (PauseButtons.Equals(key, Shift, Ctrl, Alt, Home)) {
                 Paused        = !Paused;
                 BtnPause.Text = Paused ? "Resume" : "Pause";
@@ -140,6 +143,7 @@ namespace KeyStreamOverlay {
                 InfoLogging.PauseLoggingHookToggle(Paused);
                 return;
             }
+            //TODO: Test Directional Spam Toggle - Not Working...?
 
             if (Paused) {
                 return;
@@ -150,7 +154,6 @@ namespace KeyStreamOverlay {
                     return;
                 }
             }
-
             string sft  = Shift ? TranslationDict.GetTranslation(Keys.Shift)  + "+" : "";
             string ctrl = Ctrl ? TranslationDict.GetTranslation(Keys.Control) + "+" : "";
             string alt  = Alt ? TranslationDict.GetTranslation(Keys.Alt)      + "+" : "";
@@ -178,7 +181,8 @@ namespace KeyStreamOverlay {
 
                 if (ShiftToggle) {
                     if (Shift && UseTranslations) {
-                        strkey += TranslationDict.GetShiftTranslation(key);
+                        //TODO: Modifier + Space not using Dict (Bug Go Here (Shift + Space))
+                         strkey += TranslationDict.GetShiftTranslation(key);
                     }
                     else if (UseTranslations) {
                         strkey += TranslationDict.GetTranslation(key).ToLower();

@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
 using UI_Mimic;
-using UI_Mimic.Windows;
-
 
 namespace KeyStreamOverlay {
     public partial class MainCustomize : Form {

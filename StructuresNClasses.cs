@@ -5,7 +5,7 @@ namespace KeyStreamOverlay {
     public class SaveData {
         #region DataBlock
         public static string SaveFolder { get; set; } = $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\{Application.ProductName}\\";
-        public static string SaveLocation { get; set; } = SaveFolder + "Save_Debug.json";
+        public static string SaveLocation { get; set; } = SaveFolder + "Save.json";
         public KeyCombo PauseBind { get; set; } = new KeyCombo(Keys.Insert, true, true, true, true);
         public string[] PreAllowedWindows { get; set; } = Array.Empty<string>();
         public Dictionary<Keys, string> Translations { get; set; } = new();
@@ -179,7 +179,7 @@ namespace KeyStreamOverlay {
             if(ShiftTranslation.TryGetValue(Input, out string? Translation)) {
                 return Translation;
             } else {
-                return Input.ToString();
+                return GetTranslation(Input);
             }
         }
         public static void RestoreDefaults() {
