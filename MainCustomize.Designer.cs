@@ -55,6 +55,7 @@
             CBLogToggle = new CheckBox();
             groupBox3 = new GroupBox();
             BtnAutoCatchName = new Button();
+            CBSpamProtect = new CheckBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -91,7 +92,7 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(672, 178);
+            BtnStart.Location = new Point(672, 191);
             BtnStart.Name = "BtnStart";
             BtnStart.Size = new Size(328, 55);
             BtnStart.TabIndex = 5;
@@ -277,6 +278,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(CBSpamProtect);
             groupBox2.Controls.Add(CBModPrim);
             groupBox2.Controls.Add(CBMouseOut);
             groupBox2.Controls.Add(CBSkipSetupView);
@@ -290,7 +292,7 @@
             groupBox2.Controls.Add(CBOutputTypes);
             groupBox2.Location = new Point(672, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(328, 160);
+            groupBox2.Size = new Size(328, 173);
             groupBox2.TabIndex = 25;
             groupBox2.TabStop = false;
             groupBox2.Text = "General Settings";
@@ -393,6 +395,16 @@
             BtnAutoCatchName.UseVisualStyleBackColor = true;
             BtnAutoCatchName.Click += BtnAutoCatchName_Click;
             // 
+            // CBSpamProtect
+            // 
+            CBSpamProtect.AutoSize = true;
+            CBSpamProtect.Location = new Point(150, 150);
+            CBSpamProtect.Name = "CBSpamProtect";
+            CBSpamProtect.Size = new Size(152, 19);
+            CBSpamProtect.TabIndex = 32;
+            CBSpamProtect.Text = "Toggle Spam Protection";
+            CBSpamProtect.UseVisualStyleBackColor = true;
+            // 
             // MainCustomize
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -448,5 +460,6 @@
         private CheckBox CBModPrim;
         private CheckBox CBMouseOut;
         private Button BtnAutoCatchName;
+        private CheckBox CBSpamProtect;
     }
 }

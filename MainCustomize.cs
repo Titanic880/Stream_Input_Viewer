@@ -181,7 +181,8 @@ namespace KeyStreamOverlay {
                 UseTranslations = CBTranslationToggle.Checked,
                 MouseClickToggle = CBMouseOut.Checked,
                 ModifierAsPrimary = CBModPrim.Checked,
-                OutputControl = (StreamOutputType)CBOutputTypes.SelectedIndex
+                OutputControl = (StreamOutputType)CBOutputTypes.SelectedIndex,
+                DuplicateSpamProtect = CBSpamProtect.Checked
             };
         }
         private void LoadSave(SaveData SaveInfo) {
@@ -200,6 +201,7 @@ namespace KeyStreamOverlay {
             CBMouseOut.Checked = SaveInfo.MouseClickToggle;
             CBModPrim.Checked = SaveInfo.ModifierAsPrimary;
             CBOutputTypes.SelectedIndex = (int)SaveInfo.OutputControl;
+            CBSpamProtect.Checked = SaveInfo.DuplicateSpamProtect;
             InfoLogging.LoggingInit(CBLogToggle.Checked);
         }
 

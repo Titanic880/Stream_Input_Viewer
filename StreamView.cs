@@ -133,9 +133,6 @@ namespace KeyStreamOverlay {
         KeyCombo Previous_Key = new(Keys.F24, true, true, true, true);
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
-            if(Shift && key == Keys.Space) {
-                string breakpoint = "";
-            }
             if (PauseButtons.Equals(key, Shift, Ctrl, Alt, Home)) {
                 Paused        = !Paused;
                 BtnPause.Text = Paused ? "Resume" : "Pause";
@@ -158,9 +155,6 @@ namespace KeyStreamOverlay {
             string ctrl = Ctrl ? TranslationDict.GetTranslation(Keys.Control) + "+" : "";
             string alt  = Alt ? TranslationDict.GetTranslation(Keys.Alt)      + "+" : "";
 
-            //string sft = Shift ? "Shift+" : "";
-            //string ctrl = Ctrl ? "Ctrl+" : "";
-            //string alt = Alt ? "Alt+" : "";
             string strkey = "";
             if((Shift || Ctrl || Alt) && ShiftToggle is false) {
                 strkey = " ";
@@ -181,7 +175,6 @@ namespace KeyStreamOverlay {
 
                 if (ShiftToggle) {
                     if (Shift && UseTranslations) {
-                        //TODO: Modifier + Space not using Dict (Bug Go Here (Shift + Space))
                          strkey += TranslationDict.GetShiftTranslation(key);
                     }
                     else if (UseTranslations) {
