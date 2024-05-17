@@ -23,9 +23,9 @@ To set your pause keybind, just click the key + modifiers you want
 (Currently does not support multiple main keys and only modifiers ex: Shift/Alt/Ctrl)
 then Click the 'Set Pause Keybind' button to save it.
 
-### You are required to have at minimum:
+### You are required to have at minimum to start the streamview:
 
 1 tracked program   
-Pause Keybind  
+Pause Keybind 
 
-### Prior to being able to start the stream view.
+### Project is considered to be in a finished state outside of currently unknown bugs, new feature suggestions, and UI_Mimic rewrites.

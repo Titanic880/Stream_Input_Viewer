@@ -31,6 +31,10 @@ namespace KeyStreamOverlay {
             this.HelpButton = true;
             this.HelpButtonClicked += MainCustomize_HelpButtonClicked;
 
+            //Fixes minor visual bug for labels
+            LblOut.SendToBack();
+            LblUserOutput.SendToBack();
+
             UIReaderHook = InputReader.ReaderFactory(false, new string[] { this.Text });
             UIReaderHook.GenerateHook(HookTypePub.Keyboard);
             UIReaderHook.KeyDown += KeyboardHook_KeyDown;
@@ -72,7 +76,11 @@ namespace KeyStreamOverlay {
             LaunchStreamView();
         }
         private void KeyboardHook_OnError(Exception e) {
+#if DEBUG
+            InfoLogging.LogAsError($"KeyHook Error: {e}");
+#else
             InfoLogging.LogAsError($"KeyHook Error: {e.Message}");
+#endif
         }
 
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
@@ -128,7 +136,7 @@ namespace KeyStreamOverlay {
             }
             TbOutput.Text = output;
         }
-        #endregion FormControl
+#endregion FormControl
         #region Functions
         private void LoadTranslations() {
             LstTranslations.Items.Clear();
@@ -246,6 +254,7 @@ namespace KeyStreamOverlay {
         }
         private void BtnForceSave_Click(object sender, EventArgs e) {
             JSONSave();
+            TbOutput.Text = "Saved Settings!";
         }
         private void BtnPause_Keybind_Click(object sender, EventArgs e) {
             string[] options = TbOutput.Text.Split('+');

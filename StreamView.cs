@@ -42,7 +42,7 @@ namespace KeyStreamOverlay {
             UIHook.GenerateHook(HookTypePub.Keyboard);
             UIHook.OnError += KeyboardHook_OnError;
             UIHook.KeyDown += KeyboardHook_KeyDown;
-            UIHook.GenerateHook(HookTypePub.Keyboard);
+            UIHook.GenerateHook(HookTypePub.Mouse);
             UIHook.OnMouseDown += MouseHookOnOnMouseClick;
 
             TextClearTimer = new Timer(4000);
@@ -61,8 +61,6 @@ namespace KeyStreamOverlay {
                 BtnPause.Top = UserInteractionControl.Bottom + 10;
             }
             InfoLogging.LoggingInit(Save.LoggingHookEnabled);
-
-            
             TextClearTimer.Start();
         }
         private static Control? GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor, Color TextColor) {

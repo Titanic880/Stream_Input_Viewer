@@ -31,18 +31,19 @@
             BtnPause.Location = new Point(12, 307);
             BtnPause.Name = "BtnPause";
             BtnPause.Size = new Size(176, 47);
-            BtnPause.TabIndex = 5;
+            BtnPause.TabIndex = 1;
             BtnPause.Text = "Pause";
             BtnPause.UseVisualStyleBackColor = true;
             BtnPause.Click += BtnPause_Click;
             // 
-            // SteamView_List
+            // StreamView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(200, 365);
             Controls.Add(BtnPause);
-            Name = "SteamView_List";
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Name = "StreamView";
             Text = "StreamView";
             ResumeLayout(false);
         }

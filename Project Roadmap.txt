@@ -6,14 +6,6 @@
 Bug Fix:
 	Rewrite Set Keybind to check Translations for modifier keys
 	- Needs More Testing. 
-	Fix StreamView Timer Cleanup
-	Fix StreamView Dynamic Sizing
-	- Textbox view:
-		-Short Textbox
-		-Cuts off Pause/Unpause button
-	- List View:
-		-
-
 
 Features:
 	Support for Pictures/Bitmaps?
@@ -22,16 +14,12 @@ Features:
 
 
 BackEnd:
-	Override outputting "Shift" with outputting the upper case version of what is clicked (might require a dict/list of shared keys ex: 1 => !)
-
-
 	User warning pop up when program is started with a "never show again" option
 	-Currently missing "Never show again" option
 
 	Get a better name for Translations 
 	-More accurate name
 	Create a better project name (Make it a pun or something!)
-	
 
 Shelved:
 	Rebuild TranslationsDict to an extension of Dictionary instead of a shell class
@@ -46,6 +34,7 @@ In Testing:
 Completed Features/Implementations:
 	DONE - Implement TOFILE System
 	DONE - Toggle for TOFILE
+	DONE - Shift Translations
 	DONE - Ability to select type of user output (Currently Textbox/Listbox)
 	DONE - Implement Translation modifications as end user
 	Done - Add/Edit/Remove Translation button Logic
@@ -66,3 +55,5 @@ Completed Features/Implementations:
 		DONE (Feels Sluggish) - TextBox User output
 		DONE - Add ability to change text color.
 	DONE - User warning about the Nature of the program? 
+	DONE - Fix StreamView Timer Cleanup
+	DONE - Fix StreamView Dynamic Sizing
