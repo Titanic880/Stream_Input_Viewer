@@ -11,6 +11,11 @@ Features:
 	Support for Pictures/Bitmaps?
 	Make project not look like a generic WinForm App
 	Different ways to view input
+	Auto Crop Define:
+		Shows the Left:Right:Top:Bottom pixels to object to be captured for easy setup
+		ex:			30:30:150:120 (Line up order with OBS order)
+
+	Custom Fonts?
 
 
 BackEnd:

@@ -5,7 +5,7 @@ namespace KeyStreamOverlay {
     public partial class StreamView : Form {
 
         private readonly InputReader? UIHook;
-        private readonly Control? UserInteractionControl;
+        private readonly Control UserInteractionControl;
         private readonly Timer TextClearTimer;
         private readonly KeyCombo PauseButtons;
         
@@ -23,47 +23,61 @@ namespace KeyStreamOverlay {
         public StreamView(SaveData Save) {
             InitializeComponent();
             
+            //Set form toggles
             TopMost = true;
             MinimizeBox = false;
             MaximizeBox = false;
             AcceptButton = BtnPause;
+            LblCropVals.SendToBack();
 
+            //Set Locals
             PauseButtons = Save.PauseBind;
             UseTranslations = Save.UseTranslations;
             ShiftToggle = Save.ShiftToggle;
             Keylogging = Save.LoggingHookEnabled;
-
             TextboxMaxChar = Save.CharacterLineLimit;
             MouseClickToggle = Save.MouseClickToggle;
             ModifierAsPrimary = !Save.ModifierAsPrimary;
             DuplicateSpamProtect = Save.DuplicateSpamProtect;
 
+            //Generate and Hook into Keystream & Mouse stream
             UIHook = InputReader.ReaderFactory(true, Save.PreAllowedWindows);
             UIHook.GenerateHook(HookTypePub.Keyboard);
             UIHook.OnError += KeyboardHook_OnError;
             UIHook.KeyDown += KeyboardHook_KeyDown;
-            UIHook.GenerateHook(HookTypePub.Mouse);
-            UIHook.OnMouseDown += MouseHookOnOnMouseClick;
+            if (MouseClickToggle) {
+                UIHook.GenerateHook(HookTypePub.Mouse);
+                UIHook.OnMouseDown += MouseHookOnOnMouseClick;
+            }
 
+            //Setup Timer (Run at end of construction)
             TextClearTimer = new Timer(4000);
             TextClearTimer.Elapsed += ActiveTimer_Elapsed;
 
+            //Build the User specified output control
             UserInteractionControl = GenerateUIControl(Save.OutputControl, Save.GetBackColor, Save.GetTextColor);
-            if (UserInteractionControl is null) {
+            if (UserInteractionControl == new Control()) {
                 MessageBox.Show("Failed to generate User output Control, Exiting...");
                 Close();
                 return;
             }
-
             Controls.Add(UserInteractionControl);
+            
+            //Change the size of the form according to output type (Sizing is magic numbers)
             if (Save.OutputControl == StreamOutputType.Textbox) {
-                Height = BtnPause.Height + 100;
-                BtnPause.Top = UserInteractionControl.Bottom + 10;
+                Height = BtnPause.Height + 105;
+                LblCropVals.Top = UserInteractionControl.Bottom;
+                BtnPause.Top = LblCropVals.Bottom-3;
             }
+
+            //Crop Sizing HERE
+            int[] values = GetCropValues();
+            LblCropVals.Text += $" {values[0]}:{values[1]}:{values[2]}:{values[3]}";
+
             InfoLogging.LoggingInit(Save.LoggingHookEnabled);
             TextClearTimer.Start();
         }
-        private static Control? GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor, Color TextColor) {
+        private static Control GenerateUIControl(StreamOutputType ObjType, Color DisplayBackColor, Color TextColor) {
             Control toadd;
             switch (ObjType) {
                 case StreamOutputType.Textbox:
@@ -95,10 +109,10 @@ namespace KeyStreamOverlay {
                     for (int i = 0; i < ListMax; i++) {
                         ((ListBox)toadd).Items.Add("");
                     }
-
                     break;
-                default:
-                    return null;
+            default:
+                toadd = new Control();
+                break;
             }
 
             return toadd;
@@ -129,7 +143,6 @@ namespace KeyStreamOverlay {
         }
 
         KeyCombo Previous_Key = new(Keys.F24, true, true, true, true);
-
         private void KeyboardHook_KeyDown(Keys key, bool Shift, bool Ctrl, bool Alt, bool Home) {
             if (PauseButtons.Equals(key, Shift, Ctrl, Alt, Home)) {
                 Paused        = !Paused;
@@ -200,7 +213,6 @@ namespace KeyStreamOverlay {
                 }
             }
         }
-
         private void MouseHookOnOnMouseClick(MouseButtons mouseaction) {
             if (Paused || MouseClickToggle is false) {
                 return;
@@ -232,7 +244,6 @@ namespace KeyStreamOverlay {
                 InfoLogging.LogToFile(output);
             }
         }
-
         private void KeyboardHook_OnError(Exception e) {
             AddToUI($"Error Occurred in DLL");
             InfoLogging.LogAsError($"Error in KeyboardHook: {e.Message}");
@@ -263,7 +274,6 @@ namespace KeyStreamOverlay {
                 }
             }
         }
-
         private void AddToUI_Duplicate(string input) {
             if (input == "") {
                 return;
@@ -284,13 +294,11 @@ namespace KeyStreamOverlay {
             }
         }
 
-
         private void ActiveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e) {
             if (!this.IsDisposed) {
                 Invoke(TimerTick_Action);
             }
         }
-
         private void TimerTick_Action() {
             foreach (Control a in Controls) {
                 switch (a) {
@@ -322,6 +330,17 @@ namespace KeyStreamOverlay {
                 }
             }
 
+        }
+    
+        private int[] GetCropValues() {
+            //Left:Top:Right:Bottom Respectively
+            int[] vals = new int[4];
+            //Add 2px for control inbuilt white border
+            vals[0] = UserInteractionControl.Left + 2;
+            vals[1] = UserInteractionControl.Top + 2;
+            vals[2] = vals[0]; //Should always be the same due to control being centered
+            vals[3] = LblCropVals.Height + BtnPause.Height + 6; //Magic Number is Spacing from Construction
+            return vals;
         }
     }
 }

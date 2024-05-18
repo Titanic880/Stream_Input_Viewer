@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             BtnPause = new Button();
+            LblCropVals = new Label();
             SuspendLayout();
             // 
             // BtnPause
@@ -36,19 +37,31 @@
             BtnPause.UseVisualStyleBackColor = true;
             BtnPause.Click += BtnPause_Click;
             // 
+            // LblCropVals
+            // 
+            LblCropVals.AutoSize = true;
+            LblCropVals.Location = new Point(12, 289);
+            LblCropVals.Name = "LblCropVals";
+            LblCropVals.Size = new Size(119, 15);
+            LblCropVals.TabIndex = 100;
+            LblCropVals.Text = "Crop Sizing (L:T:R:B): ";
+            // 
             // StreamView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(200, 365);
+            ClientSize = new Size(200, 364);
+            Controls.Add(LblCropVals);
             Controls.Add(BtnPause);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "StreamView";
             Text = "StreamView";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
         private Button BtnPause;
+        private Label LblCropVals;
     }
 }
