@@ -371,7 +371,7 @@ namespace KeyStreamOverlay {
                 //Sleep for 1 second so we can update the UI every Second
                 System.Threading.Thread.Sleep(1000);
             }
-            string selectedwindow = UI_Mimic.Windows.WindowInfo.GetActiveWindowTitle();
+            string selectedwindow = UI_Mimic.Windows.W_WindowInfo.GetActiveWindowTitle();
             DialogResult res = MessageBox.Show($"Window with the name of: '{selectedwindow}' was caught!\n(Please note that names can sometimes be inaccurate to the title provided but still relevant)\n is this correct?","",MessageBoxButtons.YesNo);
             
             if(res == DialogResult.Yes) {
